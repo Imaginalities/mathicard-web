@@ -363,6 +363,20 @@ def build_extended_font(input_path, output_woff2_path, output_otf_path=None):
         added_count += 1
         print(f"  + Added glyph '{gname}' for char '{ch}' (U+{codepoint:04X})")
 
+    # -----------------------------------------------------------------------
+    # Redraw '|' (U+007C / 'bar') as a clearly taller vertical bar
+    # from descender (-225) to cap height (675), 1 pixel unit (75 units) wide.
+    # This prevents '|a|' from reading as 'lal'.
+    # -----------------------------------------------------------------------
+    print("Redrawing '|' (bar) from descender (-225) to cap height (675)...")
+    bar_rects = [(75, -225, 150, 675)]
+    bar_advance = 225
+    bar_lsb = 75
+    bar_cs = blocks_to_pen(bar_rects, bar_advance, bar_advance, cs)
+    bar_cs.private = top_dict.Private
+    cs['bar'] = bar_cs
+    font['hmtx']['bar'] = (bar_advance, bar_lsb)
+
     font.setGlyphOrder(glyph_order)
 
     # Adjust vertical metrics
@@ -455,13 +469,13 @@ def render_specimen(font_path, output_png_path):
     y = draw_sep(y)
 
     # Section 1: Sample Display Titles at 64px
-    draw.text((40, y), "SAMPLE DISPLAY TITLES (64px)", font=f16, fill=COLOR_ACCENT)
+    draw.text((40, y), "SAMPLE DISPLAY TITLES & OPERATORS (64px)", font=f16, fill=COLOR_ACCENT)
     y += 30
     draw.text((40, y), "VIDEO GIỚI THIỆU TRÒ CHƠI", font=f64, fill=COLOR_WHITE)
     y += 85
     draw.text((40, y), "LUẬT CHƠI & 5 LƯỢT ĐẤU", font=f64, fill=COLOR_WHITE)
     y += 85
-    draw.text((40, y), "Lượt 5 - Cửa hàng", font=f64, fill=COLOR_WHITE)
+    draw.text((40, y), "Lượt 5 - Cửa hàng · |a|", font=f64, fill=COLOR_WHITE)
     y += 95
     y = draw_sep(y)
 
