@@ -11,12 +11,16 @@
  */
 
 import { siteContent } from "./content.js";
+import { cardsData } from "./cards-data.js";
 import { SwirlShader } from "./shader.js";
 
 // Trạng thái ứng dụng
 const AppState = {
   activeCategory: "all",
-  hasScoreRevealed: false,
+  activeRarity: "all",
+  searchQuery: "",
+  page: 1,
+  pageSize: 24,
   activeModal: null
 };
 
@@ -29,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderTrailer();
   renderOverviewPhases();
   renderCardGallery();
-  renderReviewSection();
+  renderDevEvaluation();
   renderMediaLibrary();
   renderAcademicDocs();
   renderTeamSection();
@@ -51,16 +55,13 @@ export async function checkFileExists(url) {
   }
 }
 
-/** Tự động cập nhật favicon và logo che mặt sau thẻ bài */
+/** Tự động cập nhật favicon */
 async function initBrandIcons() {
   const hasIcon = await checkFileExists("assets/logo/Logo_Mathicard_Icon.png");
   const iconSrc = hasIcon ? "assets/logo/Logo_Mathicard_Icon.png" : "assets/logo/Logo_Mathicard_Icon_placeholder.png";
 
   const favicon = document.getElementById("site-favicon");
   if (favicon) favicon.href = iconSrc;
-
-  const reviewCover = document.getElementById("review-cover-logo");
-  if (reviewCover) reviewCover.src = iconSrc;
 }
 
 function checkInitialHash() {
@@ -68,15 +69,8 @@ function checkInitialHash() {
   if (!hash) return;
 
   if (hash === "#card-modal" || hash === "#the-bai-modal") {
-    openCardInspectorModal(siteContent.cardGallery.cards[0]);
-  } else if (hash === "#danh-gia" || hash === "#review-score") {
-    const reviewSection = document.getElementById("danh-gia");
-    const reviewCard = document.getElementById("review-flip-card");
-    if (reviewSection) {
-      reviewSection.scrollIntoView({ behavior: "instant" });
-    }
-    if (reviewCard) {
-      triggerScoreReveal(reviewCard);
+    if (cardsData && cardsData.length > 0) {
+      openCardInspectorModal(cardsData[0]);
     }
   } else {
     try {
@@ -88,6 +82,78 @@ function checkInitialHash() {
       // Bỏ qua nếu hash không hợp lệ
     }
   }
+}
+
+/* =============================================================================
+   HẰNG SỐ & HÀM TIỆN ÍCH THẺ BÀI
+============================================================================= */
+export const RARITY_LABELS = {
+  all: "Tất cả độ hiếm",
+  common: "Phổ biến",
+  rare: "Hiếm",
+  epic: "Sử thi",
+  legendary: "Huyền thoại",
+  special: "Đặc biệt"
+};
+
+export const TYPE_LABELS = {
+  all: "Tất cả",
+  value: "Giá trị",
+  operator: "Toán tử",
+  item: "Vật phẩm",
+  course: "Khóa học",
+  document: "Tài liệu",
+  decoration: "Trang trí",
+  sticker: "Nhãn dán",
+  event: "Sự kiện",
+  pack: "Gói bài"
+};
+
+/** Chuyển tiếng Việt có dấu sang không dấu để tìm kiếm không phân biệt dấu */
+export function removeVietnameseTones(str) {
+  if (!str) return "";
+  return String(str)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[đĐ]/g, (m) => (m === "đ" ? "d" : "D"))
+    .toLowerCase()
+    .trim();
+}
+
+export function getSymbolLengthClass(symbol) {
+  const len = String(symbol || "").length;
+  if (len >= 4) return "len-long";
+  if (len === 3) return "len-3";
+  if (len === 2) return "len-2";
+  return "";
+}
+
+export function getCornerLengthClass(symbol) {
+  return String(symbol || "").length >= 4 ? "len-long" : "";
+}
+
+function resolveCardColor(card, symbol) {
+  if (card.type === "operator") return "dark";
+  if (card.color) return card.color;
+  return "dark";
+}
+
+/** Render thẻ bài thuần CSS/HTML text card cho thẻ giá trị & toán tử */
+export function renderCardFaceHtml(card) {
+  if (!card) return "";
+  const isValue = card.type === "value";
+  const symbol = isValue ? (card.value || "?") : (card.symbol || card.value || "?");
+  const color = resolveCardColor(card, symbol);
+  const centerLen = getSymbolLengthClass(symbol);
+  const cornerLen = getCornerLengthClass(symbol);
+
+  return `
+    <div class="card-rendered" data-type="${card.type}" data-color="${color}">
+      <span class="card-corner top-left ${cornerLen}">${symbol}</span>
+      <div class="card-center-symbol ${centerLen}">${symbol}</div>
+      <span class="card-corner bottom-right ${cornerLen}">${symbol}</span>
+    </div>
+  `;
 }
 
 /* =============================================================================
@@ -209,6 +275,7 @@ function renderHeroCardFan() {
       const rot = offset * 7; // Góc xoay quạt
       const translateY = Math.abs(offset) * 6;
       const delay = (idx * 0.15).toFixed(2);
+      const cardFace = renderCardFaceHtml(card);
 
       return `
         <div class="fanned-card" 
@@ -218,7 +285,7 @@ function renderHeroCardFan() {
              title="${card.title}">
           <div class="card-wobble" style="--wobble-delay: ${delay}s;">
             <div class="card-inner">
-              <img src="${card.image}" alt="${card.title}" width="140" height="210" loading="eager" />
+              ${cardFace}
             </div>
           </div>
         </div>
@@ -232,7 +299,7 @@ function renderHeroCardFan() {
 /* =============================================================================
    4. TRAILER SECTION (VIDEO, FALLBACK & PHỤ ĐỀ WEBVTT)
 ============================================================================= */
-function renderTrailer() {
+async function renderTrailer() {
   const title = document.getElementById("trailer-title");
   if (title) title.textContent = siteContent.trailer.sectionTitle;
 
@@ -241,18 +308,20 @@ function renderTrailer() {
 
   const videoElem = document.getElementById("main-trailer-video");
   const fallbackElem = document.getElementById("trailer-fallback");
-  const trackElem = document.getElementById("trailer-subtitles-track");
 
   if (videoElem) {
     videoElem.poster = siteContent.trailer.posterImg;
     videoElem.src = siteContent.trailer.videoSrc;
 
-    // Thiết lập phụ đề tiếng Việt
-    if (trackElem) {
+    // Phụ đề WebVTT chỉ thêm khi file tồn tại thực tế qua HTTP HEAD
+    const hasTrack = await checkFileExists(siteContent.trailer.trackSrc);
+    if (hasTrack && !videoElem.querySelector("track")) {
+      const trackElem = document.createElement("track");
       trackElem.src = siteContent.trailer.trackSrc;
-      trackElem.srclang = siteContent.trailer.trackLang;
-      trackElem.label = siteContent.trailer.trackLabel;
+      trackElem.srclang = siteContent.trailer.trackLang || "vi";
+      trackElem.label = siteContent.trailer.trackLabel || "Tiếng Việt";
       trackElem.default = true;
+      videoElem.appendChild(trackElem);
     }
 
     // Bắt sự kiện lỗi khi file video MP4 chưa được đặt vào thư mục
@@ -287,7 +356,7 @@ function handleVideoMissing(videoElem, fallbackElem) {
   `;
 }
 
-function openVideoModal() {
+async function openVideoModal() {
   const modal = document.getElementById("video-modal");
   const modalVideo = document.getElementById("modal-video-elem");
   const modalFallback = document.getElementById("modal-video-fallback");
@@ -304,9 +373,14 @@ function openVideoModal() {
     modalVideo.src = siteContent.trailer.videoSrc;
     modalVideo.poster = siteContent.trailer.posterImg;
 
-    const track = modalVideo.querySelector("track");
-    if (track) {
+    const hasTrack = await checkFileExists(siteContent.trailer.trackSrc);
+    if (hasTrack && !modalVideo.querySelector("track")) {
+      const track = document.createElement("track");
       track.src = siteContent.trailer.trackSrc;
+      track.srclang = siteContent.trailer.trackLang || "vi";
+      track.label = siteContent.trailer.trackLabel || "Tiếng Việt";
+      track.default = true;
+      modalVideo.appendChild(track);
     }
 
     modalVideo.addEventListener("error", () => {
@@ -345,7 +419,7 @@ function setTextContent(elemId, text) {
   if (elem) elem.textContent = text;
 }
 
-function renderOverviewPhases() {
+async function renderOverviewPhases() {
   setTextContent("overview-badge", siteContent.overview.sectionBadge);
   setTextContent("overview-title", siteContent.overview.sectionTitle);
   setTextContent("overview-sub", siteContent.overview.sectionSubtitle);
@@ -354,12 +428,23 @@ function renderOverviewPhases() {
   const phasesContainer = document.getElementById("phases-grid");
   if (!phasesContainer) return;
 
-  phasesContainer.innerHTML = siteContent.overview.phases.map(renderPhaseCardTemplate).join("");
+  const resolvedPhases = await Promise.all(
+    siteContent.overview.phases.map(async (phase) => {
+      const exists = await checkFileExists(phase.iconImg);
+      return { ...phase, exists };
+    })
+  );
+
+  phasesContainer.innerHTML = resolvedPhases.map(renderPhaseCardTemplate).join("");
   setupPhaseCardInteractions(phasesContainer);
   attachCardTiltEffects(".phase-card");
 }
 
 function renderPhaseCardTemplate(phase) {
+  const iconMarkup = phase.exists
+    ? `<img src="${phase.iconImg}" alt="${phase.iconAlt}" width="140" height="90" loading="lazy" />`
+    : `<div class="screen-fallback-tile"><span class="fallback-icon">🖼</span><span class="fallback-text">Ảnh sắp cập nhật</span></div>`;
+
   return `
     <div class="phase-card-wrapper" tabindex="0" role="button" aria-label="Giai đoạn ${phase.id}: ${phase.name}">
       <div class="phase-card flip-card">
@@ -367,7 +452,7 @@ function renderPhaseCardTemplate(phase) {
         <div class="card-face card-front">
           <div class="phase-step-badge">BƯỚC ${phase.stepNumber}</div>
           <div class="phase-icon-box">
-            <img src="${phase.iconImg}" alt="${phase.iconAlt}" width="140" height="90" loading="lazy" />
+            ${iconMarkup}
           </div>
           <h3 class="phase-name">${phase.name}</h3>
           <span class="phase-sub">${phase.subtitle}</span>
@@ -406,20 +491,23 @@ function setupPhaseCardInteractions(container) {
 
 
 /* =============================================================================
-   6. BỘ SƯU TẬP THẺ BÀI (GALLERY TABS & INSPECTOR MODAL)
+   6. BỘ SƯU TẬP THẺ BÀI (GALLERY TABS, RARITY CHIPS, SEARCH & INSPECTOR MODAL)
 ============================================================================= */
 function renderCardGallery() {
-  const badge = document.getElementById("gallery-badge");
-  if (badge && siteContent.cardGallery.sectionBadge) badge.textContent = siteContent.cardGallery.sectionBadge;
-
-  const title = document.getElementById("gallery-title");
-  if (title && siteContent.cardGallery.sectionTitle) title.textContent = siteContent.cardGallery.sectionTitle;
-
-  const sub = document.getElementById("gallery-sub");
-  if (sub && siteContent.cardGallery.sectionSubtitle) sub.textContent = siteContent.cardGallery.sectionSubtitle;
+  setTextContent("gallery-badge", siteContent.cardGallery.sectionBadge);
+  setTextContent("gallery-title", siteContent.cardGallery.sectionTitle);
+  setTextContent("gallery-sub", siteContent.cardGallery.sectionSubtitle);
 
   renderGalleryTabs();
+  renderRarityChips();
+  setupCardSearch();
+  setupGalleryPagination();
   renderGalleryItems();
+}
+
+function getTypeCount(typeKey) {
+  if (typeKey === "all") return cardsData.length;
+  return cardsData.filter((c) => c.type === typeKey).length;
 }
 
 function renderGalleryTabs() {
@@ -427,66 +515,186 @@ function renderGalleryTabs() {
   if (!tabsContainer) return;
 
   tabsContainer.innerHTML = siteContent.cardGallery.categories
-    .map(
-      (cat) => `
-      <button class="filter-tab-btn ${cat.key === AppState.activeCategory ? "active" : ""}" 
-              data-category="${cat.key}">
-        ${cat.label}
-      </button>
-    `
-    )
+    .map((cat) => {
+      const count = getTypeCount(cat.key);
+      const isActive = cat.key === AppState.activeCategory ? "active" : "";
+      return `
+        <button class="filter-tab-btn ${isActive}" data-category="${cat.key}" role="tab" aria-selected="${cat.key === AppState.activeCategory}">
+          <span>${cat.label}</span>
+          <span class="tab-count-badge">${count}</span>
+        </button>
+      `;
+    })
     .join("");
 
   tabsContainer.addEventListener("click", (e) => {
     const btn = e.target.closest(".filter-tab-btn");
     if (!btn) return;
 
-    tabsContainer.querySelectorAll(".filter-tab-btn").forEach((b) => b.classList.remove("active"));
+    tabsContainer.querySelectorAll(".filter-tab-btn").forEach((b) => {
+      b.classList.remove("active");
+      b.setAttribute("aria-selected", "false");
+    });
     btn.classList.add("active");
+    btn.setAttribute("aria-selected", "true");
 
     AppState.activeCategory = btn.dataset.category;
+    AppState.page = 1;
     renderGalleryItems();
+  });
+}
+
+function renderRarityChips() {
+  const container = document.getElementById("gallery-rarity-filters");
+  if (!container) return;
+
+  container.innerHTML = siteContent.cardGallery.rarities
+    .map((r) => {
+      const isActive = r.key === AppState.activeRarity ? "active" : "";
+      return `
+        <button class="rarity-chip ${isActive}" data-rarity="${r.key}" type="button">
+          ${r.label}
+        </button>
+      `;
+    })
+    .join("");
+
+  container.addEventListener("click", (e) => {
+    const chip = e.target.closest(".rarity-chip");
+    if (!chip) return;
+
+    container.querySelectorAll(".rarity-chip").forEach((c) => c.classList.remove("active"));
+    chip.classList.add("active");
+
+    AppState.activeRarity = chip.dataset.rarity;
+    AppState.page = 1;
+    renderGalleryItems();
+  });
+}
+
+function setupCardSearch() {
+  const searchInput = document.getElementById("card-search-input");
+  const clearBtn = document.getElementById("card-search-clear");
+  if (!searchInput) return;
+
+  searchInput.addEventListener("input", (e) => {
+    AppState.searchQuery = e.target.value.trim();
+    if (clearBtn) {
+      clearBtn.style.display = AppState.searchQuery ? "block" : "none";
+    }
+    AppState.page = 1;
+    renderGalleryItems();
+  });
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      AppState.searchQuery = "";
+      clearBtn.style.display = "none";
+      AppState.page = 1;
+      renderGalleryItems();
+      searchInput.focus();
+    });
+  }
+}
+
+function setupGalleryPagination() {
+  const loadMoreBtn = document.getElementById("gallery-load-more-btn");
+  if (!loadMoreBtn) return;
+
+  loadMoreBtn.addEventListener("click", () => {
+    AppState.page++;
+    renderGalleryItems();
+  });
+}
+
+function cardMatchesSearch(card, queryNorm) {
+  if (!queryNorm) return true;
+  if (removeVietnameseTones(card.nameVi).includes(queryNorm)) return true;
+  if (removeVietnameseTones(card.descriptionVi).includes(queryNorm)) return true;
+  if (removeVietnameseTones(card.id).includes(queryNorm)) return true;
+  if (card.value && removeVietnameseTones(card.value).includes(queryNorm)) return true;
+  if (card.symbol && removeVietnameseTones(card.symbol).includes(queryNorm)) return true;
+  return false;
+}
+
+function getFilteredCards() {
+  const qNorm = removeVietnameseTones(AppState.searchQuery);
+  return cardsData.filter((card) => {
+    const matchesCat = AppState.activeCategory === "all" || card.type === AppState.activeCategory;
+    if (!matchesCat) return false;
+
+    const matchesRar = AppState.activeRarity === "all" || card.rarity === AppState.activeRarity;
+    if (!matchesRar) return false;
+
+    return cardMatchesSearch(card, qNorm);
   });
 }
 
 function renderGalleryItems() {
   const grid = document.getElementById("gallery-cards-grid");
+  const counterText = document.getElementById("gallery-counter-text");
+  const paginationWrap = document.getElementById("gallery-pagination-wrap");
   if (!grid) return;
 
-  const filteredCards = siteContent.cardGallery.cards.filter((card) => {
-    if (AppState.activeCategory === "all") return true;
-    return card.category === AppState.activeCategory;
-  });
+  const filtered = getFilteredCards();
+  const totalCount = filtered.length;
+  const displayLimit = AppState.page * AppState.pageSize;
+  const displayedCards = filtered.slice(0, displayLimit);
 
-  grid.innerHTML = filteredCards
-    .map((card, idx) => {
-      const delay = ((idx % 6) * 0.12).toFixed(2);
-      return `
-      <article class="gallery-card card-wobble" 
-               style="--wobble-delay: ${delay}s;" 
-               tabindex="0" 
-               role="button"
-               data-card-id="${card.id}">
-        <div class="card-item-inner">
-          <div class="card-rarity-badge ${card.category}">${card.rarity}</div>
-          <div class="card-image-wrap">
-            <img src="${card.image}" alt="${card.name}" width="200" height="290" loading="lazy" />
-          </div>
-          <div class="card-info">
-            <h4 class="card-title">${card.name}</h4>
-            <span class="card-tag">${card.tag}</span>
-            <p class="card-desc">${card.desc}</p>
-          </div>
+  if (counterText) {
+    if (totalCount === 0) {
+      counterText.textContent = "Không tìm thấy thẻ bài phù hợp";
+    } else {
+      counterText.textContent = `Hiển thị ${displayedCards.length} / ${totalCount} thẻ bài`;
+    }
+  }
+
+  if (paginationWrap) {
+    paginationWrap.style.display = displayedCards.length < totalCount ? "flex" : "none";
+  }
+
+  grid.innerHTML = displayedCards.map(renderGalleryCardArticle).join("");
+  setupGalleryCardClicks(grid);
+  attachCardTiltEffects(".gallery-card");
+}
+
+function renderGalleryCardArticle(card, idx) {
+  const delay = ((idx % 6) * 0.1).toFixed(2);
+  const rarityLabel = RARITY_LABELS[card.rarity] || card.rarity;
+  const typeLabel = TYPE_LABELS[card.type] || card.type;
+  const priceLabel = card.price ? `${card.price} Coin` : "Miễn phí";
+
+  const visualMarkup = (card.render === "text" || card.type === "value" || card.type === "operator")
+    ? renderCardFaceHtml(card)
+    : `<img src="${card.image}" alt="${card.nameVi}" width="200" height="280" loading="lazy" />`;
+
+  return `
+    <article class="gallery-card card-wobble" 
+             style="--wobble-delay: ${delay}s;" 
+             tabindex="0" 
+             role="button"
+             aria-label="${card.nameVi}"
+             data-card-id="${card.id}">
+      <div class="card-item-inner">
+        <div class="card-rarity-badge ${card.rarity}">${rarityLabel}</div>
+        <div class="card-image-wrap">
+          ${visualMarkup}
         </div>
-      </article>
-    `;
-    })
-    .join("");
+        <div class="card-info">
+          <h4 class="card-title">${card.nameVi}</h4>
+          <span class="card-tag">${typeLabel} · ${priceLabel}</span>
+          <p class="card-desc">${card.descriptionVi || ""}</p>
+        </div>
+      </div>
+    </article>
+  `;
+}
 
-  // Sự kiện click/Enter mở modal xem chi tiết
+function setupGalleryCardClicks(grid) {
   grid.querySelectorAll(".gallery-card").forEach((elem) => {
     const cardId = elem.dataset.cardId;
-    const cardData = siteContent.cardGallery.cards.find((c) => c.id === cardId);
+    const cardData = cardsData.find((c) => c.id === cardId);
 
     const onSelect = () => {
       elem.classList.add("card-pop");
@@ -502,8 +710,6 @@ function renderGalleryItems() {
       }
     });
   });
-
-  attachCardTiltEffects(".gallery-card");
 }
 
 function openCardInspectorModal(card) {
@@ -512,20 +718,29 @@ function openCardInspectorModal(card) {
   const modalBody = document.getElementById("card-modal-content");
   if (!modal || !modalBody) return;
 
+  const rarityLabel = RARITY_LABELS[card.rarity] || card.rarity;
+  const typeLabel = TYPE_LABELS[card.type] || card.type;
+  const priceLabel = card.price ? `${card.price} Coin` : "Miễn phí";
+
+  const visualMarkup = (card.render === "text" || card.type === "value" || card.type === "operator")
+    ? renderCardFaceHtml(card)
+    : `<img src="${card.image}" alt="${card.nameVi}" class="modal-card-img" />`;
+
   modalBody.innerHTML = `
     <div class="modal-card-display">
-      <img src="${card.image}" alt="${card.name}" class="modal-card-img" />
+      ${visualMarkup}
     </div>
     <div class="modal-card-details">
-      <div class="modal-rarity-tag ${card.category}">${card.rarity} · ${card.tag}</div>
-      <h2 class="modal-card-heading">${card.name}</h2>
+      <div class="modal-rarity-tag ${card.rarity}">${rarityLabel} · ${typeLabel}</div>
+      <h2 class="modal-card-heading">${card.nameVi}</h2>
       <div class="modal-card-meta">
-        <span>Phân loại: <strong>${card.category.toUpperCase()}</strong></span>
+        <span>Phân loại: <strong>${typeLabel.toUpperCase()}</strong></span>
         <span>Mã định danh: <strong>#${card.id}</strong></span>
+        <span>Giá cửa hàng: <strong>${priceLabel}</strong></span>
       </div>
       <div class="modal-card-desc-box">
         <label>HIỆU ỨNG & CƠ CHẾ:</label>
-        <p>${card.desc}</p>
+        <p>${card.descriptionVi || "Thẻ bài cơ bản không có hiệu ứng đặc biệt."}</p>
       </div>
       <div class="modal-card-tip">
         <span>💡 Mẹo chiến thuật: Sử dụng thẻ này trong các vòng đấu then chốt để đột phá điểm số!</span>
@@ -537,181 +752,47 @@ function openCardInspectorModal(card) {
 }
 
 /* =============================================================================
-   7. ĐÁNH GIÁ (REVIEW CARD FLIP, SCORE TALLY & SCREEN SHAKE)
+   7. ĐÁNH GIÁ & NHÌN NHẬN (DEV EVALUATION - 3 CỘT)
 ============================================================================= */
-function computeStarsHtml(score, maxScore = 10) {
-  const ratingOutOf5 = (score / maxScore) * 5;
-  const rounded = Math.round(ratingOutOf5 * 2) / 2; // Làm tròn về bội số 0.5 (ví dụ 8.5/10 -> 4.5 sao)
-  const full = Math.floor(rounded);
-  const half = (rounded % 1 !== 0);
-  const empty = 5 - full - (half ? 1 : 0);
+function renderDevEvaluation() {
+  const evalData = siteContent.devEvaluation;
+  if (!evalData) return;
 
-  let html = "";
-  for (let i = 0; i < full; i++) {
-    html += '<span class="star star-full" aria-hidden="true">★</span>';
-  }
-  if (half) {
-    html += '<span class="star star-half" aria-hidden="true">★</span>';
-  }
-  for (let i = 0; i < empty; i++) {
-    html += '<span class="star star-empty" aria-hidden="true">☆</span>';
-  }
-  return { html, rounded };
-}
+  setTextContent("review-badge", evalData.sectionBadge);
+  setTextContent("review-title", evalData.sectionTitle);
+  setTextContent("review-sub", evalData.sectionSubtitle);
 
-function renderReviewSection() {
-  const badge = document.getElementById("review-badge");
-  if (badge && siteContent.review.sectionBadge) badge.textContent = siteContent.review.sectionBadge;
-
-  const title = document.getElementById("review-title");
-  if (title && siteContent.review.sectionTitle) title.textContent = siteContent.review.sectionTitle;
-
-  const sub = document.getElementById("review-sub");
-  if (sub && siteContent.review.sectionSubtitle) sub.textContent = siteContent.review.sectionSubtitle;
-
-  const coverText = document.getElementById("review-cover-text");
-  if (coverText && siteContent.review.cardCoverText) coverText.textContent = siteContent.review.cardCoverText;
-
-  const quote = document.getElementById("review-quote");
-  if (quote) quote.textContent = `"${siteContent.review.quote}"`;
-
-  // Render số sao tính toán động từ điểm overallScore (8.5/10 -> 4.5 sao)
-  const starsContainer = document.getElementById("review-score-stars");
-  if (starsContainer) {
-    const { html, rounded } = computeStarsHtml(siteContent.review.overallScore, siteContent.review.maxScore);
-    starsContainer.innerHTML = html;
-    starsContainer.setAttribute("aria-label", `${rounded} trên 5 sao`);
-  }
-
-  renderReviewCriteria();
-  renderReviewProsCons();
-  setupReviewScrollObserver();
-}
-
-function renderReviewCriteria() {
-  const container = document.getElementById("review-criteria-bars");
-  if (!container) return;
-
-  container.innerHTML = siteContent.review.subScores
-    .map(
-      (sub) => `
-      <div class="criteria-row">
-        <div class="criteria-info">
-          <span class="criteria-label">${sub.label}</span>
-          <span class="criteria-score">${sub.score.toFixed(1)} / 10</span>
+  const grid = document.getElementById("dev-eval-grid");
+  if (grid && evalData.columns) {
+    grid.innerHTML = evalData.columns.map((col) => `
+      <div class="eval-column-card col-${col.id}">
+        <div class="eval-col-header">
+          <span class="eval-col-icon" aria-hidden="true">${col.icon}</span>
+          <h3 class="eval-col-title">${col.title}</h3>
         </div>
-        <div class="progress-track">
-          <div class="progress-fill" style="--target-width: ${sub.percent}%;"></div>
-        </div>
+        <span class="eval-col-tag">${col.tag}</span>
+        <ul class="eval-list">
+          ${col.items.map((item) => `<li>${item}</li>`).join("")}
+        </ul>
       </div>
-    `
-    )
-    .join("");
-}
-
-function renderReviewProsCons() {
-  const prosList = document.getElementById("review-pros");
-  if (prosList) {
-    prosList.innerHTML = siteContent.review.pros
-      .map((pro) => `<li><span class="bullet-pro">✔</span> ${pro}</li>`)
-      .join("");
+    `).join("");
   }
 
-  const consList = document.getElementById("review-cons");
-  if (consList) {
-    consList.innerHTML = siteContent.review.cons
-      .map((con) => `<li><span class="bullet-con">✖</span> ${con}</li>`)
-      .join("");
-  }
-}
-
-function setupReviewScrollObserver() {
-  const reviewCard = document.getElementById("review-flip-card");
-  if (!reviewCard) return;
-
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !AppState.hasScoreRevealed) {
-            AppState.hasScoreRevealed = true;
-            triggerScoreReveal(reviewCard);
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-    observer.observe(reviewCard);
-  }
-
-  // Cho phép bấm chuột hoặc phím Enter/Space để lật thủ công
-  const onActivate = () => {
-    if (!reviewCard.classList.contains("revealed")) {
-      triggerScoreReveal(reviewCard);
-    }
-  };
-
-  reviewCard.addEventListener("click", onActivate);
-  reviewCard.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      onActivate();
-    }
-  });
-}
-
-function triggerScoreReveal(reviewCard) {
-  if (AppState.hasScoreRevealed || reviewCard.classList.contains("revealed")) return;
-  AppState.hasScoreRevealed = true;
-  reviewCard.classList.add("revealed");
-
-  // Đếm số điểm (Tally counter)
-  const scoreNumberElem = document.getElementById("tally-score-number");
-  if (!scoreNumberElem) return;
-
-  const targetScore = siteContent.review.overallScore;
-  const duration = 1500;
-  const startTimestamp = performance.now();
-
-  function animateTally(now) {
-    const elapsed = now - startTimestamp;
-    const progress = Math.min(elapsed / duration, 1.0);
-    // Easing out cubic
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const currentVal = (eased * targetScore).toFixed(1);
-
-    scoreNumberElem.textContent = currentVal;
-
-    if (progress < 1.0) {
-      requestAnimationFrame(animateTally);
+  const quotesWrap = document.getElementById("playtest-quotes-wrap");
+  if (quotesWrap) {
+    if (evalData.playtestQuotes && evalData.playtestQuotes.length > 0) {
+      quotesWrap.style.display = "grid";
+      quotesWrap.innerHTML = evalData.playtestQuotes.map((q) => `
+        <blockquote class="playtest-quote-card">
+          <p class="quote-text">"${q.text}"</p>
+          <cite class="quote-author">— ${q.author}</cite>
+        </blockquote>
+      `).join("");
     } else {
-      scoreNumberElem.textContent = targetScore.toFixed(1);
-      triggerScreenShake();
-      animateRatingBars();
+      quotesWrap.style.display = "none";
+      quotesWrap.innerHTML = "";
     }
   }
-
-  requestAnimationFrame(animateTally);
-}
-
-function triggerScreenShake() {
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (prefersReducedMotion) return;
-
-  const reviewSection = document.getElementById("danh-gia");
-  if (!reviewSection) return;
-
-  reviewSection.classList.add("screen-shake");
-  setTimeout(() => {
-    reviewSection.classList.remove("screen-shake");
-  }, 450);
-}
-
-function animateRatingBars() {
-  const fills = document.querySelectorAll(".progress-fill");
-  fills.forEach((fill) => {
-    fill.classList.add("animate");
-  });
 }
 
 /* =============================================================================
@@ -789,29 +870,42 @@ async function renderFontShowcase() {
   });
 }
 
-function renderMediaImageGrid() {
+async function renderMediaImageGrid() {
   const grid = document.getElementById("media-images-grid");
   if (!grid) return;
 
-  grid.innerHTML = siteContent.media.imagesGrid
-    .map(
-      (img) => `
-      <div class="media-thumb-card" tabindex="0" role="button" data-src="${img.src}" data-caption="${img.caption}">
-        <div class="thumb-img-wrap">
-          <img src="${img.src}" alt="${img.alt}" loading="lazy" />
+  const resolvedImages = await Promise.all(
+    siteContent.media.imagesGrid.map(async (img) => {
+      const exists = await checkFileExists(img.src);
+      return { ...img, exists };
+    })
+  );
+
+  grid.innerHTML = resolvedImages
+    .map((img) => {
+      const imgMarkup = img.exists
+        ? `<img src="${img.src}" alt="${img.alt}" loading="lazy" />`
+        : `<div class="screen-fallback-tile"><span class="fallback-icon">🖼</span><span class="fallback-text">Ảnh sắp cập nhật</span></div>`;
+
+      return `
+        <div class="media-thumb-card" tabindex="0" role="button" data-src="${img.exists ? img.src : ''}" data-caption="${img.caption}">
+          <div class="thumb-img-wrap">
+            ${imgMarkup}
+          </div>
+          <div class="thumb-caption">${img.caption}</div>
         </div>
-        <div class="thumb-caption">${img.caption}</div>
-      </div>
-    `
-    )
+      `;
+    })
     .join("");
 
   grid.querySelectorAll(".media-thumb-card").forEach((card) => {
-    card.addEventListener("click", () => openLightbox(card.dataset.src, card.dataset.caption));
+    if (!card.dataset.src) return;
+    const onSelect = () => openLightbox(card.dataset.src, card.dataset.caption);
+    card.addEventListener("click", onSelect);
     card.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        openLightbox(card.dataset.src, card.dataset.caption);
+        onSelect();
       }
     });
   });

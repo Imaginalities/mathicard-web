@@ -39,49 +39,52 @@ export const siteContent = {
         target: "#gioi-thieu"
       }
     },
-    // Dãy thẻ bài xòe quạt tương tác ở Hero (5-7 thẻ số + toán tử, không dùng mặt sau)
+    // Dãy thẻ bài xòe quạt tương tác ở Hero (Phong cách "8 − 8 = ?" thuần CSS text cards)
     fannedCards: [
       {
-        id: "hero-1",
-        title: "Thẻ Số 1",
-        image: "assets/cards/val_1.webp",
-        type: "value"
+        id: "hero-val-8-red",
+        title: "Thẻ Số 8 (Đỏ)",
+        render: "text",
+        type: "value",
+        value: "8",
+        color: "red",
+        colorHex: "#d91f17"
       },
       {
-        id: "hero-2",
-        title: "Toán tử Cộng (+)",
-        image: "assets/cards/op_plus.webp",
-        type: "operator"
-      },
-      {
-        id: "hero-3",
-        title: "Thẻ Số 5",
-        image: "assets/cards/val_5.webp",
-        type: "value"
-      },
-      {
-        id: "hero-4",
-        title: "Toán tử Nhân (×)",
-        image: "assets/cards/op_multiply.webp",
-        type: "operator"
-      },
-      {
-        id: "hero-5",
-        title: "Thẻ Số 7 Hoàng Kim",
-        image: "assets/cards/val_7.webp",
-        type: "value"
-      },
-      {
-        id: "hero-6",
+        id: "hero-op-sub",
         title: "Toán tử Trừ (−)",
-        image: "assets/cards/op_minus.webp",
-        type: "operator"
+        render: "text",
+        type: "operator",
+        symbol: "−",
+        color: "dark",
+        colorHex: "#1a1a1a"
       },
       {
-        id: "hero-7",
-        title: "Thẻ Số 9 Cực Đại",
-        image: "assets/cards/val_9.webp",
-        type: "value"
+        id: "hero-val-8-blue",
+        title: "Thẻ Số 8 (Xanh dương)",
+        render: "text",
+        type: "value",
+        value: "8",
+        color: "blue",
+        colorHex: "#1461bd"
+      },
+      {
+        id: "hero-op-eq",
+        title: "Dấu Bằng (=)",
+        render: "text",
+        type: "operator",
+        symbol: "=",
+        color: "dark",
+        colorHex: "#1a1a1a"
+      },
+      {
+        id: "hero-val-target",
+        title: "Mục tiêu (? - Vàng)",
+        render: "text",
+        type: "value",
+        value: "?",
+        color: "yellow",
+        colorHex: "#cc7a00"
       }
     ]
   },
@@ -90,8 +93,8 @@ export const siteContent = {
   trailer: {
     sectionTitle: "TRAILER GAME & GAMEPLAY",
     sectionSubtitle: "Video giới thiệu và hướng dẫn luật chơi Mathicard dưới 30 giây",
-    videoSrc: "assets/video/Video_Mathicard_NoSub.mp4",
-    posterImg: "assets/images/KeyArt.webp",
+    videoSrc: "assets/video/Video_Mathicard_Sub.mp4",
+    posterImg: "assets/video/poster.webp",
     posterAlt: "Poster video Mathicard",
     trackSrc: "assets/video/Video_Mathicard.vtt",
     trackLang: "vi",
@@ -112,284 +115,128 @@ export const siteContent = {
       {
         id: 1,
         stepNumber: "01",
-        name: "Bốc bài",
-        subtitle: "Giai đoạn Bốc bài",
-        iconImg: "assets/images/Luot_01.webp",
+        name: "Lượt 1 – Bốc bài",
+        subtitle: "Rút bài từ cọc",
+        iconImg: "assets/screens/SS_05_BocBai.webp",
         iconAlt: "Giai đoạn 1: Bốc bài",
-        brief: "Rút đủ 8 lá bài số lên tay từ cọc bài và nhận 4 lá bài dấu cơ bản (+, −, ×, ÷) vào khung toán tử.",
+        brief: "Rút đủ 8 lá bài số lên tay từ cọc bài và nhận 4 thẻ phép tính cơ bản (+, −, ×, /) sẵn sàng vào trận.",
         detail: "Mỗi người chơi bắt đầu với cọc bài 36 lá số (1–9, mỗi số 4 lá). Khung toán tử lưu trữ các phép tính cơ bản hoặc nâng cao được mua từ Cửa hàng."
       },
       {
         id: 2,
         stepNumber: "02",
-        name: "Sinh giá trị",
-        subtitle: "Giai đoạn Sinh giá trị",
-        iconImg: "assets/images/Luot_02.webp",
+        name: "Lượt 2 – Sinh giá trị",
+        subtitle: "Mục tiêu vòng đấu",
+        iconImg: "assets/screens/SS_06_DanhBai.webp",
         iconAlt: "Giai đoạn 2: Sinh giá trị",
-        brief: "Hệ thống tự động phát sinh một số nguyên ngẫu nhiên làm giá trị mục tiêu cho toàn bộ người chơi.",
+        brief: "Hệ thống tự động phát sinh một số nguyên ngẫu nhiên làm giá trị mục tiêu chung cho toàn bộ người chơi.",
         detail: "Tất cả người chơi trong phòng đều chung một mục tiêu số này. Tốc độ và tư duy ghép phép tính tiệm cận quyết định vị thế thắng bại."
       },
       {
         id: 3,
         stepNumber: "03",
-        name: "Đánh bài",
-        subtitle: "Giai đoạn Đánh bài",
-        iconImg: "assets/images/Luot_03.webp",
+        name: "Lượt 3 – Đánh bài & Chốt",
+        subtitle: "Ghép phép tính & Đáp án",
+        iconImg: "assets/screens/SS_06_DanhBai.webp",
         iconAlt: "Giai đoạn 3: Đánh bài",
-        brief: "Đặt thẻ số và toán tử thành một biểu thức toán học hợp lệ sao cho kết quả gần giá trị mục tiêu nhất.",
-        detail: "Người chơi có thể kích hoạt thêm các thẻ vật phẩm, thẻ giáo trình hoặc hình dán bổ trợ để nhân đôi điểm hoặc biến đổi số linh hoạt."
+        brief: "Đặt thẻ số và phép tính thành biểu thức toán học tiệm cận mục tiêu, rồi nhấn nút Chốt để hoàn thành đáp án.",
+        detail: "Người chơi có thể kích hoạt thêm các thẻ vật phẩm, thẻ Khóa học hoặc nhãn dán bổ trợ để nhân đôi điểm hoặc biến đổi số linh hoạt."
       },
       {
         id: 4,
         stepNumber: "04",
-        name: "Tính điểm",
-        subtitle: "Giai đoạn Tính điểm",
-        iconImg: "assets/images/Luot_04.webp",
+        name: "Lượt 4 – Tính điểm & Kết quả",
+        subtitle: "So sánh độ lệch",
+        iconImg: "assets/screens/SS_07_TinhDiem.webp",
         iconAlt: "Giai đoạn 4: Tính điểm",
-        brief: "So sánh độ lệch của biểu thức so với mục tiêu; trao thưởng điểm phòng, tiền Coin và BCoin danh giá.",
-        detail: "Người về Nhất giành nhiều điểm phòng nhất để tiến gần chiến thắng chung cuộc, đồng thời tích lũy Coin và BCoin chuẩn bị cho vòng mua sắm."
+        brief: "So sánh kết quả biểu thức với giá trị mục tiêu; trao thưởng điểm phòng, tiền Coin và BCoin danh giá.",
+        detail: "Người về Nhất giành nhiều điểm phòng nhất để tiến gần chiến thắng chung cuộc, đồng thời tích lũy Coin và BCoin chuẩn bị cho lượt mua sắm."
       },
       {
         id: 5,
         stepNumber: "05",
-        name: "Cửa hàng",
-        subtitle: "Giai đoạn Cửa hàng",
-        iconImg: "assets/images/Luot_05.webp",
+        name: "Lượt 5 – Cửa hàng & Đổi mới",
+        subtitle: "Nâng cấp bộ bài & Vòng tiếp",
+        iconImg: "assets/screens/SS_08_CuaHang.webp",
         iconAlt: "Giai đoạn 5: Cửa hàng",
-        brief: "Sử dụng Coin và BCoin mua sắm thẻ phép, thẻ vật phẩm mới, gói thẻ nâng cấp hoặc thay đổi toán tử.",
-        detail: "Sau khi hết thời gian Cửa hàng, ván đấu lập tức quay lại Lượt 1 (Bốc bài) với sức mạnh bộ bài mới cho đến khi tìm ra người chiến thắng!"
+        brief: "Sử dụng Coin và BCoin mua sắm Khóa học, vật phẩm, gói bài mới, bấm Đổi mới (Reroll) hoặc nhấn Vòng tiếp.",
+        detail: "Sau khi hết thời gian Cửa hàng hoặc tất cả bấm Vòng tiếp, ván đấu lập tức quay lại Lượt 1 (Bốc bài) với sức mạnh bộ bài mới cho đến khi tìm ra người chiến thắng!"
       }
     ]
   },
 
-  // 5. BỘ SƯU TẬP THẺ BÀI (GALLERY)
+  // 5. BỘ SƯU TẬP THẺ BÀI (GALLERY CONFIGURATION)
   cardGallery: {
     sectionBadge: "BỘ SƯU TẬP THẺ",
-    sectionTitle: "BỘ SƯU TẬP THẺ BÀI",
-    sectionSubtitle: "Khám phá hệ thống thẻ bài đa dạng: Số học, Toán tử, Thẻ phép & Bộ bài",
+    sectionTitle: "BỘ THẺ BÀI MATHICARD",
+    sectionSubtitle: "Khám phá 275 thẻ bài trích xuất từ dữ liệu game: Giá trị, Toán tử, Vật phẩm, Khóa học, Tài liệu, Trang trí, Nhãn dán, Sự kiện, Gói bài",
     categories: [
-      { key: "all", label: "Tất cả thẻ" },
-      { key: "value", label: "Thẻ Giá trị" },
+      { key: "all", label: "Tất cả" },
+      { key: "value", label: "Giá trị" },
       { key: "operator", label: "Toán tử" },
-      { key: "spell", label: "Thẻ Phép & Vật phẩm" },
-      { key: "deck", label: "Bộ bài & Gói" }
+      { key: "item", label: "Vật phẩm" },
+      { key: "course", label: "Khóa học" },
+      { key: "document", label: "Tài liệu" },
+      { key: "decoration", label: "Trang trí" },
+      { key: "sticker", label: "Nhãn dán" },
+      { key: "event", label: "Sự kiện" },
+      { key: "pack", label: "Gói bài" }
     ],
-    cards: [
-      // THẺ GIÁ TRỊ (Số 1 đến 9)
-      {
-        id: "val-1",
-        category: "value",
-        name: "Thẻ Số 1",
-        tag: "Số nguyên cơ bản",
-        rarity: "Phổ thông",
-        image: "assets/cards/val_1.webp",
-        desc: "Thẻ số cơ bản giá trị 1. Thích hợp dùng làm bước đệm cho phép nhân chia hoặc tiệm cận sai số nhỏ."
-      },
-      {
-        id: "val-3",
-        category: "value",
-        name: "Thẻ Số 3",
-        tag: "Số lẻ chiến thuật",
-        rarity: "Phổ thông",
-        image: "assets/cards/val_3.webp",
-        desc: "Thẻ số 3 linh hoạt. Dễ dàng kết hợp với toán tử nhân và số mũ để tạo bước nhảy giá trị lớn."
-      },
-      {
-        id: "val-5",
-        category: "value",
-        name: "Thẻ Số 5",
-        tag: "Số mốc tròn chục",
-        rarity: "Phổ thông",
-        image: "assets/cards/val_5.webp",
-        desc: "Thẻ số 5 trung tâm. Giúp định hình các phép tính tiệm cận mốc hàng chục nhanh chóng và an toàn."
-      },
-      {
-        id: "val-7",
-        category: "value",
-        name: "Thẻ Số 7",
-        tag: "Số Hoàng Kim",
-        rarity: "Hiếm",
-        image: "assets/cards/val_7.webp",
-        desc: "Lá số may mắn 7. Kích hoạt combo thần tài khi kết hợp cùng thẻ vật phẩm Jackpot trên bàn đấu."
-      },
-      {
-        id: "val-9",
-        category: "value",
-        name: "Thẻ Số 9",
-        tag: "Số cực đại",
-        rarity: "Hiếm",
-        image: "assets/cards/val_9.webp",
-        desc: "Thẻ số có giá trị tự nhiên cao nhất trong cọc bài cơ bản. Đem lại đột biến lớn khi nhân dồn."
-      },
-
-      // TOÁN TỬ (+, -, ×, ÷)
-      {
-        id: "op-plus",
-        category: "operator",
-        name: "Toán tử Cộng (+)",
-        tag: "Nhị phân cơ bản",
-        rarity: "Cốt lõi",
-        image: "assets/cards/op_plus.webp",
-        desc: "Phép cộng nhị phân tiêu chuẩn. Tích lũy giá trị từng bước nhỏ để tiến sát mục tiêu với độ chính xác cao."
-      },
-      {
-        id: "op-minus",
-        category: "operator",
-        name: "Toán tử Trừ (−)",
-        tag: "Nhị phân cơ bản",
-        rarity: "Cốt lõi",
-        image: "assets/cards/op_minus.webp",
-        desc: "Phép trừ số học. Khắc chế các biểu thức vượt quá giá trị mục tiêu, hạ thấp sai số về mức 0."
-      },
-      {
-        id: "op-mult",
-        category: "operator",
-        name: "Toán tử Nhân (×)",
-        tag: "Nhị phân khuếch đại",
-        rarity: "Cốt lõi",
-        image: "assets/cards/op_multiply.webp",
-        desc: "Phép nhân khuếch đại. Tạo ra những con số mục tiêu khổng lồ chỉ với 2 lá bài trên tay."
-      },
-      {
-        id: "op-div",
-        category: "operator",
-        name: "Toán tử Chia (÷)",
-        tag: "Nhị phân thu nhỏ",
-        rarity: "Cốt lõi",
-        image: "assets/cards/op_divide.webp",
-        desc: "Phép chia lấy nguyên. Rất hữu ích khi đối đầu với các số mục tiêu phân đoạn nhỏ hoặc cân bằng giá trị."
-      },
-
-      // THẺ PHÉP & VẬT PHẨM (Items)
-      {
-        id: "item-rainbow",
-        category: "spell",
-        name: "Cầu vồng (Rainbow)",
-        tag: "Thẻ vật phẩm",
-        rarity: "Hiếm (Rare)",
-        image: "assets/cards/item_rainbow.webp",
-        desc: "Cộng thêm điểm thưởng lớn và xu khi biểu thức trên bàn sở hữu đủ 4 màu thẻ số khác biệt."
-      },
-      {
-        id: "item-jackpot",
-        category: "spell",
-        name: "Jackpot 777",
-        tag: "Thẻ vật phẩm",
-        rarity: "Sử thi (Epic)",
-        image: "assets/cards/item_jackpot.webp",
-        desc: "Thưởng điểm tối đa cho người chơi nếu kết hợp thành công ba lá bài số 7 trong cùng một lượt."
-      },
-      {
-        id: "item-tetris",
-        category: "spell",
-        name: "Tetris",
-        tag: "Thẻ vật phẩm",
-        rarity: "Hiếm (Rare)",
-        image: "assets/cards/item_tetris.webp",
-        desc: "Kích hoạt hiệu ứng cộng hưởng khi đặt các thẻ bài có hình dán tương thích nằm cạnh nhau."
-      },
-      {
-        id: "item-anvil",
-        category: "spell",
-        name: "Cái Đe (The Anvil)",
-        tag: "Thẻ nâng cấp",
-        rarity: "Sử thi (Epic)",
-        image: "assets/cards/item_anvil.webp",
-        desc: "Rèn và dung hợp 3 thẻ vật phẩm thông thường thành 1 thẻ vật phẩm ngẫu nhiên bậc Huyền thoại."
-      },
-      {
-        id: "item-pawn",
-        category: "spell",
-        name: "Con Tốt (Pawn)",
-        tag: "Thẻ cờ vua",
-        rarity: "Phổ thông",
-        image: "assets/cards/item_pawn.webp",
-        desc: "Di chuyển 1 ô sang phải sau mỗi lượt đấu; tự động phong cấp thành Hậu khi đến cuối hàng trang bị."
-      },
-      {
-        id: "item-satellite",
-        category: "spell",
-        name: "Vệ Tinh (Satellite)",
-        tag: "Thẻ cơ động",
-        rarity: "Hiếm (Rare)",
-        image: "assets/cards/item_satellite.webp",
-        desc: "Tự động đổi vị trí ngẫu nhiên mỗi vòng; tăng gấp đôi chỉ số cho các thẻ vật phẩm lân cận."
-      },
-
-      // BỘ BÀI & GÓI BÀI (Decks & Packs)
-      {
-        id: "deck-base",
-        category: "deck",
-        name: "Bộ Bài Mặc Định (Basedeck)",
-        tag: "Bộ bài khởi đầu",
-        rarity: "Cơ bản",
-        image: "assets/cards/deck_base.webp",
-        desc: "Bộ bài tiêu chuẩn 36 lá số từ 1 đến 9 cân bằng, là nền tảng chiến thuật cho mọi tân thủ."
-      },
-      {
-        id: "deck-gold",
-        category: "deck",
-        name: "Bộ Bài Hoàng Kim (Golddeck)",
-        tag: "Bộ bài mở rộng",
-        rarity: "Huyền thoại",
-        image: "assets/cards/deck_gold.webp",
-        desc: "Tăng 50% lượng Coin kiếm được sau mỗi vòng và gia tăng tỉ lệ rút thẻ số 7, 8, 9."
-      },
-      {
-        id: "deck-purple",
-        category: "deck",
-        name: "Bộ Bài Huyền Bí (Purpledeck)",
-        tag: "Bộ bài mở rộng",
-        rarity: "Sử thi",
-        image: "assets/cards/deck_purple.webp",
-        desc: "Khởi đầu trận với sẵn 1 thẻ phép biến ảo ngẫu nhiên; gia tăng thời gian suy nghĩ trong lượt đánh."
-      },
-      {
-        id: "pack-starter",
-        category: "deck",
-        name: "Gói Thẻ Tân Thủ (Pack 1)",
-        tag: "Gói mở rộng",
-        rarity: "Phổ thông",
-        image: "assets/cards/pack_1.webp",
-        desc: "Mở khóa 3 thẻ bài số ngẫu nhiên cùng cơ hội nhận các thẻ bổ trợ sơ cấp trong Cửa hàng."
-      },
-      {
-        id: "pack-advanced",
-        category: "deck",
-        name: "Gói Thẻ Nâng Cao (Pack 2)",
-        tag: "Gói mở rộng",
-        rarity: "Hiếm",
-        image: "assets/cards/pack_2.webp",
-        desc: "Chứa các thẻ phép thuật biến đổi dấu, hỗ trợ lội ngược dòng ngoạn mục ở những vòng đấu quyết định."
-      }
+    rarities: [
+      { key: "all", label: "Tất cả độ hiếm" },
+      { key: "common", label: "Phổ biến" },
+      { key: "rare", label: "Hiếm" },
+      { key: "epic", label: "Sử thi" },
+      { key: "legendary", label: "Huyền thoại" },
+      { key: "special", label: "Đặc biệt" }
     ]
   },
 
-  // 6. ĐÁNH GIÁ & NHẬN XÉT (REVIEW)
-  review: {
-    sectionBadge: "ĐÁNH GIÁ",
-    sectionTitle: "ĐÁNH GIÁ CHUYÊN MÔN",
-    sectionSubtitle: "Nhận xét và phân tích chất lượng game từ góc nhìn đồ án đa phương tiện",
-    cardCoverText: "CHẠM HOẶC CUỘN ĐỂ LẬT THẺ XEM ĐIỂM",
-    overallScore: 8.5,
-    maxScore: 10,
-    quote: "Mathicard là sự kết hợp táo bạo và sáng tạo giữa tính toán số học phản xạ nhanh với cơ chế xây dựng bộ bài qua cửa hàng giữa các vòng. Trò chơi chứng minh rằng toán học có thể trở thành một trải nghiệm giải trí đối kháng cực kỳ gay cấn!",
-    subScores: [
-      { label: "Lối chơi & Tính cân bằng", score: 9.0, percent: 90 },
-      { label: "Đồ họa Retro Pixel & Hiệu ứng", score: 8.5, percent: 85 },
-      { label: "Tính giáo dục & Rèn luyện phản xạ", score: 9.0, percent: 90 },
-      { label: "Trải nghiệm đối kháng bạn bè (2–4 người)", score: 8.0, percent: 80 }
+  // 6. ĐÁNH GIÁ & NHÌN NHẬN (DEV EVALUATION - 3 CỘT)
+  devEvaluation: {
+    sectionBadge: "ĐÁNH GIÁ & NHÌN NHẬN",
+    sectionTitle: "ĐÁNH GIÁ & NHÌN NHẬN",
+    sectionSubtitle: "Phân tích thẳng thắn về điểm mạnh, những điểm còn hạn chế và định hướng phát triển của Mathicard",
+    columns: [
+      {
+        id: "strengths",
+        title: "Điểm mạnh",
+        icon: "⚡",
+        tag: "ƯU ĐIỂM CỐT LÕI",
+        items: [
+          "Vòng lặp 5 lượt đấu (Bốc bài, Sinh giá trị, Đánh bài & Chốt, Tính điểm, Cửa hàng) chặt chẽ, tạo nhịp độ đối kháng nhanh và cuốn hút.",
+          "Hệ thống thẻ đồ sộ (275 thẻ) với 9 phân loại rõ rệt, kết hợp sáng tạo giữa số học cơ bản, hàm toán tử và thẻ bổ trợ chiến thuật.",
+          "Phong cách đồ họa Retro Pixel đồng bộ, hiệu ứng WebGL Shader sống động và chuyển động thẻ bài vật lý chân thực.",
+          "Cơ chế kinh tế hai đồng tiền Coin và BCoin giúp tối ưu hóa chiều sâu chiến thuật xây dựng bộ bài qua từng vòng đấu."
+        ]
+      },
+      {
+        id: "limitations",
+        title: "Hạn chế hiện tại",
+        icon: "⚠",
+        tag: "ĐIỂM CẦN HOÀN THIỆN",
+        items: [
+          "Phụ thuộc vào đường truyền mạng thời gian thực; chưa có cơ chế bù trễ khi kết nối WebSocket của người chơi bị gián đoạn.",
+          "Chưa có chế độ đấu tập ngoại tuyến (Offline AI Bot) để người mới làm quen với luật chơi và thử nghiệm bộ bài tự do.",
+          "Hệ thống âm thanh hiệu ứng (SFX) và nhạc nền (BGM) 8-bit còn đang trong quá trình thu âm, chưa bao phủ toàn bộ thao tác.",
+          "Thời gian suy nghĩ ở lượt đánh bài cần thêm tùy biến linh hoạt theo từng cấp độ kỹ năng của người chơi."
+        ]
+      },
+      {
+        id: "roadmap",
+        title: "Hướng phát triển",
+        icon: "🚀",
+        tag: "LỘ TRÌNH TƯƠNG LAI",
+        items: [
+          "Phát triển hệ thống Bot AI mô phỏng nhiều trường phái tính toán khác nhau, hỗ trợ luyện tập cá nhân hóa.",
+          "Bổ sung hệ thống đấu xếp hạng (Ranked Match), bảng vàng vinh danh và giải đấu giao hữu trực tuyến.",
+          "Tối ưu hóa giao thức truyền thông điệp mạng, bổ sung tính năng tự động tái kết nối bảo toàn trạng thái ván bài.",
+          "Mở rộng thêm các gói thẻ toán học nâng cao (Giải tích, Ma trận) phục vụ mục tiêu học tập và giải trí chuyên sâu."
+        ]
+      }
     ],
-    pros: [
-      "Vòng lặp 5 giai đoạn chặt chẽ, dồn dập, không gây nhàm chán.",
-      "Hệ thống thẻ bài phong phú, tạo ra hàng ngàn combo toán học biến ảo.",
-      "Đồ họa retro pixel chunky bắt mắt, tương thích mượt mà cả trên Web và Mobile.",
-      "Tích hợp cả hai đơn vị tiền tệ Coin và BCoin giúp kinh tế trong game có chiều sâu."
-    ],
-    cons: [
-      "Đòi hỏi kết nối mạng ổn định cho phòng đấu 2–4 người chơi đồng thời.",
-      "Cần thêm các chế độ đấu tập (AI bot) cho người chơi mới làm quen luật."
-    ]
+    // Mảng trích dẫn người chơi thử nghiệm (để rỗng [] theo yêu cầu, chỉ render khi có phần tử)
+    playtestQuotes: []
   },
 
   // 7. THƯ VIỆN MEDIA & NHẬN DIỆN THƯƠNG HIỆU
@@ -416,34 +263,76 @@ export const siteContent = {
     },
     imagesGrid: [
       {
-        id: "img-promo",
+        id: "ss-01",
+        src: "assets/screens/SS_01_TrangChu.webp",
+        alt: "Màn hình Trang chủ Mathicard",
+        caption: "Trang chủ: Giao diện chính và lựa chọn chế độ chơi"
+      },
+      {
+        id: "ss-02",
+        src: "assets/screens/SS_02_TaoPhong.webp",
+        alt: "Thiết lập phòng đấu 2–4 người",
+        caption: "Tạo phòng: Tùy chỉnh phòng đấu và số lượng người tham gia"
+      },
+      {
+        id: "ss-03",
+        src: "assets/screens/SS_03_PhongCho.webp",
+        alt: "Phòng chờ thi đấu",
+        caption: "Phòng chờ: Tập hợp người chơi và chuẩn bị bắt đầu trận"
+      },
+      {
+        id: "ss-04",
+        src: "assets/screens/SS_04_ChonBoBai.webp",
+        alt: "Chọn bộ bài chiến thuật",
+        caption: "Chọn bộ bài: Lựa chọn bộ bài khởi đầu cho ván đấu"
+      },
+      {
+        id: "ss-05",
+        src: "assets/screens/SS_05_BocBai.webp",
+        alt: "Giai đoạn Bốc bài",
+        caption: "Lượt 1 – Bốc bài: Rút 8 thẻ số và nhận toán tử cơ bản"
+      },
+      {
+        id: "ss-06",
+        src: "assets/screens/SS_06_DanhBai.webp",
+        alt: "Giai đoạn Đánh bài & Ghép phép tính",
+        caption: "Lượt 3 – Đánh bài: Ghép biểu thức tiệm cận mục tiêu và Chốt"
+      },
+      {
+        id: "ss-07",
+        src: "assets/screens/SS_07_TinhDiem.webp",
+        alt: "Giai đoạn Tính điểm & Kết quả",
+        caption: "Lượt 4 – Tính điểm: So khớp kết quả và trao thưởng Coin"
+      },
+      {
+        id: "ss-08",
+        src: "assets/screens/SS_08_CuaHang.webp",
+        alt: "Cửa hàng mua sắm vật phẩm",
+        caption: "Lượt 5 – Cửa hàng: Mua Khóa học, gói thẻ và Đổi mới"
+      },
+      {
+        id: "ss-09",
+        src: "assets/screens/SS_09_ChiTietThe.webp",
+        alt: "Thông số chi tiết thẻ bài",
+        caption: "Chi tiết thẻ: Xem thông tin và cơ chế hiệu ứng bổ trợ"
+      },
+      {
+        id: "ss-10",
+        src: "assets/screens/SS_10_MoGoi.webp",
+        alt: "Hoạt họa mở gói thẻ bài",
+        caption: "Mở gói thẻ: Khám phá các thẻ bài ngẫu nhiên mới"
+      },
+      {
+        id: "ss-11",
+        src: "assets/screens/SS_11_KetThuc.webp",
+        alt: "Tổng kết ván đấu",
+        caption: "Kết thúc ván: Vinh danh người chiến thắng đạt điểm phòng"
+      },
+      {
+        id: "ss-promo",
         src: "assets/images/PromoBanner.png",
         alt: "Poster quảng bá Mathicard",
         caption: "Poster quảng bá chính thức của game Mathicard"
-      },
-      {
-        id: "img-1",
-        src: "assets/images/KeyArt.webp",
-        alt: "Key Art Mathicard chính thức",
-        caption: "Key Art: Đấu trường toán học Mathicard (Đồ họa 16:9)"
-      },
-      {
-        id: "img-2",
-        src: "assets/images/CardShowcase.webp",
-        alt: "Showcase các bộ bài và gói mở rộng",
-        caption: "Showcase: Hệ thống 6 bộ bài và các gói thẻ nâng cấp"
-      },
-      {
-        id: "img-3",
-        src: "assets/images/DanhGia.webp",
-        alt: "Bảng đánh giá chuyên môn 8.5/10",
-        caption: "Infographic: Bảng đánh giá và phân tích chuyên môn"
-      },
-      {
-        id: "img-4",
-        src: "assets/images/Luot_03.webp",
-        alt: "Giai đoạn đánh bài và ghép toán tử",
-        caption: "Gameplay: Giai đoạn Đánh bài & Ghép biểu thức tiệm cận"
       }
     ],
     animatedGrid: [
