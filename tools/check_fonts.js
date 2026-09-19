@@ -1,35 +1,84 @@
 /**
- * MATHICARD - FONT & TYPOGRAPHY CHECKER (check_fonts.js)
+ * MATHICARD - FONT & TYPOGRAPHY COVERAGE CHECKER (check_fonts.js)
  *
- * Dev check: every element with computed font-family starting with the game font
- * (SVN-Determination-Sans) must match /^[\x00-\x7F√Σ×÷−πφ·]*$/.
+ * Verifies:
+ * 1. Single display font ("Mathicard Display" / "SVN-Determination-Sans") is used for display elements.
+ * 2. Pixelify Sans is completely removed (0 elements using Pixelify Sans).
+ * 3. Every character rendered in display font exists 100% in the font's cmap (no fallback glyphs).
  *
- * Can be run via CLI: node web/tools/check_fonts.js (or node tools/check_fonts.js)
+ * Can be run via CLI: node web/tools/check_fonts.js
  * Or called inside browser: window.checkFonts()
  */
 
 function checkFonts(root = document) {
-  const ALLOWED_REGEX = /^[\x00-\x7F√Σ×÷−πφ·]*$/;
+  // Exact character set present in Mathicard Display font cmap (248 glyphs)
+  const CMAP_CHARS_ARRAY = [
+    " ", "!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/",
+    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ":", ";", "<", "=", ">", "?", "@",
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+    "[", "\\", "]", "^", "_", "`",
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+    "{", "|", "}", "~", "\n", "\r", "\t", "·",
+    "À", "Á", "Â", "Ã", "È", "É", "Ê", "Ì", "Í", "Ò", "Ó", "Ô", "Õ", "×", "Ù", "Ú", "Ý",
+    "à", "á", "â", "ã", "è", "é", "ê", "ì", "í", "ò", "ó", "ô", "õ", "÷", "ù", "ú", "ý",
+    "Ă", "ă", "Đ", "đ", "Ĩ", "ĩ", "Ũ", "ũ", "Ơ", "ơ", "Ư", "ư", "Σ", "π", "φ",
+    "Ạ", "ạ", "Ả", "ả", "Ấ", "ấ", "Ầ", "ầ", "Ẩ", "ẩ", "Ẫ", "ẫ", "Ậ", "ậ", "Ắ", "ắ", "Ằ", "ằ", "Ẳ", "ẳ", "Ẵ", "ẵ", "Ặ", "ặ",
+    "Ẹ", "ẹ", "Ẻ", "ẻ", "Ẽ", "ẽ", "Ế", "ế", "Ề", "ề", "Ể", "ể", "Ễ", "ễ", "Ệ", "ệ",
+    "Ỉ", "ỉ", "Ị", "ị", "Ọ", "ọ", "Ỏ", "ỏ", "Ố", "ố", "Ồ", "ồ", "Ổ", "ổ", "Ỗ", "ỗ", "Ộ", "ộ",
+    "Ớ", "ớ", "Ờ", "ờ", "Ở", "ở", "Ỡ", "ỡ", "Ợ", "ợ", "Ụ", "ụ", "Ủ", "ủ",
+    "Ứ", "ứ", "Ừ", "ừ", "Ử", "ử", "Ữ", "ữ", "Ự", "ự", "Ỳ", "ỳ", "Ỵ", "ỵ", "Ỷ", "ỷ", "Ỹ", "ỹ",
+    "−", "√", "≤", "≥", "⌈", "⌉", "⌊", "⌋", "–", "▶", "↓", "✕", "☰"
+  ];
+  const DISPLAY_CMAP_SET = new Set(CMAP_CHARS_ARRAY);
+
   const elements = root.querySelectorAll("*");
   const violations = [];
   const compliant = [];
+  let pixelifyCount = 0;
 
   for (const el of elements) {
     const computed = window.getComputedStyle(el);
-    const rawFamily = computed.fontFamily || "";
-    const cleanFamily = rawFamily.replace(/^['"]/, "");
+    const rawFamily = (computed.fontFamily || "").toLowerCase();
 
-    if (cleanFamily.toLowerCase().startsWith("svn-determination-sans")) {
+    // Check 1: Pixelify Sans must not be used anywhere
+    if (rawFamily.includes("pixelify sans") || rawFamily.includes("pixelify-sans")) {
+      pixelifyCount++;
+      violations.push({
+        type: "deprecated_font",
+        tag: el.tagName.toLowerCase(),
+        id: el.id || null,
+        className: el.className || null,
+        fontFamily: computed.fontFamily,
+        message: "Pixelify Sans is deprecated and must be removed"
+      });
+      continue;
+    }
+
+    // Check 2: Elements using the display font
+    const isDisplayFont = rawFamily.includes("mathicard display") ||
+                          rawFamily.includes("svn-determination-sans");
+
+    if (isDisplayFont) {
+      // Get visible textContent of direct or text nodes
       const text = el.textContent || "";
-      if (!ALLOWED_REGEX.test(text)) {
-        const illegalChars = Array.from(text).filter((ch) => !ALLOWED_REGEX.test(ch));
+      if (text.trim().length === 0) continue;
+
+      const unmappedChars = [];
+      for (const ch of text) {
+        if (!DISPLAY_CMAP_SET.has(ch)) {
+          unmappedChars.push(ch);
+        }
+      }
+
+      if (unmappedChars.length > 0) {
         violations.push({
+          type: "fallback_glyph",
           tag: el.tagName.toLowerCase(),
           id: el.id || null,
           className: el.className || null,
-          fontFamily: rawFamily,
+          fontFamily: computed.fontFamily,
           text: text.length > 60 ? text.substring(0, 60) + "..." : text,
-          illegalChars: [...new Set(illegalChars)]
+          illegalChars: [...new Set(unmappedChars)]
         });
       } else {
         compliant.push({
@@ -42,18 +91,19 @@ function checkFonts(root = document) {
     }
   }
 
-  return { violations, compliant, totalInspected: elements.length };
+  return { violations, compliant, totalInspected: elements.length, pixelifyCount };
 }
 
 if (typeof window !== "undefined") {
   window.checkFonts = checkFonts;
+  window.DISPLAY_CMAP_SET = DISPLAY_CMAP_SET;
 }
 
 if (typeof module !== "undefined" && require.main === module) {
   const { spawn } = require("child_process");
   const path = require("path");
 
-  const PORT = 9891;
+  const PORT = 9892;
   const BASE_URL = process.env.MATHICARD_URL || "http://127.0.0.1:8089/web/index.html";
 
   async function sleep(ms) {
@@ -62,7 +112,7 @@ if (typeof module !== "undefined" && require.main === module) {
 
   async function run() {
     console.log("=================================================");
-    console.log(" MATHICARD TYPOGRAPHY & FONT RULE VERIFICATION   ");
+    console.log(" MATHICARD DISPLAY FONT COVERAGE & CMAP CHECK   ");
     console.log("=================================================");
     console.log(`Target URL: ${BASE_URL}`);
 
@@ -141,7 +191,7 @@ if (typeof module !== "undefined" && require.main === module) {
 
       await send("Page.enable");
       await send("Page.navigate", { url: BASE_URL });
-      await sleep(2000);
+      await sleep(2500);
 
       // Wait for fonts ready
       await evalFn("document.fonts.ready");
@@ -150,15 +200,16 @@ if (typeof module !== "undefined" && require.main === module) {
       const initialReport = await evalFn(checkExpr);
 
       console.log(`Inspected DOM Elements: ${initialReport.totalInspected}`);
-      console.log(`Elements using SVN-Determination-Sans: ${initialReport.compliant.length + initialReport.violations.length}`);
+      console.log(`Elements using Display Font: ${initialReport.compliant.length + initialReport.violations.length}`);
+      console.log(`Elements using Pixelify Sans: ${initialReport.pixelifyCount}`);
       console.log(`Violations found: ${initialReport.violations.length}`);
 
       if (initialReport.violations.length > 0) {
         console.error("\n[VIOLATIONS DETECTED]:");
         for (const v of initialReport.violations) {
-          console.error(` - Tag: <${v.tag}> ID: "${v.id}" Class: "${v.className}"`);
-          console.error(`   Text: "${v.text}"`);
-          console.error(`   Illegal characters: ${JSON.stringify(v.illegalChars)}`);
+          console.error(` - Type: ${v.type} | Tag: <${v.tag}> ID: "${v.id}" Class: "${v.className}"`);
+          if (v.illegalChars) console.error(`   Missing in cmap: ${JSON.stringify(v.illegalChars)} (Text: "${v.text}")`);
+          if (v.message) console.error(`   Message: ${v.message}`);
         }
       }
 
@@ -171,21 +222,25 @@ if (typeof module !== "undefined" && require.main === module) {
           const btn = document.querySelector('.filter-tab-btn[data-category="${tab}"]') || document.querySelector('.type-filter-btn[data-type="${tab}"]');
           if (btn) btn.click();
         })()`);
-        await sleep(200);
+        await sleep(250);
         const tabReport = await evalFn(checkExpr);
         if (tabReport.violations.length > 0) {
-          allViolations.push(...tabReport.violations);
+          for (const tv of tabReport.violations) {
+            if (!allViolations.some((v) => v.id === tv.id && v.className === tv.className)) {
+              allViolations.push(tv);
+            }
+          }
         }
       }
 
-      console.log("\nSample Compliant Elements with SVN-Determination-Sans:");
+      console.log("\nSample Compliant Elements with Mathicard Display Font:");
       for (const c of initialReport.compliant.slice(0, 10)) {
         console.log(` - <${c.tag}> class="${c.className}": "${c.text}"`);
       }
 
       console.log("-------------------------------------------------");
       if (allViolations.length === 0) {
-        console.log("PASS: 0 font violations found! All game font elements conform to ASCII + math glyphs.");
+        console.log("PASS: 0 font violations! All display elements render without any fallback glyphs.");
         await cleanup();
         process.exit(0);
       } else {
@@ -203,9 +258,6 @@ if (typeof module !== "undefined" && require.main === module) {
   run();
 }
 
-const ALLOWED_REGEX = /^[\x00-\x7F√Σ×÷−πφ·]*$/;
-checkFonts.ALLOWED_REGEX = ALLOWED_REGEX;
-
 if (typeof module !== "undefined") {
-  module.exports = { checkFonts, ALLOWED_REGEX };
+  module.exports = { checkFonts };
 }

@@ -96,9 +96,6 @@ export const siteContent = {
     videoSrc: "assets/video/Video_Mathicard_Sub.mp4",
     posterImg: "assets/video/poster.webp",
     posterAlt: "Poster video Mathicard",
-    trackSrc: "assets/video/Video_Mathicard.vtt",
-    trackLang: "vi",
-    trackLabel: "Tiếng Việt (Có dấu)",
     durationText: "Thời lượng: < 30 giây · Lồng tiếng & Phụ đề tiếng Việt",
     // Trạng thái dự phòng khi đồng đội chưa kịp nộp file MP4
     placeholderTitle: "Video sắp ra mắt!",

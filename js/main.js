@@ -144,14 +144,12 @@ export function renderCardFaceHtml(card) {
   const color = resolveCardColor(card, symbol);
   const centerLen = getSymbolLengthClass(symbol);
   const cornerLen = getCornerLengthClass(symbol);
-  const isAsciiGameFont = /^[\x00-\x7F√Σ×÷−πφ·]*$/.test(symbol);
-  const fontClass = isAsciiGameFont ? "" : "symbol-fallback";
 
   return `
     <div class="card-rendered" data-type="${card.type}" data-color="${color}">
-      <span class="card-corner top-left ${cornerLen} ${fontClass}">${symbol}</span>
-      <div class="card-center-symbol ${centerLen} ${fontClass}">${symbol}</div>
-      <span class="card-corner bottom-right ${cornerLen} ${fontClass}">${symbol}</span>
+      <span class="card-corner top-left ${cornerLen}">${symbol}</span>
+      <div class="card-center-symbol ${centerLen}">${symbol}</div>
+      <span class="card-corner bottom-right ${cornerLen}">${symbol}</span>
     </div>
   `;
 }
@@ -311,17 +309,6 @@ async function renderTrailer() {
     videoElem.poster = siteContent.trailer.posterImg;
     videoElem.src = siteContent.trailer.videoSrc;
 
-    // Phụ đề WebVTT chỉ thêm khi file tồn tại thực tế qua HTTP HEAD
-    const hasTrack = await checkFileExists(siteContent.trailer.trackSrc);
-    if (hasTrack && !videoElem.querySelector("track")) {
-      const trackElem = document.createElement("track");
-      trackElem.src = siteContent.trailer.trackSrc;
-      trackElem.srclang = siteContent.trailer.trackLang || "vi";
-      trackElem.label = siteContent.trailer.trackLabel || "Tiếng Việt";
-      trackElem.default = true;
-      videoElem.appendChild(trackElem);
-    }
-
     // Bắt sự kiện lỗi khi file video MP4 chưa được đặt vào thư mục
     videoElem.addEventListener("error", () => {
       handleVideoMissing(videoElem, fallbackElem);
@@ -370,16 +357,6 @@ async function openVideoModal() {
     modalVideo.style.display = "block";
     modalVideo.src = siteContent.trailer.videoSrc;
     modalVideo.poster = siteContent.trailer.posterImg;
-
-    const hasTrack = await checkFileExists(siteContent.trailer.trackSrc);
-    if (hasTrack && !modalVideo.querySelector("track")) {
-      const track = document.createElement("track");
-      track.src = siteContent.trailer.trackSrc;
-      track.srclang = siteContent.trailer.trackLang || "vi";
-      track.label = siteContent.trailer.trackLabel || "Tiếng Việt";
-      track.default = true;
-      modalVideo.appendChild(track);
-    }
 
     modalVideo.addEventListener("error", () => {
       showModalVideoFallback(modalVideo, modalFallback);
@@ -443,6 +420,10 @@ function renderPhaseCardTemplate(phase) {
     ? `<img src="${phase.iconImg}" alt="${phase.iconAlt}" width="140" height="90" loading="lazy" />`
     : `<div class="screen-fallback-tile"><span class="fallback-icon">🖼</span><span class="fallback-text">Ảnh sắp cập nhật</span></div>`;
 
+  const roundPrefix = `Lượt ${phase.id}`;
+  const nameParts = (phase.name || "").split(/[–\-]/);
+  const phaseSubName = nameParts.length > 1 ? nameParts.slice(1).join("–").trim() : phase.name;
+
   return `
     <div class="phase-card-wrapper" tabindex="0" role="button" aria-label="Giai đoạn ${phase.id}: ${phase.name}">
       <div class="phase-card flip-card">
@@ -452,7 +433,10 @@ function renderPhaseCardTemplate(phase) {
           <div class="phase-icon-box">
             ${iconMarkup}
           </div>
-          <h3 class="phase-name">${phase.name}</h3>
+          <h3 class="phase-name">
+            <span class="phase-round">${roundPrefix}</span>
+            <span class="phase-title-text">${phaseSubName}</span>
+          </h3>
           <span class="phase-sub">${phase.subtitle}</span>
           <p class="phase-brief">${phase.brief}</p>
           <div class="flip-hint"><span>↻ Bấm để xem chi tiết</span></div>
@@ -460,7 +444,10 @@ function renderPhaseCardTemplate(phase) {
         <!-- MẶT SAU (BACK) -->
         <div class="card-face card-back">
           <div class="phase-step-badge back-badge">CHI TIẾT BƯỚC ${phase.stepNumber}</div>
-          <h4 class="back-title">${phase.name}</h4>
+          <h4 class="back-title">
+            <span class="phase-round">${roundPrefix}</span>
+            <span class="phase-title-text">${phaseSubName}</span>
+          </h4>
           <p class="phase-detail">${phase.detail}</p>
           <div class="flip-hint"><span>↺ Bấm để lật lại</span></div>
         </div>

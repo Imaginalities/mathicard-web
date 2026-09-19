@@ -55,23 +55,20 @@ Khi cập nhật tài nguyên:
 | **Ảnh Showcase** | `web/assets/images/CardShowcase.webp` | Đã có: Banner các bộ bài & gói mở rộng. |
 | **Ảnh Đánh giá** | `web/assets/images/DanhGia.webp` | Đã có: Bảng điểm đánh giá đồ án. |
 | **Ảnh 5 Lượt** | `web/assets/images/Luot_01.webp` .. `Luot_05.webp` | Đã có: Minh họa 5 phase của vòng đấu. |
-| **Video Trailer** | `web/assets/video/Video_Mathicard_Sub.mp4` | Đã có: Video giới thiệu trò chơi kèm phụ đề tiếng Việt. |
-| **Phụ đề VTT** | `web/assets/video/Video_Mathicard.vtt` | Đã có: Tệp phụ đề WebVTT chuẩn hóa. |
+| **Video Trailer** | `web/assets/video/Video_Mathicard_Sub.mp4` | Đã có: Video giới thiệu trò chơi với phụ đề tiếng Việt được gắn cứng (burned-in). Trình duyệt không tải hay hiển thị phụ đề trùng lặp. |
 
-> 💡 **Cơ chế Runtime HEAD-check thông minh:** Website tự động thực hiện truy vấn HTTP HEAD đối với các tài nguyên động (như `web/assets/logo/Logo_Mathicard_Ngang.png`). Nếu tệp chưa tồn tại trên máy chủ, giao diện tự động chuyển sang cơ chế fallback thích hợp (wordmark CSS), ngăn hoàn toàn lỗi hiển thị ảnh vỡ.
+> 💡 **Phông chữ hiển thị (Display Font):** Phông chữ hiển thị pixel `Mathicard Display` (`web/assets/fonts/MathicardDisplay.woff2`) được kế thừa và mở rộng trực tiếp từ phông chữ của trò chơi (`SVN-Determination-Sans`) cho đồ án môn học này (*the extended font is derived from the game's font for this course project*). Phông chữ đạt độ phủ 100% tiếng Việt có dấu và toàn bộ các ký hiệu toán học đặc thù (`+`, `−`, `×`, `/`, `√`, `Σ`, `π`, `φ`, `⌈⌉`, `⌊⌋`, v.v.), không còn bất kỳ ký tự nào bị lỗi hiển thị hay rơi vào font chữ dự phòng (fallback). Phông chữ nội dung (body text) sử dụng Be Vietnam Pro.
 
 ---
 
-## 3. CÔNG CỤ CHUYỂN ĐỔI PHỤ ĐỀ (.SRT → .VTT)
+## 3. PHỤ ĐỀ VIDEO TRAILER & XỬ LÝ TRÙNG LẶP
 
-Trình duyệt web chuẩn hóa sử dụng định dạng **WebVTT** (`.vtt`) cho thẻ `<track>`. Nếu bạn làm phụ đề bằng phần mềm xuất ra `.srt`, hãy dùng script có sẵn trong thư mục `web/tools/`:
+Video trailer chính thức (`web/assets/video/Video_Mathicard_Sub.mp4`) đã có sẵn phụ đề tiếng Việt được gắn cứng trực tiếp vào luồng hình ảnh (burned-in subtitles).
+Theo yêu cầu thiết kế và trải nghiệm người dùng, tệp phụ đề mẫu `Video_Mathicard.vtt`, thẻ `<track>` và các logic kiểm tra HEAD request đã được gỡ bỏ hoàn toàn; trình duyệt không hiển thị bất kỳ lớp phụ đề DOM nào đè lên video để tránh hiện tượng phụ đề kép (double subtitles).
 
+Script `web/tools/srt2vtt.py` được lưu lại dưới dạng công cụ tiện ích nếu cần chuyển đổi `.srt` sang `.vtt` trong các kịch bản sử dụng độc lập:
 ```bash
-# Cú pháp:
 python3 web/tools/srt2vtt.py <duong_dan_file.srt> [duong_dan_file.vtt]
-
-# Ví dụ chuyển đổi trực tiếp:
-python3 web/tools/srt2vtt.py my_subtitles.srt web/assets/video/Video_Mathicard.vtt
 ```
 
 ---

@@ -10,8 +10,19 @@
  */
 
 @font-face {
+  font-family: "Mathicard Display";
+  src: url("../assets/fonts/MathicardDisplay.woff2") format("woff2"),
+       url("../assets/fonts/MathicardDisplay.otf") format("opentype"),
+       url("../assets/fonts/SVN-Determination-Sans.otf") format("opentype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "SVN-Determination-Sans";
-  src: url("../assets/fonts/SVN-Determination-Sans.otf") format("opentype");
+  src: url("../assets/fonts/MathicardDisplay.woff2") format("woff2"),
+       url("../assets/fonts/SVN-Determination-Sans.otf") format("opentype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -52,9 +63,10 @@
   --border-cyan: #00b4d8;
   --btn-shadow: #070c14;
 
-  /* Fonts: SVN-Determination-Sans (game font cho card glyphs, wordmark, decorative English badges); Pixelify Sans; Be Vietnam Pro */
-  --font-game: "SVN-Determination-Sans", monospace, sans-serif;
-  --font-pixel: "Pixelify Sans", sans-serif;
+  /* Single Display Font: Mathicard Display (extended game pixel font with 100% Vietnamese & math coverage) */
+  --font-display: "Mathicard Display", "SVN-Determination-Sans", monospace, sans-serif;
+  --font-game: var(--font-display);
+  --font-pixel: var(--font-display);
   --font-body: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
 
   --max-width: 1240px;
@@ -588,22 +600,29 @@ a.disabled {
 .phases-grid-wrap {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  align-items: stretch;
   gap: 16px;
 }
 
 .phase-card-wrapper {
   perspective: 1000px;
   cursor: pointer;
-  height: 380px;
+  height: 100%;
+  min-height: 440px;
+  display: flex;
+  flex-direction: column;
 }
 
 .phase-card {
   width: 100%;
   height: 100%;
+  flex: 1;
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
   border-radius: 12px;
+  display: flex;
+  flex-direction: column;
 }
 
 .phase-card.flipped {
@@ -611,9 +630,6 @@ a.disabled {
 }
 
 .card-face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
   border-radius: 12px;
   padding: 16px;
   display: flex;
@@ -621,10 +637,15 @@ a.disabled {
   border: 2px solid var(--border-pixel);
   background: var(--bg-card);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
 }
 
 .card-front {
-  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  backface-visibility: hidden;
   align-items: center;
   text-align: center;
 }
@@ -634,21 +655,25 @@ a.disabled {
 }
 
 .phase-step-badge {
-  font-family: var(--font-pixel);
-  font-size: 1.1rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
   color: var(--color-gold);
   background: rgba(244, 162, 97, 0.15);
   padding: 2px 10px;
   border-radius: 4px;
   border: 1px solid var(--color-gold);
+  flex-shrink: 0;
+  margin-bottom: 6px;
 }
 
 .phase-icon-box {
   width: 100%;
-  height: 110px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 6px;
 }
 
 .phase-icon-box img {
@@ -659,57 +684,96 @@ a.disabled {
 }
 
 .phase-name {
-  font-family: var(--font-pixel);
-  font-size: 1.65rem;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.15vw, 1.35rem);
+  line-height: 1.25;
   color: var(--text-main);
-  margin-top: 4px;
+  margin: 4px 0 2px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.phase-name .phase-round {
+  color: var(--color-gold);
+  font-size: 0.9em;
+}
+
+.phase-name .phase-title-text {
+  color: var(--text-main);
 }
 
 .phase-sub {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-green);
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  flex-shrink: 0;
 }
 
 .phase-brief {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
   line-height: 1.45;
-  margin: 8px 0;
+  margin: 0;
 }
 
 .flip-hint {
+  margin-top: auto;
+  padding-top: 12px;
+  flex-shrink: 0;
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   color: var(--color-gold);
 }
 
 /* Mặt sau thẻ */
 .card-back {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   transform: rotateY(180deg);
+  backface-visibility: hidden;
   background: #111a2c;
   border-color: var(--color-gold);
-  justify-content: space-between;
+  text-align: left;
 }
 
 .back-badge {
   align-self: flex-start;
+  flex-shrink: 0;
 }
 
 .back-title {
-  font-family: var(--font-pixel);
-  font-size: 1.8rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.2vw, 1.4rem);
   color: var(--color-gold);
-  margin: 10px 0;
+  margin: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.back-title .phase-round {
+  color: var(--color-gold);
+  font-size: 0.85em;
+}
+
+.back-title .phase-title-text {
+  color: var(--text-main);
 }
 
 .phase-detail {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--text-main);
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 /* 8. BỘ SƯU TẬP THẺ BÀI (GALLERY) */
@@ -1100,10 +1164,6 @@ a.disabled {
   font-size: 13cqw;
 }
 
-.card-rendered .card-corner.symbol-fallback,
-.card-rendered .card-center-symbol.symbol-fallback {
-  font-family: var(--font-pixel) !important;
-}
 
 /* Màu chữ thẻ giá trị & toán tử (Toán tử luôn dùng chữ đen #1a1a1a theo game và yêu cầu Task 2) */
 .card-rendered[data-type="operator"],
@@ -1786,6 +1846,12 @@ body.modal-open {
 @media (max-width: 1024px) {
   .phases-grid-wrap {
     grid-template-columns: repeat(3, 1fr);
+    align-items: stretch;
+  }
+
+  .phase-card-wrapper {
+    min-height: 440px;
+    height: 100%;
   }
 
   .eval-columns-grid {
@@ -1872,12 +1938,14 @@ body.modal-open {
     gap: 14px;
     padding-bottom: 16px;
     -webkit-overflow-scrolling: touch;
+    align-items: stretch;
   }
 
   .phase-card-wrapper {
     flex: 0 0 260px;
     scroll-snap-align: start;
-    height: 360px;
+    min-height: 440px;
+    height: auto;
   }
 
   .card-inspector-layout {

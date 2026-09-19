@@ -6,11 +6,11 @@
   <title>Mathicard – Game Thẻ Bài Toán Học Đối Kháng</title>
   <meta name="description" content="Trang web quảng bá tựa game thẻ bài toán học chiến thuật Mathicard - Bài tập lớn môn Công nghệ đa phương tiện." />
   
-  <!-- Fonts: SVN-Determination-Sans (In-Game Pixel Font), Pixelify Sans & Be Vietnam Pro -->
-  <link rel="preload" href="assets/fonts/SVN-Determination-Sans.otf" as="font" type="font/otf" crossorigin />
+  <!-- Fonts: Mathicard Display (In-Game Pixel Font) & Be Vietnam Pro (Body) -->
+  <link rel="preload" href="assets/fonts/MathicardDisplay.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   
   <!-- CSS Stylesheet chính (Đường dẫn tương đối) -->
   <link rel="stylesheet" href="css/style.css" />
@@ -90,7 +90,6 @@
 
         <div class="trailer-wrapper">
           <video id="main-trailer-video" controls preload="metadata" playsinline>
-            <!-- Phụ đề WebVTT được thêm qua JavaScript sau khi kiểm tra file tồn tại qua HEAD check -->
             Trình duyệt của bạn không hỗ trợ thẻ video HTML5.
           </video>
           <!-- Fallback hiển thị poster sang trọng khi chưa có video mp4 -->
@@ -252,9 +251,7 @@
         <button class="modal-close-btn" aria-label="Đóng modal">✕</button>
       </div>
       <div class="modal-body" style="padding: 0; background: #000; position: relative; min-height: 280px;">
-        <video id="modal-video-elem" controls style="width: 100%; aspect-ratio: 16/9; display: block;">
-          <!-- Phụ đề WebVTT được thêm qua JavaScript sau khi kiểm tra file tồn tại qua HEAD check -->
-        </video>
+        <video id="modal-video-elem" controls style="width: 100%; aspect-ratio: 16/9; display: block;"></video>
         <div id="modal-video-fallback" class="trailer-fallback-box" style="display: none;"></div>
       </div>
     </div>
