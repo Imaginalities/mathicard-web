@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupGlobalInteractions();
   setupModals();
   checkInitialHash();
+  window.addEventListener("hashchange", checkInitialHash);
 });
 
 function checkInitialHash() {
@@ -183,7 +184,7 @@ function renderHeroCardFan() {
     })
     .join("");
 
-  attachCardTiltEffects(".fanned-card");
+  attachCardTiltEffects(".fanned-card .card-inner");
 }
 
 /* =============================================================================
@@ -247,66 +248,109 @@ function handleVideoMissing(videoElem, fallbackElem) {
 function openVideoModal() {
   const modal = document.getElementById("video-modal");
   const modalVideo = document.getElementById("modal-video-elem");
+  const modalFallback = document.getElementById("modal-video-fallback");
   if (!modal || !modalVideo) return;
 
-  modalVideo.src = siteContent.trailer.videoSrc;
-  modalVideo.poster = siteContent.trailer.posterImg;
+  const mainVideo = document.getElementById("main-trailer-video");
+  const isVideoMissing = mainVideo && mainVideo.style.display === "none";
 
-  const track = modalVideo.querySelector("track");
-  if (track) {
-    track.src = siteContent.trailer.trackSrc;
+  if (isVideoMissing) {
+    showModalVideoFallback(modalVideo, modalFallback);
+  } else {
+    if (modalFallback) modalFallback.style.display = "none";
+    modalVideo.style.display = "block";
+    modalVideo.src = siteContent.trailer.videoSrc;
+    modalVideo.poster = siteContent.trailer.posterImg;
+
+    const track = modalVideo.querySelector("track");
+    if (track) {
+      track.src = siteContent.trailer.trackSrc;
+    }
+
+    modalVideo.addEventListener("error", () => {
+      showModalVideoFallback(modalVideo, modalFallback);
+    }, { once: true });
+
+    modalVideo.play().catch(() => {});
   }
 
   openModal(modal);
+}
 
-  modalVideo.play().catch(() => {
-    // Tự động dừng nếu trình duyệt chặn autoplay hoặc file chưa có
-  });
+function showModalVideoFallback(modalVideo, modalFallback) {
+  if (modalVideo) modalVideo.style.display = "none";
+  if (!modalFallback) return;
+  modalFallback.style.display = "flex";
+  modalFallback.innerHTML = `
+    <div class="trailer-poster-art">
+      <img src="${siteContent.trailer.posterImg}" alt="Poster trailer Mathicard" class="poster-backdrop" />
+      <div class="poster-overlay">
+        <span class="pixel-badge">THÔNG BÁO MEDIA</span>
+        <h3>${siteContent.trailer.placeholderTitle}</h3>
+        <p>${siteContent.trailer.placeholderMessage}</p>
+        <span class="sub-info">${siteContent.trailer.durationText}</span>
+      </div>
+    </div>
+  `;
 }
 
 /* =============================================================================
    5. GIỚI THIỆU GAME & 5 GIAI ĐOẠN VÁN ĐẤU (3D FLIP CARDS)
 ============================================================================= */
+function setTextContent(elemId, text) {
+  if (!text) return;
+  const elem = document.getElementById(elemId);
+  if (elem) elem.textContent = text;
+}
+
 function renderOverviewPhases() {
-  const pitchElem = document.getElementById("overview-pitch");
-  if (pitchElem) pitchElem.textContent = siteContent.overview.pitch;
+  setTextContent("overview-badge", siteContent.overview.sectionBadge);
+  setTextContent("overview-title", siteContent.overview.sectionTitle);
+  setTextContent("overview-sub", siteContent.overview.sectionSubtitle);
+  setTextContent("overview-pitch", siteContent.overview.pitch);
 
   const phasesContainer = document.getElementById("phases-grid");
   if (!phasesContainer) return;
 
-  phasesContainer.innerHTML = siteContent.overview.phases
-    .map(
-      (phase) => `
-      <div class="phase-card-wrapper" tabindex="0" role="button" aria-label="Giai đoạn ${phase.id}: ${phase.name}">
-        <div class="phase-card flip-card">
-          <!-- MẶT TRƯỚC (FRONT) -->
-          <div class="card-face card-front">
-            <div class="phase-step-badge">BƯỚC ${phase.stepNumber}</div>
-            <div class="phase-icon-box">
-              <img src="${phase.iconImg}" alt="${phase.iconAlt}" width="140" height="90" loading="lazy" />
-            </div>
-            <h3 class="phase-name">${phase.name}</h3>
-            <span class="phase-sub">${phase.subtitle}</span>
-            <p class="phase-brief">${phase.brief}</p>
-            <div class="flip-hint"><span>↻ Bấm để xem chi tiết</span></div>
+  phasesContainer.innerHTML = siteContent.overview.phases.map(renderPhaseCardTemplate).join("");
+  setupPhaseCardInteractions(phasesContainer);
+  attachCardTiltEffects(".phase-card");
+}
+
+function renderPhaseCardTemplate(phase) {
+  return `
+    <div class="phase-card-wrapper" tabindex="0" role="button" aria-label="Giai đoạn ${phase.id}: ${phase.name}">
+      <div class="phase-card flip-card">
+        <!-- MẶT TRƯỚC (FRONT) -->
+        <div class="card-face card-front">
+          <div class="phase-step-badge">BƯỚC ${phase.stepNumber}</div>
+          <div class="phase-icon-box">
+            <img src="${phase.iconImg}" alt="${phase.iconAlt}" width="140" height="90" loading="lazy" />
           </div>
-          <!-- MẶT SAU (BACK) -->
-          <div class="card-face card-back">
-            <div class="phase-step-badge back-badge">CHI TIẾT BƯỚC ${phase.stepNumber}</div>
-            <h4 class="back-title">${phase.name}</h4>
-            <p class="phase-detail">${phase.detail}</p>
-            <div class="flip-hint"><span>↺ Bấm để lật lại</span></div>
-          </div>
+          <h3 class="phase-name">${phase.name}</h3>
+          <span class="phase-sub">${phase.subtitle}</span>
+          <p class="phase-brief">${phase.brief}</p>
+          <div class="flip-hint"><span>↻ Bấm để xem chi tiết</span></div>
+        </div>
+        <!-- MẶT SAU (BACK) -->
+        <div class="card-face card-back">
+          <div class="phase-step-badge back-badge">CHI TIẾT BƯỚC ${phase.stepNumber}</div>
+          <h4 class="back-title">${phase.name}</h4>
+          <p class="phase-detail">${phase.detail}</p>
+          <div class="flip-hint"><span>↺ Bấm để lật lại</span></div>
         </div>
       </div>
-    `
-    )
-    .join("");
+    </div>
+  `;
+}
 
-  // Tương tác lật thẻ khi bấm chuột hoặc Enter/Space
-  phasesContainer.querySelectorAll(".phase-card-wrapper").forEach((wrapper) => {
+function setupPhaseCardInteractions(container) {
+  container.querySelectorAll(".phase-card-wrapper").forEach((wrapper) => {
     const flipCard = wrapper.querySelector(".flip-card");
-    const toggleFlip = () => flipCard.classList.toggle("flipped");
+    const toggleFlip = () => {
+      flipCard.style.transform = "";
+      flipCard.classList.toggle("flipped");
+    };
 
     wrapper.addEventListener("click", toggleFlip);
     wrapper.addEventListener("keydown", (e) => {
@@ -316,14 +360,22 @@ function renderOverviewPhases() {
       }
     });
   });
-
-  attachCardTiltEffects(".phase-card");
 }
+
 
 /* =============================================================================
    6. BỘ SƯU TẬP THẺ BÀI (GALLERY TABS & INSPECTOR MODAL)
 ============================================================================= */
 function renderCardGallery() {
+  const badge = document.getElementById("gallery-badge");
+  if (badge && siteContent.cardGallery.sectionBadge) badge.textContent = siteContent.cardGallery.sectionBadge;
+
+  const title = document.getElementById("gallery-title");
+  if (title && siteContent.cardGallery.sectionTitle) title.textContent = siteContent.cardGallery.sectionTitle;
+
+  const sub = document.getElementById("gallery-sub");
+  if (sub && siteContent.cardGallery.sectionSubtitle) sub.textContent = siteContent.cardGallery.sectionSubtitle;
+
   renderGalleryTabs();
   renderGalleryItems();
 }
@@ -446,8 +498,17 @@ function openCardInspectorModal(card) {
    7. ĐÁNH GIÁ (REVIEW CARD FLIP, SCORE TALLY & SCREEN SHAKE)
 ============================================================================= */
 function renderReviewSection() {
+  const badge = document.getElementById("review-badge");
+  if (badge && siteContent.review.sectionBadge) badge.textContent = siteContent.review.sectionBadge;
+
   const title = document.getElementById("review-title");
-  if (title) title.textContent = siteContent.review.sectionTitle;
+  if (title && siteContent.review.sectionTitle) title.textContent = siteContent.review.sectionTitle;
+
+  const sub = document.getElementById("review-sub");
+  if (sub && siteContent.review.sectionSubtitle) sub.textContent = siteContent.review.sectionSubtitle;
+
+  const coverText = document.getElementById("review-cover-text");
+  if (coverText && siteContent.review.cardCoverText) coverText.textContent = siteContent.review.cardCoverText;
 
   const quote = document.getElementById("review-quote");
   if (quote) quote.textContent = `"${siteContent.review.quote}"`;
@@ -496,31 +557,42 @@ function renderReviewProsCons() {
 
 function setupReviewScrollObserver() {
   const reviewCard = document.getElementById("review-flip-card");
-  if (!reviewCard || !("IntersectionObserver" in window)) return;
+  if (!reviewCard) return;
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && !AppState.hasScoreRevealed) {
-          AppState.hasScoreRevealed = true;
-          triggerScoreReveal(reviewCard);
-        }
-      });
-    },
-    { threshold: 0.3 }
-  );
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !AppState.hasScoreRevealed) {
+            AppState.hasScoreRevealed = true;
+            triggerScoreReveal(reviewCard);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(reviewCard);
+  }
 
-  observer.observe(reviewCard);
-
-  // Cho phép bấm trực tiếp vào thẻ úp để lật thủ công
-  reviewCard.addEventListener("click", () => {
+  // Cho phép bấm chuột hoặc phím Enter/Space để lật thủ công
+  const onActivate = () => {
     if (!reviewCard.classList.contains("revealed")) {
       triggerScoreReveal(reviewCard);
+    }
+  };
+
+  reviewCard.addEventListener("click", onActivate);
+  reviewCard.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onActivate();
     }
   });
 }
 
 function triggerScoreReveal(reviewCard) {
+  if (AppState.hasScoreRevealed || reviewCard.classList.contains("revealed")) return;
+  AppState.hasScoreRevealed = true;
   reviewCard.classList.add("revealed");
 
   // Đếm số điểm (Tally counter)
@@ -576,6 +648,20 @@ function animateRatingBars() {
    8. THƯ VIỆN MEDIA & FONT CHỮ THIẾT KẾ
 ============================================================================= */
 function renderMediaLibrary() {
+  const badge = document.getElementById("media-badge");
+  if (badge && siteContent.media.sectionBadge) badge.textContent = siteContent.media.sectionBadge;
+
+  const title = document.getElementById("media-title");
+  if (title && siteContent.media.sectionTitle) title.textContent = siteContent.media.sectionTitle;
+
+  const sub = document.getElementById("media-sub");
+  if (sub && siteContent.media.sectionSubtitle) sub.textContent = siteContent.media.sectionSubtitle;
+
+  const fontTitle = document.getElementById("font-showcase-title");
+  if (fontTitle && siteContent.media.fontShowcase && siteContent.media.fontShowcase.title) {
+    fontTitle.textContent = siteContent.media.fontShowcase.title;
+  }
+
   renderFontShowcase();
   renderMediaImageGrid();
   renderAnimatedGrid();
@@ -599,7 +685,7 @@ function renderFontShowcase() {
   paletteGrid.innerHTML = fontData.paletteSwatches
     .map(
       (swatch) => `
-      <div class="swatch-item" role="button" tabindex="0" title="Bấm để sao chép mã màu ${swatch.hex}">
+      <div class="swatch-item" role="button" tabindex="0" title="Bấm hoặc nhấn Enter để sao chép mã màu ${swatch.hex}">
         <div class="swatch-color" style="background-color: ${swatch.hex};"></div>
         <div class="swatch-details">
           <span class="swatch-name">${swatch.name}</span>
@@ -611,14 +697,23 @@ function renderFontShowcase() {
     )
     .join("");
 
-  // Bấm swatch để sao chép mã màu
+  // Bấm swatch hoặc nhấn Enter/Space để sao chép mã màu
   paletteGrid.querySelectorAll(".swatch-item").forEach((item) => {
-    item.addEventListener("click", () => {
+    const onCopy = async () => {
       const hex = item.querySelector(".swatch-hex").textContent;
-      navigator.clipboard.writeText(hex).then(() => {
+      const ok = await copyToClipboard(hex);
+      if (ok) {
         item.classList.add("copied");
         setTimeout(() => item.classList.remove("copied"), 1200);
-      });
+      }
+    };
+
+    item.addEventListener("click", onCopy);
+    item.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onCopy();
+      }
     });
   });
 }
@@ -670,7 +765,14 @@ function renderAnimatedGrid() {
     .join("");
 
   grid.querySelectorAll(".media-thumb-card").forEach((card) => {
-    card.addEventListener("click", () => openLightbox(card.dataset.src, card.dataset.caption));
+    const onSelect = () => openLightbox(card.dataset.src, card.dataset.caption);
+    card.addEventListener("click", onSelect);
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onSelect();
+      }
+    });
   });
 }
 
@@ -689,48 +791,52 @@ function openLightbox(src, caption) {
    9. TÀI LIỆU HỌC THUẬT BTL (DOCUMENTS & MODAL PDF VIEWER)
 ============================================================================= */
 function renderAcademicDocs() {
+  setTextContent("academic-badge", siteContent.academicDocs.sectionBadge);
+  setTextContent("academic-title", siteContent.academicDocs.sectionTitle);
+  setTextContent("academic-sub", siteContent.academicDocs.sectionSubtitle);
+
   const container = document.getElementById("academic-docs-grid");
   if (!container) return;
 
-  container.innerHTML = siteContent.academicDocs.deliverables
-    .map((doc) => {
-      const isReady = doc.isReady;
-      const statusBadge = isReady
-        ? `<span class="doc-badge ready">SẴN SÀNG</span>`
-        : `<span class="doc-badge pending">ĐANG CẬP NHẬT</span>`;
+  container.innerHTML = siteContent.academicDocs.deliverables.map(renderDocCard).join("");
+  setupDocPreviewActions(container);
+}
 
-      // Nút xem PDF (chỉ kích hoạt nếu isReady và có file PDF)
-      const previewBtn = isReady && doc.pdfFile
-        ? `<button class="pixel-btn btn-secondary btn-view-pdf" data-pdf="${doc.pdfFile}" data-title="${doc.title}">Xem</button>`
-        : `<button class="pixel-btn btn-secondary disabled" disabled title="Tài liệu đang được nhóm cập nhật">Xem</button>`;
+function renderDocCard(doc) {
+  const isReady = Boolean(doc.isReady);
+  const statusBadge = isReady
+    ? `<span class="doc-badge ready">SẴN SÀNG</span>`
+    : `<span class="doc-badge pending">ĐANG CẬP NHẬT</span>`;
 
-      // Nút tải file gốc
-      const downloadBtn = isReady && doc.downloadFile
-        ? `<a href="${doc.downloadFile}" download class="pixel-btn btn-primary">Tải về</a>`
-        : `<button class="pixel-btn btn-primary disabled" disabled title="Tài liệu đang được nhóm cập nhật">Tải về</button>`;
+  const previewBtn = isReady && doc.pdfFile
+    ? `<button class="pixel-btn btn-secondary btn-view-pdf" data-pdf="${doc.pdfFile}" data-title="${doc.title}">Xem</button>`
+    : `<button class="pixel-btn btn-secondary disabled" disabled title="Tài liệu đang được nhóm cập nhật">Xem</button>`;
 
-      return `
-        <article class="doc-card ${isReady ? "" : "doc-pending"}">
-          <div class="doc-card-header">
-            <span class="doc-tag">${doc.tag}</span>
-            ${statusBadge}
-          </div>
-          <h3 class="doc-title">${doc.title}</h3>
-          <p class="doc-scope">${doc.scope}</p>
-          <p class="doc-desc">${doc.description}</p>
-          <div class="doc-author">
-            <span>Tác giả / Phụ trách: <strong>${doc.author}</strong></span>
-          </div>
-          <div class="doc-actions">
-            ${previewBtn}
-            ${downloadBtn}
-          </div>
-        </article>
-      `;
-    })
-    .join("");
+  const downloadBtn = isReady && doc.downloadFile
+    ? `<a href="${doc.downloadFile}" download class="pixel-btn btn-primary">Tải về</a>`
+    : `<button class="pixel-btn btn-primary disabled" disabled title="Tài liệu đang được nhóm cập nhật">Tải về</button>`;
 
-  // Bắt sự kiện bấm Xem PDF
+  return `
+    <article class="doc-card ${isReady ? "" : "doc-pending"}">
+      <div class="doc-card-header">
+        <span class="doc-tag">${doc.tag}</span>
+        ${statusBadge}
+      </div>
+      <h3 class="doc-title">${doc.title}</h3>
+      <p class="doc-scope">${doc.scope}</p>
+      <p class="doc-desc">${doc.description}</p>
+      <div class="doc-author">
+        <span>Tác giả / Phụ trách: <strong>${doc.author}</strong></span>
+      </div>
+      <div class="doc-actions">
+        ${previewBtn}
+        ${downloadBtn}
+      </div>
+    </article>
+  `;
+}
+
+function setupDocPreviewActions(container) {
   container.querySelectorAll(".btn-view-pdf").forEach((btn) => {
     btn.addEventListener("click", () => {
       openPdfModal(btn.dataset.pdf, btn.dataset.title);
@@ -753,22 +859,60 @@ function openPdfModal(pdfUrl, title) {
    10. THÔNG TIN NHÓM & PHÂN CÔNG
 ============================================================================= */
 function renderTeamSection() {
+  const badge = document.getElementById("team-badge");
+  if (badge && siteContent.team.sectionBadge) badge.textContent = siteContent.team.sectionBadge;
+
+  const title = document.getElementById("team-title");
+  if (title && siteContent.team.sectionTitle) title.textContent = siteContent.team.sectionTitle;
+
+  const sub = document.getElementById("team-sub");
+  if (sub && siteContent.team.sectionSubtitle) sub.textContent = siteContent.team.sectionSubtitle;
+
   const classInfo = document.getElementById("team-class-info");
   if (classInfo) classInfo.textContent = siteContent.team.classInfo;
 
   const tableBody = document.getElementById("team-table-body");
-  if (!tableBody) return;
+  if (tableBody) {
+    tableBody.innerHTML = siteContent.team.members
+      .map(
+        (m) => `
+        <tr>
+          <td class="col-stt">${m.stt}</td>
+          <td class="col-name"><strong>${m.name}</strong></td>
+          <td class="col-role"><span class="role-pill">${m.role}</span></td>
+          <td class="col-tasks">${m.tasks}</td>
+          <td class="col-status"><span class="status-badge ${m.status.includes('Hoàn thành') ? 'done' : 'progress'}">${m.status}</span></td>
+        </tr>
+      `
+      )
+      .join("");
+  }
 
-  tableBody.innerHTML = siteContent.team.members
+  renderTeamRoadmap();
+}
+
+function renderTeamRoadmap() {
+  const roadmapTitle = document.getElementById("team-roadmap-title");
+  if (roadmapTitle && siteContent.team.taskRoadmapTitle) roadmapTitle.textContent = siteContent.team.taskRoadmapTitle;
+
+  const roadmapSub = document.getElementById("team-roadmap-sub");
+  if (roadmapSub && siteContent.team.taskRoadmapSubtitle) roadmapSub.textContent = siteContent.team.taskRoadmapSubtitle;
+
+  const grid = document.getElementById("team-milestones-grid");
+  if (!grid || !siteContent.team.milestones) return;
+
+  grid.innerHTML = siteContent.team.milestones
     .map(
       (m) => `
-      <tr>
-        <td class="col-stt">${m.stt}</td>
-        <td class="col-name"><strong>${m.name}</strong></td>
-        <td class="col-role"><span class="role-pill">${m.role}</span></td>
-        <td class="col-tasks">${m.tasks}</td>
-        <td class="col-status"><span class="status-badge ${m.status.includes('Hoàn thành') ? 'done' : 'progress'}">${m.status}</span></td>
-      </tr>
+      <div class="milestone-card">
+        <div class="milestone-phase">${m.phase}</div>
+        <h4 class="milestone-title">${m.title}</h4>
+        <p class="milestone-tasks">${m.tasks}</p>
+        <div class="milestone-footer">
+          <span class="milestone-badge">${m.badge}</span>
+          <span class="milestone-status">✔ ${m.status}</span>
+        </div>
+      </div>
     `
     )
     .join("");
@@ -873,7 +1017,10 @@ function attachCardTiltEffects(selector) {
       const rotateY = deltaX * 12;
       const rotateX = -deltaY * 12;
 
-      card.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(1)}deg) rotateY(${rotateY.toFixed(1)}deg) scale3d(1.04, 1.04, 1.04)`;
+      const isFlipped = card.classList.contains("flipped");
+      const finalRotY = isFlipped ? 180 - rotateY : rotateY;
+
+      card.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(1)}deg) rotateY(${finalRotY.toFixed(1)}deg) scale3d(1.04, 1.04, 1.04)`;
     });
 
     card.addEventListener("mouseleave", () => {
@@ -881,3 +1028,38 @@ function attachCardTiltEffects(selector) {
     });
   });
 }
+
+/**
+ * Sao chép văn bản vào clipboard an toàn (hỗ trợ cả môi trường HTTPS lẫn HTTP/không hỗ trợ API trực tiếp)
+ */
+async function copyToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (err) {
+      // Chuyển sang phương thức fallback nếu không thể truy cập clipboard API
+    }
+  }
+  return fallbackCopyText(text);
+}
+
+function fallbackCopyText(text) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.left = "-9999px";
+  textArea.style.top = "0";
+  textArea.setAttribute("readonly", "");
+  document.body.appendChild(textArea);
+  textArea.select();
+  let success = false;
+  try {
+    success = document.execCommand("copy");
+  } catch (err) {
+    // Bỏ qua lỗi nếu trình duyệt không hỗ trợ execCommand
+  }
+  document.body.removeChild(textArea);
+  return success;
+}
+

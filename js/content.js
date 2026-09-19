@@ -111,6 +111,7 @@ export const siteContent = {
 
   // 4. GIỚI THIỆU TỔNG QUAN & 5 GIAI ĐOẠN VÁN ĐẤU
   overview: {
+    sectionBadge: "CƠ CHẾ TRÒ CHƠI",
     sectionTitle: "LUẬT CHƠI & 5 LƯỢT ĐẤU",
     sectionSubtitle: "Chuỗi 5 giai đoạn vòng lặp khép kín trong mỗi round đấu Mathicard",
     pitch: "Mỗi ván đấu Mathicard là một cuộc đua điểm số căng thẳng giữa 2–4 người chơi. Mục tiêu là trở thành người đầu tiên tích lũy đủ điểm phòng (20, 30 hoặc 50 điểm) thông qua việc kết hợp thẻ số và thẻ phép tính.",
@@ -170,6 +171,7 @@ export const siteContent = {
 
   // 5. BỘ SƯU TẬP THẺ BÀI (GALLERY)
   cardGallery: {
+    sectionBadge: "CARD COLLECTION",
     sectionTitle: "BỘ SƯU TẬP THẺ BÀI",
     sectionSubtitle: "Khám phá hơn 120+ thẻ bài độc đáo: Số học, Toán tử, Thẻ phép & Bộ bài",
     categories: [
@@ -372,6 +374,7 @@ export const siteContent = {
 
   // 6. ĐÁNH GIÁ & NHẬN XÉT (REVIEW)
   review: {
+    sectionBadge: "CRITIC REVIEW",
     sectionTitle: "ĐÁNH GIÁ CHUYÊN MÔN",
     sectionSubtitle: "Nhận xét và phân tích chất lượng game từ góc nhìn đồ án đa phương tiện",
     cardCoverText: "CHẠM HOẶC CUỘN ĐỂ LẬT THẺ XEM ĐIỂM",
@@ -398,6 +401,7 @@ export const siteContent = {
 
   // 7. THƯ VIỆN MEDIA & NHẬN DIỆN THƯƠNG HIỆU
   media: {
+    sectionBadge: "MEDIA SHOWCASE",
     sectionTitle: "THƯ VIỆN ĐA PHƯƠNG TIỆN",
     sectionSubtitle: "Bộ nhận diện thương hiệu, font chữ tự thiết kế, hình ảnh và hoạt họa",
     fontShowcase: {
@@ -460,6 +464,7 @@ export const siteContent = {
 
   // 8. TÀI LIỆU HỌC THUẬT BTL CÔNG NGHỆ ĐA PHƯƠNG TIỆN
   academicDocs: {
+    sectionBadge: "ACADEMIC DELIVERABLES",
     sectionTitle: "TÀI LIỆU HỌC THUẬT BTL",
     sectionSubtitle: "Các sản phẩm nghiên cứu, bản dịch giáo trình và mã nguồn của nhóm",
     notice: "Trình duyệt hỗ trợ xem trực tiếp bản PDF trong modal. Bấm 'Xem trực tuyến' để đọc hoặc 'Tải về' để lưu tệp gốc.",
@@ -494,7 +499,7 @@ export const siteContent = {
         description: "Khảo sát kỹ thuật streaming thích ứng DASH/HLS, bộ đệm phát lại và giao thức truyền tải đa phương tiện.",
         pdfFile: "docs/NC_2.3_Video.pdf",
         downloadFile: "docs/NC_2.3_Video.docx",
-        isReady: false, // Thể hiện trạng thái "Đang cập nhật"
+        isReady: true,
         tag: "Báo cáo nghiên cứu"
       },
       {
@@ -516,7 +521,7 @@ export const siteContent = {
         description: "Bản trình chiếu tóm lược nội dung game Mathicard, bản dịch chương 11–12 và kết quả nghiên cứu công nghệ video.",
         pdfFile: "docs/Slide_68PM1_NhomXX.pdf",
         downloadFile: "docs/Slide_68PM1_NhomXX.pptx",
-        isReady: false, // Thể hiện trạng thái "Đang cập nhật"
+        isReady: true,
         tag: "Slide thuyết trình"
       }
     ]
@@ -524,6 +529,7 @@ export const siteContent = {
 
   // 9. THÀNH VIÊN NHÓM & PHÂN CÔNG CÔNG VIỆC
   team: {
+    sectionBadge: "TEAM MEMBERS",
     sectionTitle: "THÀNH VIÊN & PHÂN CÔNG",
     sectionSubtitle: "Thông tin nhóm sinh viên thực hiện bài tập lớn môn Công nghệ đa phương tiện",
     classInfo: "Lớp: 68PM1 · Nhóm: XX",
@@ -556,6 +562,39 @@ export const siteContent = {
         role: "Nghiên cứu & Kỹ thuật",
         tasks: "Báo cáo Nghiên cứu 2.2 (Nén JPEG/MPEG) & 2.3 (Truyền video), Xây dựng mã nguồn Demo nén ảnh Jupyter Notebook",
         status: "Hoàn thành"
+      }
+    ],
+    // Danh mục công việc & Tiến độ 50 giờ (Team Task List & Roadmap)
+    taskRoadmapTitle: "TIẾN ĐỘ THỰC HIỆN DỰ ÁN (50 GIỜ)",
+    taskRoadmapSubtitle: "Lộ trình phân bổ thời gian và các mốc bàn giao sản phẩm của nhóm",
+    milestones: [
+      {
+        phase: "Mốc H0–H8 (Checkpoint 1)",
+        title: "Khởi động & Phác thảo",
+        tasks: "Thiết lập cấu trúc web tĩnh; phác thảo logo và bảng chữ cái font riêng; dịch mục 11.1–11.2; lập dàn ý nghiên cứu 2.2 & 2.3.",
+        status: "Hoàn thành",
+        badge: "CHECKPOINT 1"
+      },
+      {
+        phase: "Mốc H8–H24 (Bản nháp đủ)",
+        title: "Dịch thuật, Nghiên cứu & Media",
+        tasks: "Hoàn thiện bản dịch thô Ch11–12; viết báo cáo nghiên cứu JPEG/MPEG và truyền phát video; lập trình notebook Demo_Nen.ipynb; hoàn thiện bộ hình ảnh KeyArt và cắt thẻ bài.",
+        status: "Hoàn thành",
+        badge: "BẢN NHÁP"
+      },
+      {
+        phase: "Mốc H24–H32 (Review & Sửa)",
+        title: "Kiểm tra chéo & Hoàn thiện",
+        tasks: "Trưởng nhóm review chéo; chuẩn hóa bảng thuật ngữ ThuatNgu.xlsx; xuất bản video trailer lồng tiếng và căn chỉnh phụ đề Video_Mathicard.vtt.",
+        status: "Hoàn thành",
+        badge: "REVIEW"
+      },
+      {
+        phase: "Mốc H32–H50 (Nghiệm thu)",
+        title: "Tích hợp Website & Đóng gói",
+        tasks: "Ghép toàn bộ tài liệu học thuật vào web tĩnh; hoàn thiện slide báo cáo Slide_68PM1_NhomXX; kiểm thử responsive 375px/768px/1440px, shader WebGL và accessibility.",
+        status: "Hoàn thành",
+        badge: "FINAL"
       }
     ]
   },

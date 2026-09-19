@@ -77,9 +77,29 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Fallback nền tĩnh khi không có WebGL hoặc giảm chuyển động */
+/* Fallback nền tĩnh khi bật prefers-reduced-motion */
 body.shader-fallback {
   background: radial-gradient(circle at 50% 20%, #152b48 0%, #0b1320 65%, #05080e 100%);
+}
+
+/* Fallback nền CSS Animated Gradient khi trình duyệt không hỗ trợ WebGL */
+body.shader-fallback-animated {
+  background: linear-gradient(135deg, var(--swirl-col1), var(--swirl-col2), var(--swirl-col3), var(--swirl-col4), var(--swirl-col1));
+  background-size: 400% 400%;
+  animation: gradientSwirl 20s ease infinite;
+}
+
+@keyframes gradientSwirl {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.shader-fallback-animated {
+    animation: none !important;
+    background: radial-gradient(circle at 50% 20%, #152b48 0%, #0b1320 65%, #05080e 100%) !important;
+  }
 }
 
 #bg-shader-canvas {
@@ -1358,6 +1378,125 @@ body.shader-fallback {
 .status-badge.progress {
   background: rgba(244, 162, 97, 0.2);
   color: var(--color-gold);
+}
+
+.team-class-badge {
+  font-family: var(--font-pixel);
+  font-size: 1.35rem;
+  color: var(--color-coin);
+  background: rgba(255, 209, 102, 0.12);
+  border: 1px solid var(--color-coin);
+  padding: 4px 14px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+/* ROADMAP / MILESTONES (TIẾN ĐỘ 50 GIỜ) */
+.team-roadmap-wrap {
+  margin-top: 50px;
+  background: var(--bg-card);
+  border: 2px solid var(--border-pixel);
+  border-radius: 12px;
+  padding: 30px 24px;
+}
+
+.roadmap-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.roadmap-title {
+  font-family: var(--font-pixel);
+  font-size: 2.2rem;
+  color: var(--text-main);
+  margin: 6px 0;
+}
+
+.roadmap-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.milestones-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.milestone-card {
+  background: rgba(16, 26, 43, 0.9);
+  border: 1px solid var(--border-pixel);
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.milestone-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-gold);
+}
+
+.milestone-phase {
+  font-family: var(--font-pixel);
+  font-size: 1.15rem;
+  color: var(--color-gold);
+  margin-bottom: 6px;
+}
+
+.milestone-title {
+  font-family: var(--font-pixel);
+  font-size: 1.4rem;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.milestone-tasks {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+
+.milestone-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-top: 10px;
+  margin-top: auto;
+}
+
+.milestone-badge {
+  font-family: var(--font-pixel);
+  font-size: 0.95rem;
+  color: var(--color-green);
+  background: rgba(46, 196, 182, 0.15);
+  border: 1px solid var(--color-green);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.milestone-status {
+  font-size: 0.82rem;
+  color: var(--color-green);
+  font-weight: 500;
+}
+
+@media (max-width: 992px) {
+  .milestones-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
+  .milestones-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* 13. CHÂN TRANG (FOOTER) */

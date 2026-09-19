@@ -133,12 +133,12 @@ export class SwirlShader {
     // 1. Kiểm tra prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) {
-      this.enableCssFallback("Chế độ giảm chuyển động (prefers-reduced-motion) được bật.");
+      this.enableCssFallback("Chế độ giảm chuyển động (prefers-reduced-motion) được bật.", true);
       return;
     }
 
     if (!this.canvas) {
-      console.warn("Canvas không tồn tại, dùng CSS gradient fallback.");
+      this.enableCssFallback("Canvas không tồn tại.", false);
       return;
     }
 
@@ -223,12 +223,18 @@ export class SwirlShader {
     return shader;
   }
 
-  enableCssFallback(reason) {
+  enableCssFallback(reason, isReducedMotion = false) {
     console.info(`Kích hoạt CSS Background Fallback: ${reason}`);
     if (this.canvas) {
       this.canvas.style.display = "none";
     }
-    document.body.classList.add("shader-fallback");
+    if (isReducedMotion) {
+      document.body.classList.remove("shader-fallback-animated");
+      document.body.classList.add("shader-fallback");
+    } else {
+      document.body.classList.remove("shader-fallback");
+      document.body.classList.add("shader-fallback-animated");
+    }
   }
 
   setupEventListeners() {
