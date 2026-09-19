@@ -3,8 +3,7 @@
  * MATHICARD - DỮ LIỆU NỘI DUNG TOÀN TRANG (web/js/content.js)
  * =============================================================================
  * TỆP TRUNG TÂM DUY NHẤT CHỨA NỘI DUNG, ĐƯỜNG DẪN TÀI NGUYÊN VÀ THÔNG TIN DỰ ÁN.
- * Các thành viên trong nhóm chỉ cần chỉnh sửa nội dung trong file này hoặc thay
- * thế file tài nguyên cùng tên trong thư mục `assets/` và `docs/`.
+ * Chỉnh sửa nội dung trong file này hoặc thay thế file tài nguyên cùng tên trong thư mục `assets/`.
  * KHÔNG CẦN CHỈNH SỬA MÃ NGUỒN HTML/CSS/JS KHÁC!
  * =============================================================================
  */
@@ -15,7 +14,7 @@ export const siteContent = {
     siteTitle: "Mathicard – Game Thẻ Bài Toán Học Đối Kháng",
     slogan: "Tính nhanh – Thắng lớn!",
     subSlogan: "Game thẻ bài số học 2–4 người: Kết hợp phép tính siêu tốc, xây dựng bộ bài ma thuật và chinh phục đỉnh cao!",
-    tagline: "Bài tập lớn môn Công nghệ đa phương tiện · Lớp 68PM1 · Nhóm XX",
+    tagline: "Bài tập lớn môn Công nghệ đa phương tiện",
     gameEngine: "Godot 4 + C# (Được cấp phép sử dụng)",
     version: "v1.0.0-web"
   },
@@ -24,17 +23,17 @@ export const siteContent = {
   hero: {
     logoImg: "assets/logo/Logo_Mathicard_Ngang.png",
     logoAlt: "Logo chính thức của game Mathicard",
-    badgeText: "GAME THẺ BÀI TOÁN HỌC ĐỐI KHÁNG",
+    badgeText: "MATH CARD BATTLER",
     slogan: "Tính nhanh – Thắng lớn!",
     description: "Đấu trường thẻ bài toán học 2–4 người chơi theo lượt. Vận dụng tư duy logic, kết hợp các thẻ số 1–9 cùng toán tử cơ bản để tiệm cận mục tiêu vòng đấu và nâng cấp bộ bài tại Cửa hàng!",
     buttons: {
       trailer: {
-        text: "Xem trailer",
+        text: "Xem video",
         icon: "▶",
         target: "#trailer"
       },
       explore: {
-        text: "Khám phá game",
+        text: "Khám phá trò chơi",
         icon: "↓",
         target: "#gioi-thieu"
       }
@@ -91,8 +90,9 @@ export const siteContent = {
 
   // 3. VIDEO TRAILER & PHỤ ĐỀ
   trailer: {
-    sectionTitle: "TRAILER GAME & GAMEPLAY",
-    sectionSubtitle: "Video giới thiệu và hướng dẫn luật chơi Mathicard dưới 30 giây",
+    sectionBadge: "TRAILER",
+    sectionTitle: "VIDEO GIỚI THIỆU TRÒ CHƠI",
+    sectionSubtitle: "Video giới thiệu và hướng dẫn luật chơi dưới 30 giây",
     videoSrc: "assets/video/Video_Mathicard_Sub.mp4",
     posterImg: "assets/video/poster.webp",
     posterAlt: "Poster video Mathicard",
@@ -101,13 +101,13 @@ export const siteContent = {
     trackLabel: "Tiếng Việt (Có dấu)",
     durationText: "Thời lượng: < 30 giây · Lồng tiếng & Phụ đề tiếng Việt",
     // Trạng thái dự phòng khi đồng đội chưa kịp nộp file MP4
-    placeholderTitle: "Trailer sắp ra mắt!",
-    placeholderMessage: "Nhóm Media đang hoàn thiện bản dựng video lồng tiếng và ghép phụ đề WebVTT chuẩn xác. Mời bạn khám phá luật chơi và các bộ thẻ bài bên dưới!"
+    placeholderTitle: "Video sắp ra mắt!",
+    placeholderMessage: "Bộ phận đồ họa đang hoàn thiện bản dựng video lồng tiếng và ghép phụ đề chuẩn xác. Mời bạn khám phá luật chơi và các bộ thẻ bài bên dưới!"
   },
 
   // 4. GIỚI THIỆU TỔNG QUAN & 5 GIAI ĐOẠN VÁN ĐẤU
   overview: {
-    sectionBadge: "CƠ CHẾ TRÒ CHƠI",
+    sectionBadge: "HOW TO PLAY",
     sectionTitle: "LUẬT CHƠI & 5 LƯỢT ĐẤU",
     sectionSubtitle: "Chuỗi 5 giai đoạn vòng lặp khép kín trong mỗi vòng đấu Mathicard",
     pitch: "Mỗi ván đấu Mathicard là một cuộc đua điểm số căng thẳng giữa 2–4 người chơi. Mục tiêu là trở thành người đầu tiên tích lũy đủ điểm phòng (20, 30 hoặc 50 điểm) thông qua việc kết hợp thẻ số và thẻ phép tính.",
@@ -159,7 +159,7 @@ export const siteContent = {
         subtitle: "Nâng cấp bộ bài & Vòng tiếp",
         iconImg: "assets/screens/SS_08_CuaHang.webp",
         iconAlt: "Giai đoạn 5: Cửa hàng",
-        brief: "Sử dụng Coin và BCoin mua sắm Khóa học, vật phẩm, gói bài mới, bấm Đổi mới (Reroll) hoặc nhấn Vòng tiếp.",
+        brief: "Sử dụng Coin và BCoin mua sắm Khóa học, vật phẩm, gói bài mới, bấm Đổi mới hoặc nhấn Vòng tiếp.",
         detail: "Sau khi hết thời gian Cửa hàng hoặc tất cả bấm Vòng tiếp, ván đấu lập tức quay lại Lượt 1 (Bốc bài) với sức mạnh bộ bài mới cho đến khi tìm ra người chiến thắng!"
       }
     ]
@@ -167,9 +167,9 @@ export const siteContent = {
 
   // 5. BỘ SƯU TẬP THẺ BÀI (GALLERY CONFIGURATION)
   cardGallery: {
-    sectionBadge: "BỘ SƯU TẬP THẺ",
-    sectionTitle: "BỘ THẺ BÀI MATHICARD",
-    sectionSubtitle: "Khám phá 275 thẻ bài trích xuất từ dữ liệu game: Giá trị, Toán tử, Vật phẩm, Khóa học, Tài liệu, Trang trí, Nhãn dán, Sự kiện, Gói bài",
+    sectionBadge: "THE CARDS",
+    sectionTitle: "BỘ THẺ BÀI CHIẾN THUẬT",
+    sectionSubtitle: "Khám phá 275 thẻ bài trích xuất từ dữ liệu trò chơi: Giá trị, Toán tử, Vật phẩm, Khóa học, Tài liệu, Trang trí, Nhãn dán, Sự kiện, Gói bài",
     categories: [
       { key: "all", label: "Tất cả" },
       { key: "value", label: "Giá trị" },
@@ -194,7 +194,7 @@ export const siteContent = {
 
   // 6. ĐÁNH GIÁ & NHÌN NHẬN (DEV EVALUATION - 3 CỘT)
   devEvaluation: {
-    sectionBadge: "ĐÁNH GIÁ & NHÌN NHẬN",
+    sectionBadge: "REVIEW",
     sectionTitle: "ĐÁNH GIÁ & NHÌN NHẬN",
     sectionSubtitle: "Phân tích thẳng thắn về điểm mạnh, những điểm còn hạn chế và định hướng phát triển của Mathicard",
     columns: [
@@ -217,8 +217,8 @@ export const siteContent = {
         tag: "ĐIỂM CẦN HOÀN THIỆN",
         items: [
           "Phụ thuộc vào đường truyền mạng thời gian thực; chưa có cơ chế bù trễ khi kết nối WebSocket của người chơi bị gián đoạn.",
-          "Chưa có chế độ đấu tập ngoại tuyến (Offline AI Bot) để người mới làm quen với luật chơi và thử nghiệm bộ bài tự do.",
-          "Hệ thống âm thanh hiệu ứng (SFX) và nhạc nền (BGM) 8-bit còn đang trong quá trình thu âm, chưa bao phủ toàn bộ thao tác.",
+          "Chưa có chế độ đấu tập ngoại tuyến để người mới làm quen với luật chơi và thử nghiệm bộ bài tự do.",
+          "Hệ thống âm thanh hiệu ứng và nhạc nền 8-bit còn đang trong quá trình thu âm, chưa bao phủ toàn bộ thao tác.",
           "Thời gian suy nghĩ ở lượt đánh bài cần thêm tùy biến linh hoạt theo từng cấp độ kỹ năng của người chơi."
         ]
       },
@@ -228,8 +228,8 @@ export const siteContent = {
         icon: "🚀",
         tag: "LỘ TRÌNH TƯƠNG LAI",
         items: [
-          "Phát triển hệ thống Bot AI mô phỏng nhiều trường phái tính toán khác nhau, hỗ trợ luyện tập cá nhân hóa.",
-          "Bổ sung hệ thống đấu xếp hạng (Ranked Match), bảng vàng vinh danh và giải đấu giao hữu trực tuyến.",
+          "Phát triển hệ thống máy đấu tự động mô phỏng nhiều trường phái tính toán khác nhau, hỗ trợ luyện tập cá nhân hóa.",
+          "Bổ sung hệ thống đấu xếp hạng, bảng vàng vinh danh và giải đấu giao hữu trực tuyến.",
           "Tối ưu hóa giao thức truyền thông điệp mạng, bổ sung tính năng tự động tái kết nối bảo toàn trạng thái ván bài.",
           "Mở rộng thêm các gói thẻ toán học nâng cao (Giải tích, Ma trận) phục vụ mục tiêu học tập và giải trí chuyên sâu."
         ]
@@ -241,17 +241,17 @@ export const siteContent = {
 
   // 7. THƯ VIỆN MEDIA & NHẬN DIỆN THƯƠNG HIỆU
   media: {
-    sectionBadge: "THƯ VIỆN MEDIA",
+    sectionBadge: "MEDIA",
     sectionTitle: "THƯ VIỆN ĐA PHƯƠNG TIỆN",
     sectionSubtitle: "Bộ nhận diện thương hiệu, font chữ tự thiết kế, hình ảnh và hoạt họa",
     fontShowcase: {
-      title: "BỘ NHẬN DIỆN & FONT CHỮ TỰ THIẾT KẾ",
+      title: "BỘ NHẬN DIỆN & KIỂU CHỮ TỰ THIẾT KẾ",
       alphabetImg: "assets/logo/BangChu_Mathicard.png",
       alphabetPlaceholderImg: "assets/logo/BangChu_Mathicard_placeholder.png",
       logoNgangImg: "assets/logo/Logo_Mathicard_Ngang.png",
       logoIconImg: "assets/logo/Logo_Mathicard_Icon.png",
       logoIconPlaceholderImg: "assets/logo/Logo_Mathicard_Icon_placeholder.png",
-      conceptNote: "Font chữ Pixel 8-bit được nhóm tự xây dựng trên hệ thống lưới (pixel grid) đồng nhất, thiết kế riêng để tối ưu độ tương phản trên màn hình game Godot 4 và giao diện web. Font hỗ trợ trọn vẹn 100% các ký tự tiếng Việt có dấu phức tạp như Đánh giá, Bốc bài, Cửa hàng, Tính điểm.",
+      conceptNote: "Kiểu chữ Pixel 8-bit được thiết kế và tự xây dựng trên hệ thống lưới đồng nhất, thiết kế riêng để tối ưu độ tương phản trên màn hình game Godot 4 và giao diện web. Phông chữ hỗ trợ trọn vẹn 100% các ký tự tiếng Việt có dấu phức tạp như Đánh giá, Bốc bài, Cửa hàng, Tính điểm.",
       paletteSwatches: [
         { name: "Deep Teal Base", hex: "#0b1320", role: "Nền vũ trụ tối" },
         { name: "Card Panel Navy", hex: "#162a45", role: "Nền khung thẻ bài" },
@@ -340,135 +340,34 @@ export const siteContent = {
         id: "gif-1",
         src: "assets/gif/Anim_LatBai.gif",
         alt: "Hiệu ứng lật thẻ bài 2 mặt",
-        caption: "Sprite Animation: Hiệu ứng lật thẻ bài hai mặt (9 khung hình)"
+        caption: "Ảnh động lật thẻ: Hiệu ứng lật thẻ bài hai mặt (9 khung hình)"
       },
       {
         id: "gif-2",
         src: "assets/gif/Anim_Logo.gif",
         placeholderSrc: "assets/gif/Anim_Logo_placeholder.gif",
         alt: "Animation logo Mathicard",
-        caption: "Logo Animation: Hiệu ứng chuyển động logo"
+        caption: "Ảnh động biểu trưng: Hiệu ứng chuyển động logo"
       }
     ]
   },
 
-  // 8. TÀI LIỆU HỌC THUẬT BTL CÔNG NGHỆ ĐA PHƯƠNG TIỆN
-  academicDocs: {
-    sectionBadge: "TÀI LIỆU HỌC THUẬT",
-    sectionTitle: "TÀI LIỆU HỌC THUẬT BTL",
-    sectionSubtitle: "Các sản phẩm nghiên cứu, bản dịch giáo trình và mã nguồn của nhóm",
-    notice: "Trình duyệt hỗ trợ xem trực tiếp bản PDF trong modal. Bấm 'Xem trực tuyến' để đọc hoặc 'Tải về' để lưu tệp gốc.",
-    deliverables: [
-      {
-        id: "doc-dich",
-        title: "Bản Dịch: Sách Fundamentals of Multimedia",
-        scope: "Chương 11 (MPEG-1, 2, 4, 7) & Chương 12 (H.264, H.265)",
-        author: "Lê Hoàng Cường",
-        description: "Dịch thuật học thuật chi tiết chuẩn nén video liên khung, ước lượng chuyển động và thuật toán mã hóa entropy.",
-        pdfFile: "docs/Dich_Ch11_12.pdf",
-        downloadFile: "docs/Dich_Ch11_12.docx",
-        isReady: true,
-        tag: "Bản dịch sách"
-      },
-      {
-        id: "doc-nc22",
-        title: "Nghiên Cứu 2.2: Các Bước Nén Mất Dữ Liệu",
-        scope: "Chuyên đề nén mất dữ liệu (Lossy Compression) trong JPEG & MPEG",
-        author: "Phạm Quốc Dũng",
-        description: "Phân tích sâu bước lượng tử hóa (Quantization) và lấy mẫu sắc độ gây suy hao chất lượng trong nén ảnh và video.",
-        pdfFile: "docs/NC_2.2_JPEG_MPEG.pdf",
-        downloadFile: "docs/NC_2.2_JPEG_MPEG.docx",
-        isReady: true,
-        tag: "Báo cáo nghiên cứu"
-      },
-      {
-        id: "doc-nc23",
-        title: "Nghiên Cứu 2.3: Lưu Trữ, Phát Lại & Truyền Video",
-        scope: "Hạ tầng lưu trữ và truyền phát luồng video số trực tuyến",
-        author: "Phạm Quốc Dũng",
-        description: "Khảo sát kỹ thuật streaming thích ứng DASH/HLS, bộ đệm phát lại và giao thức truyền tải đa phương tiện.",
-        pdfFile: "docs/NC_2.3_Video.pdf",
-        downloadFile: "docs/NC_2.3_Video.docx",
-        isReady: true,
-        tag: "Báo cáo nghiên cứu"
-      },
-      {
-        id: "doc-demo",
-        title: "Mã Nguồn Demo: Thuật Toán Nén Đa Phương Tiện",
-        scope: "Jupyter Notebook trực quan hóa biến đổi DCT & ma trận lượng tử",
-        author: "Phạm Quốc Dũng",
-        description: "Chương trình Python thực thi thuật toán nén ảnh JPEG và biểu diễn ma trận lượng tử hóa độ sáng tiêu chuẩn.",
-        pdfFile: "", // File ipynb tải trực tiếp
-        downloadFile: "docs/Demo_Nen.ipynb",
-        isReady: true,
-        tag: "Mã nguồn Python"
-      },
-      {
-        id: "doc-slide",
-        title: "Slide Báo Cáo Thuyết Trình Bài Tập Lớn",
-        scope: "Bộ slide thuyết trình đồ án trước hội đồng môn học",
-        author: "Nguyễn Văn An",
-        description: "Bản trình chiếu tóm lược nội dung game Mathicard, bản dịch chương 11–12 và kết quả nghiên cứu công nghệ video.",
-        pdfFile: "docs/Slide_68PM1_NhomXX.pdf",
-        downloadFile: "docs/Slide_68PM1_NhomXX.pptx",
-        isReady: true,
-        tag: "Slide thuyết trình"
-      }
-    ]
-  },
-
-  // 9. THÀNH VIÊN NHÓM & PHÂN CÔNG CÔNG VIỆC
-  team: {
-    sectionBadge: "THÀNH VIÊN NHÓM",
-    sectionTitle: "THÀNH VIÊN & PHÂN CÔNG",
-    sectionSubtitle: "Thông tin nhóm sinh viên thực hiện bài tập lớn môn Công nghệ đa phương tiện",
-    classInfo: "Lớp: 68PM1 · Nhóm: XX",
-    faculty: "Khoa Công nghệ Thông tin · Trường Đại học Xây dựng Hà Nội",
-    members: [
-      {
-        stt: 1,
-        name: "Nguyễn Văn An",
-        role: "Trưởng nhóm",
-        tasks: "Xây dựng Website quảng bá tĩnh, Thiết kế Slide thuyết trình, Soát lỗi & Tổng hợp hồ sơ nộp bài",
-        status: "Hoàn thành"
-      },
-      {
-        stt: 2,
-        name: "Trần Minh Bảo",
-        role: "Phụ trách Media",
-        tasks: "Thiết kế Logo với font chữ riêng, Xử lý hình ảnh, Tạo ảnh động (GIF), Dựng Video lồng tiếng & Phụ đề VTT",
-        status: "Đang cập nhật video"
-      },
-      {
-        stt: 3,
-        name: "Lê Hoàng Cường",
-        role: "Dịch thuật tài liệu",
-        tasks: "Dịch Fundamentals of Multimedia Chương 11 (MPEG) & 12 (H.264/H.265), Xây dựng bảng thuật ngữ chuyên ngành",
-        status: "Hoàn thành"
-      },
-      {
-        stt: 4,
-        name: "Phạm Quốc Dũng",
-        role: "Nghiên cứu & Kỹ thuật",
-        tasks: "Báo cáo Nghiên cứu 2.2 (Nén JPEG/MPEG) & 2.3 (Truyền video), Xây dựng mã nguồn Demo nén ảnh Jupyter Notebook",
-        status: "Hoàn thành"
-      }
-    ]
-  },
-
-  // 10. CHÂN TRANG (FOOTER)
+  // 8. CHÂN TRANG (FOOTER)
   footer: {
     brand: "MATHICARD",
-    copyright: "© 2026 Mathicard Game Studio. Bài tập lớn môn Công nghệ đa phương tiện.",
-    credit: "Sản phẩm học tập được phát triển bởi Nhóm sinh viên Lớp 68PM1.",
+    footerText: undefined,
     navLinks: [
-      { label: "Giới thiệu", href: "#gioi-thieu" },
+      { label: "Trang chủ", href: "#hero" },
       { label: "Trailer", href: "#trailer" },
+      { label: "Luật chơi", href: "#gioi-thieu" },
       { label: "Bộ thẻ bài", href: "#cac-loai-the" },
       { label: "Đánh giá", href: "#danh-gia" },
-      { label: "Media", href: "#media" },
-      { label: "Tài liệu", href: "#tai-lieu" },
-      { label: "Nhóm", href: "#nhom" }
+      { label: "Media", href: "#media" }
     ]
-  }
+  },
+  footerText: undefined
 };
+
+export const footerText = "Bài tập lớn môn Công nghệ Đa phương tiện · 68PM1 · Nhóm 6";
+siteContent.footerText = footerText;
+siteContent.footer.footerText = footerText;

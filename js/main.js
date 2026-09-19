@@ -4,13 +4,13 @@
  * =============================================================================
  * - Kết nối dữ liệu từ content.js vào giao diện người dùng (DOM).
  * - Khởi tạo WebGL Shader nền và hiệu ứng thẻ bài Balatro-inspired.
- * - Quản lý tương tác: Lật bài, Tally điểm số, Modal PDF, Lightbox, Video phụ đề.
+ * - Quản lý tương tác: Lật bài, Tally điểm số, Lightbox, Video phụ đề.
  * - Tuân thủ tiêu chuẩn kỹ thuật: Cyclomatic Complexity <= 8 cho mỗi hàm,
  *   tối ưu hiệu năng, responsive và accessibility.
  * =============================================================================
  */
 
-import { siteContent } from "./content.js";
+import { siteContent, footerText } from "./content.js";
 import { cardsData } from "./cards-data.js";
 import { SwirlShader } from "./shader.js";
 
@@ -35,8 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCardGallery();
   renderDevEvaluation();
   renderMediaLibrary();
-  renderAcademicDocs();
-  renderTeamSection();
   renderFooter();
   setupGlobalInteractions();
   setupModals();
@@ -146,12 +144,14 @@ export function renderCardFaceHtml(card) {
   const color = resolveCardColor(card, symbol);
   const centerLen = getSymbolLengthClass(symbol);
   const cornerLen = getCornerLengthClass(symbol);
+  const isAsciiGameFont = /^[\x00-\x7F√Σ×÷−πφ·]*$/.test(symbol);
+  const fontClass = isAsciiGameFont ? "" : "symbol-fallback";
 
   return `
     <div class="card-rendered" data-type="${card.type}" data-color="${color}">
-      <span class="card-corner top-left ${cornerLen}">${symbol}</span>
-      <div class="card-center-symbol ${centerLen}">${symbol}</div>
-      <span class="card-corner bottom-right ${cornerLen}">${symbol}</span>
+      <span class="card-corner top-left ${cornerLen} ${fontClass}">${symbol}</span>
+      <div class="card-center-symbol ${centerLen} ${fontClass}">${symbol}</div>
+      <span class="card-corner bottom-right ${cornerLen} ${fontClass}">${symbol}</span>
     </div>
   `;
 }
@@ -194,9 +194,7 @@ async function renderNavigation() {
     { href: "#gioi-thieu", label: "Luật chơi" },
     { href: "#cac-loai-the", label: "Bộ thẻ" },
     { href: "#danh-gia", label: "Đánh giá" },
-    { href: "#media", label: "Media" },
-    { href: "#tai-lieu", label: "Tài liệu BTL" },
-    { href: "#nhom", label: "Nhóm 68PM1" }
+    { href: "#media", label: "Media" }
   ];
 
   navLinksContainer.innerHTML = links
@@ -936,7 +934,7 @@ async function renderAnimatedGrid() {
       <div class="media-thumb-card gif-card" tabindex="0" role="button" data-src="${gif.activeSrc}" data-caption="${gif.caption}">
         <div class="thumb-img-wrap">
           <img src="${gif.activeSrc}" alt="${gif.alt}" loading="lazy" />
-          <span class="gif-badge">ẢNH ĐỘNG GIF</span>
+          <span class="gif-badge">ẢNH ĐỘNG</span>
         </div>
         <div class="thumb-caption">${gif.caption}</div>
       </div>
@@ -968,129 +966,14 @@ function openLightbox(src, caption) {
 }
 
 /* =============================================================================
-   9. TÀI LIỆU HỌC THUẬT BTL (DOCUMENTS & MODAL PDF VIEWER)
-============================================================================= */
-async function renderAcademicDocs() {
-  setTextContent("academic-badge", siteContent.academicDocs.sectionBadge);
-  setTextContent("academic-title", siteContent.academicDocs.sectionTitle);
-  setTextContent("academic-sub", siteContent.academicDocs.sectionSubtitle);
-
-  const container = document.getElementById("academic-docs-grid");
-  if (!container) return;
-
-  // Kiểm tra trạng thái tồn tại của tệp qua HTTP HEAD tại runtime
-  const docStatuses = await Promise.all(
-    siteContent.academicDocs.deliverables.map(async (doc) => {
-      const hasPdf = doc.pdfFile ? await checkFileExists(doc.pdfFile) : false;
-      const hasDownload = doc.downloadFile ? await checkFileExists(doc.downloadFile) : false;
-      return { ...doc, hasPdf, hasDownload, isReady: hasPdf || hasDownload };
-    })
-  );
-
-  container.innerHTML = docStatuses.map(renderDocCard).join("");
-  setupDocPreviewActions(container);
-}
-
-function renderDocCard(doc) {
-  const isReady = Boolean(doc.isReady);
-  const statusBadge = isReady
-    ? `<span class="doc-badge ready">SẴN SÀNG</span>`
-    : `<span class="doc-badge pending">ĐANG CẬP NHẬT</span>`;
-
-  const previewTooltip = doc.pdfFile
-    ? "Tài liệu đang được nhóm cập nhật"
-    : "Mã nguồn - chỉ hỗ trợ tải về trực tiếp, không có bản xem trước PDF";
-
-  const previewBtn = doc.hasPdf
-    ? `<button class="pixel-btn btn-secondary btn-view-pdf" data-pdf="${doc.pdfFile}" data-title="${doc.title}">Xem</button>`
-    : `<button class="pixel-btn btn-secondary disabled" disabled title="${previewTooltip}">Xem</button>`;
-
-  const downloadBtn = doc.hasDownload
-    ? `<a href="${doc.downloadFile}" download class="pixel-btn btn-primary">Tải về</a>`
-    : `<button class="pixel-btn btn-primary disabled" disabled title="Tài liệu đang được nhóm cập nhật">Tải về</button>`;
-
-  return `
-    <article class="doc-card ${isReady ? "" : "doc-pending"}">
-      <div class="doc-card-header">
-        <span class="doc-tag">${doc.tag}</span>
-        ${statusBadge}
-      </div>
-      <h3 class="doc-title">${doc.title}</h3>
-      <p class="doc-scope">${doc.scope}</p>
-      <p class="doc-desc">${doc.description}</p>
-      <div class="doc-author">
-        <span>Tác giả / Phụ trách: <strong>${doc.author}</strong></span>
-      </div>
-      <div class="doc-actions">
-        ${previewBtn}
-        ${downloadBtn}
-      </div>
-    </article>
-  `;
-}
-
-function setupDocPreviewActions(container) {
-  container.querySelectorAll(".btn-view-pdf").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      openPdfModal(btn.dataset.pdf, btn.dataset.title);
-    });
-  });
-}
-
-function openPdfModal(pdfUrl, title) {
-  const modal = document.getElementById("pdf-modal");
-  const iframe = document.getElementById("pdf-modal-iframe");
-  const modalTitle = document.getElementById("pdf-modal-title");
-  if (!modal || !iframe) return;
-
-  iframe.src = pdfUrl;
-  if (modalTitle) modalTitle.textContent = title || "Xem Tài Liệu PDF";
-  openModal(modal);
-}
-
-/* =============================================================================
-   10. THÔNG TIN NHÓM & PHÂN CÔNG
-============================================================================= */
-function renderTeamSection() {
-  const badge = document.getElementById("team-badge");
-  if (badge && siteContent.team.sectionBadge) badge.textContent = siteContent.team.sectionBadge;
-
-  const title = document.getElementById("team-title");
-  if (title && siteContent.team.sectionTitle) title.textContent = siteContent.team.sectionTitle;
-
-  const sub = document.getElementById("team-sub");
-  if (sub && siteContent.team.sectionSubtitle) sub.textContent = siteContent.team.sectionSubtitle;
-
-  const classInfo = document.getElementById("team-class-info");
-  if (classInfo) classInfo.textContent = siteContent.team.classInfo;
-
-  const tableBody = document.getElementById("team-table-body");
-  if (tableBody) {
-    tableBody.innerHTML = siteContent.team.members
-      .map(
-        (m) => `
-        <tr>
-          <td class="col-stt">${m.stt}</td>
-          <td class="col-name"><strong>${m.name}</strong></td>
-          <td class="col-role"><span class="role-pill">${m.role}</span></td>
-          <td class="col-tasks">${m.tasks}</td>
-          <td class="col-status"><span class="status-badge ${m.status.includes('Hoàn thành') ? 'done' : 'progress'}">${m.status}</span></td>
-        </tr>
-      `
-      )
-      .join("");
-  }
-}
-
-/* =============================================================================
-   11. FOOTER
+   9. FOOTER
 ============================================================================= */
 function renderFooter() {
-  const copyright = document.getElementById("footer-copyright");
-  if (copyright) copyright.textContent = siteContent.footer.copyright;
-
-  const credit = document.getElementById("footer-credit");
-  if (credit) credit.textContent = siteContent.footer.credit;
+  const footerTextElem = document.getElementById("footer-text");
+  const text = siteContent.footerText || footerText || "";
+  if (footerTextElem) {
+    footerTextElem.textContent = text;
+  }
 }
 
 /* =============================================================================
