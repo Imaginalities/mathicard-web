@@ -611,7 +611,11 @@ function setupGalleryPagination() {
 function cardMatchesSearch(card, queryNorm) {
   if (!queryNorm) return true;
   if (removeVietnameseTones(card.nameVi).includes(queryNorm)) return true;
-  if (removeVietnameseTones(card.descriptionVi).includes(queryNorm)) return true;
+  if (card.descriptionVi) {
+    let plainDesc = card.descriptionVi.replace(/<img[^>]*alt="([^"]+)"[^>]*>/gi, " $1 ");
+    plainDesc = plainDesc.replace(/<[^>]+>/g, " ");
+    if (removeVietnameseTones(plainDesc).includes(queryNorm)) return true;
+  }
   if (removeVietnameseTones(card.id).includes(queryNorm)) return true;
   if (card.value && removeVietnameseTones(card.value).includes(queryNorm)) return true;
   if (card.symbol && removeVietnameseTones(card.symbol).includes(queryNorm)) return true;
@@ -684,7 +688,7 @@ function renderGalleryCardArticle(card, idx) {
         <div class="card-info">
           <h4 class="card-title">${card.nameVi}</h4>
           <span class="card-tag">${typeLabel} · ${priceLabel}</span>
-          <p class="card-desc">${card.descriptionVi || ""}</p>
+          ${card.descriptionVi ? `<p class="card-desc">${card.descriptionVi}</p>` : ""}
         </div>
       </div>
     </article>
@@ -726,6 +730,14 @@ function openCardInspectorModal(card) {
     ? renderCardFaceHtml(card)
     : `<img src="${card.image}" alt="${card.nameVi}" class="modal-card-img" />`;
 
+  const descMarkup = card.descriptionVi
+    ? `
+      <div class="modal-card-desc-box">
+        <label>HIỆU ỨNG & CƠ CHẾ:</label>
+        <p>${card.descriptionVi}</p>
+      </div>`
+    : "";
+
   modalBody.innerHTML = `
     <div class="modal-card-display">
       ${visualMarkup}
@@ -735,16 +747,11 @@ function openCardInspectorModal(card) {
       <h2 class="modal-card-heading">${card.nameVi}</h2>
       <div class="modal-card-meta">
         <span>Phân loại: <strong>${typeLabel.toUpperCase()}</strong></span>
+        <span>Độ hiếm: <strong>${rarityLabel}</strong></span>
         <span>Mã định danh: <strong>#${card.id}</strong></span>
         <span>Giá cửa hàng: <strong>${priceLabel}</strong></span>
       </div>
-      <div class="modal-card-desc-box">
-        <label>HIỆU ỨNG & CƠ CHẾ:</label>
-        <p>${card.descriptionVi || "Thẻ bài cơ bản không có hiệu ứng đặc biệt."}</p>
-      </div>
-      <div class="modal-card-tip">
-        <span>💡 Mẹo chiến thuật: Sử dụng thẻ này trong các vòng đấu then chốt để đột phá điểm số!</span>
-      </div>
+      ${descMarkup}
     </div>
   `;
 

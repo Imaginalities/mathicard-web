@@ -24,6 +24,10 @@ SHARED_DIR = os.path.join(GAME_DIR, "Mathicard.Shared")
 CONST_DIR = os.path.join(SHARED_DIR, "src", "Domain", "Constants")
 OUTPUT_JS = os.path.join(BASE_DIR, "web", "js", "cards-data.js")
 
+COIN_IMG = '<img src="assets/icons/coin.webp" alt="Xu" class="card-token-icon" />'
+BCOIN_IMG = '<img src="assets/icons/bcoin.webp" alt="Xu thưởng" class="card-token-icon" />'
+POINT_IMG = '<img src="assets/icons/point.webp" alt="Điểm" class="card-token-icon" />'
+
 def load_localization():
     loc_file = os.path.join(CLIENT_DIR, "localization.csv")
     loc = {}
@@ -136,10 +140,74 @@ def clean_rarity(val):
     val = val.replace("CardRarity.", "").strip().lower()
     return val
 
-def clean_desc(text):
-    # Strip BBCode color tags while preserving token tags like [C], [BC], [PT], [MP]
-    text = re.sub(r'\[color=[^\]]+\]', '', text)
-    text = text.replace('[/color]', '')
+def transform_markup(text):
+    """
+    Converts game tags ([C], [BC], [PT], BBCode color, etc.) to valid HTML.
+    Inline icons use 1em sizing with appropriate alt text.
+    """
+    if not text:
+        return ""
+    
+    # 1. Replace {REWARD} with X (matching game client CardDescriptionResolver)
+    text = text.replace("{REWARD}", "X")
+    
+    # 2. BBCode colors: [color=#hex]...[/color] -> <span style="color: #hex;">...</span>
+    text = re.sub(r'\[color=([^\]]+)\]', r'<span style="color: \1;">', text)
+    text = text.replace('[/color]', '</span>')
+    
+    # 3. BBCode styles: [b], [i], [u], [s]
+    text = re.sub(r'\[b\](.*?)\[/b\]', r'<strong>\1</strong>', text)
+    text = re.sub(r'\[i\](.*?)\[/i\]', r'<em>\1</em>', text)
+    text = re.sub(r'\[u\](.*?)\[/u\]', r'<u>\1</u>', text)
+    text = re.sub(r'\[s\](.*?)\[/s\]', r'<s>\1</s>', text)
+    
+    # 4. Compound / specific Vietnamese catalog tokens
+    text = re.sub(r'\[\+0\.1\s*Hệ số Nhân BCoin\]', f'+0.1 Hệ số Nhân {BCOIN_IMG}', text)
+    text = re.sub(r'\[\+0\.2\s*Hệ số Nhân Coin\]', f'+0.2 Hệ số Nhân {COIN_IMG}', text)
+    text = re.sub(r'\[\+x\s*Coin\]', f'+x {COIN_IMG}', text)
+    text = re.sub(r'\[\+?([\d\.x\/]+)\s*Coin\]', rf'\1 {COIN_IMG}', text)
+    
+    # 5. Game mechanic tokens from client code & catalogs (Fame, Reroll, values, operators)
+    text = re.sub(r'\[([+\-]?\d*)\s*Danh vọng\]', r'\1 Danh vọng', text)
+    text = text.replace('[Fame]', 'Danh vọng')
+    text = re.sub(r'\[([+\-]?\d*)\s*Reroll\]', r'\1 Reroll', text)
+    text = text.replace('[Reroll]', 'Reroll')
+    text = re.sub(r'\[([+\-]\d+)\]', r'\1', text)
+    text = text.replace('[×]', '×').replace('[÷]', '÷').replace('[/]', '/').replace('[x]', 'x')
+    text = text.replace('[x/1.5]', 'x/1.5')
+    
+    # 6. Resource tokens with modifier/amount: [+1 C], [-2 BC], [+0.4 MP], [+x C], [+PT], etc.
+    def replace_resource_token(match):
+        mod = match.group(1).strip()
+        res = match.group(2).strip()
+        mod_prefix = (mod + ' ') if mod else ''
+        if res == 'C':
+            return f'{mod_prefix}{COIN_IMG}'
+        elif res == 'BC':
+            return f'{mod_prefix}{BCOIN_IMG}'
+        elif res == 'PT':
+            return f'{mod_prefix}{POINT_IMG}'
+        elif res == 'MP':
+            return f'<span style="color: #aad4ff;">{mod_prefix}MP</span>'
+        elif res == 'SV':
+            return f'<span style="color: #f5c842;">{mod_prefix}SV</span>'
+        elif res == 'DUR':
+            return f'<span style="color: #c8f0a8;">{mod_prefix}DUR</span>'
+        else:
+            return match.group(0) # Keep for validation check
+            
+    text = re.sub(r'\[([+\-x×÷]?[\d\.x\/]*)\s*([A-Z_]+)\]', replace_resource_token, text)
+    
+    # 7. Standalone resource tokens
+    text = text.replace('[C]', COIN_IMG)
+    text = text.replace('[BC]', BCOIN_IMG)
+    text = text.replace('[PT]', POINT_IMG)
+    text = text.replace('[MP]', '<span style="color: #aad4ff;">MP</span>')
+    text = text.replace('[SV]', '<span style="color: #f5c842;">SV</span>')
+    text = text.replace('[DUR]', '<span style="color: #c8f0a8;">DUR</span>')
+    
+    # 8. Newline formatting
+    text = text.replace('\\n', '<br />').replace('\n', '<br />')
     return text.strip()
 
 def calculate_price(card_type, rarity, player_count=1):
@@ -175,12 +243,7 @@ def calculate_price(card_type, rarity, player_count=1):
 
 def build_value_cards(loc):
     # 9 numbers * 4 colors = 36 cards, plus 3 special constants = 39 cards
-    # Color logic from ValueCardView.cs:
-    # Red: rgb(0.85, 0.12, 0.09) -> #d91f17
-    # Blue: rgb(0.08, 0.38, 0.74) -> #1461bd
-    # Green: rgb(0.15, 0.55, 0.22) -> #268c38
-    # Yellow: rgb(0.80, 0.48, 0.00) -> #cc7a00
-    # None: rgb(0, 0, 0) -> #1a1a1a
+    # Value cards have no individual description in game data; per requirement 3, show no description.
     colors_info = [
         ("Red", "đỏ", "Đỏ", "#d91f17"),
         ("Blue", "xanh dương", "Xanh dương", "#1461bd"),
@@ -193,13 +256,12 @@ def build_value_cards(loc):
         for col_id, col_desc, col_title, hex_val in colors_info:
             card_id = f"Val_{col_id}_{val}"
             name_vi = f"Thẻ {val} ({col_title})"
-            desc_vi = f"Lá giá trị {val}, màu {col_desc}."
             cards.append({
                 "id": card_id,
                 "type": "value",
                 "nameVi": name_vi,
                 "rarity": "common",
-                "descriptionVi": desc_vi,
+                "descriptionVi": "",
                 "price": 10,
                 "render": "text",
                 "value": str(val),
@@ -210,17 +272,17 @@ def build_value_cards(loc):
     
     # 3 Special constants from PackLootResolver.cs
     special_consts = [
-        ("Val_Pi", "π", "Hằng số Pi", "rare", "Hằng số Pi (≈ 3.14159...). Lá hằng số đặc biệt không màu.", 20),
-        ("Val_Euler", "e", "Hằng số Euler", "rare", "Hằng số Euler (≈ 2.71828...). Lá hằng số đặc biệt không màu.", 20),
-        ("Val_Phi", "φ", "Tỷ lệ vàng", "rare", "Tỷ lệ vàng φ (≈ 1.61803...). Lá hằng số đặc biệt không màu.", 20),
+        ("Val_Pi", "π", "Hằng số Pi", "rare", 20),
+        ("Val_Euler", "e", "Hằng số Euler", "rare", 20),
+        ("Val_Phi", "φ", "Tỷ lệ vàng", "rare", 20),
     ]
-    for cid, sym, cname, crarity, cdesc, cprice in special_consts:
+    for cid, sym, cname, crarity, cprice in special_consts:
         cards.append({
             "id": cid,
             "type": "value",
             "nameVi": f"Thẻ hằng số {sym} ({cname})",
             "rarity": crarity,
-            "descriptionVi": cdesc,
+            "descriptionVi": "",
             "price": cprice,
             "render": "text",
             "value": sym,
@@ -234,7 +296,7 @@ def build_value_cards(loc):
 def build_operator_cards(loc):
     # From CardEnums.cs OperatorType:
     # Add, Subtract, Multiply, Divide, Sin, Cos, Tan, Ln, Sqrt, Abs, Ceil, Floor, Truncate
-    # Exact in-game display and localization from localization.csv (DESC_OPERATOR)
+    # Operator cards have no individual description in game data; per requirement 3, show no description.
     operators = [
         ("Op_Add", "Cộng", "+", "common", "binary", 15),
         ("Op_Sub", "Trừ", "−", "common", "binary", 15),
@@ -251,15 +313,13 @@ def build_operator_cards(loc):
         ("Op_Truncate", "Cắt thập phân", "trunc", "rare", "unary", 30),
     ]
     cards = []
-    desc_template = loc.get("DESC_OPERATOR", "Toán tử {0}, dùng để xây dựng biểu thức.")
     for cid, name, sym, rarity, cat, price in operators:
-        desc = desc_template.format(name)
         cards.append({
             "id": cid,
             "type": "operator",
             "nameVi": f"Toán tử {name}",
             "rarity": rarity,
-            "descriptionVi": desc,
+            "descriptionVi": "",
             "price": price,
             "render": "text",
             "symbol": sym,
@@ -292,7 +352,8 @@ def parse_items(loc):
         desc = clean_str(args[4])
         
         name_vi = loc.get(f"ITEM_{card_id}_NAME", display_name)
-        desc_vi = clean_desc(loc.get(f"ITEM_{card_id}_DESC", desc))
+        raw_desc = loc.get(f"ITEM_{card_id}_DESC", desc)
+        desc_vi = transform_markup(raw_desc)
         price = calculate_price("item", rarity)
         
         cards.append({
@@ -329,7 +390,8 @@ def parse_courses(loc):
         desc = clean_str(args[4])
         
         name_vi = loc.get(f"COURSE_{card_id}_NAME", display_name)
-        desc_vi = clean_desc(loc.get(f"COURSE_{card_id}_DESC", desc))
+        raw_desc = loc.get(f"COURSE_{card_id}_DESC", desc)
+        desc_vi = transform_markup(raw_desc)
         price = calculate_price("course", rarity)
         
         cards.append({
@@ -365,7 +427,8 @@ def parse_documents(loc):
         desc = clean_str(args[5])
         
         name_vi = loc.get(f"DOCUMENT_{card_id.upper()}_NAME", display_name)
-        desc_vi = clean_desc(loc.get(f"DOCUMENT_{card_id.upper()}_DESC", desc))
+        raw_desc = loc.get(f"DOCUMENT_{card_id.upper()}_DESC", desc)
+        desc_vi = transform_markup(raw_desc)
         price = calculate_price("document", rarity)
         
         cards.append({
@@ -401,8 +464,13 @@ def parse_decorations(loc):
         deco_type = args[3].replace("DecorationType.", "").strip()
         desc = clean_str(args[4])
         
-        name_vi = loc.get(f"DECORATION_{card_id.upper()}_NAME", display_name)
-        desc_vi = clean_desc(loc.get(f"DECORATION_{card_id.upper()}_DESC", desc))
+        # Name resolution from loc or catalog
+        name_vi = loc.get(f"DECORATION_{deco_type.upper()}_NAME", loc.get(f"DECORATION_{card_id.upper()}_NAME", display_name))
+        
+        # Description resolution: prefer DECORATION_{DECO_TYPE}_DESC, fallback to DECORATION_{CARD_ID}_DESC, then catalog desc
+        key_desc = f"DECORATION_{deco_type.upper()}_DESC"
+        raw_desc = loc.get(key_desc, loc.get(f"DECORATION_{card_id.upper()}_DESC", desc))
+        desc_vi = transform_markup(raw_desc)
         price = calculate_price("decoration", rarity)
         
         cards.append({
@@ -439,12 +507,12 @@ def parse_stickers(loc):
         desc = clean_str(args[4])
         
         # Name resolution from loc
-        # e.g. STICKER_HIDDEN_NAME -> "Nhãn Ẩn Dấu"
         key_name = f"STICKER_{sticker_type.upper()}_NAME"
         name_vi = loc.get(key_name, loc.get(f"{card_id.upper()}_NAME", display_name))
         
         key_desc = f"STICKER_{sticker_type.upper()}_DESC"
-        desc_vi = clean_desc(loc.get(key_desc, desc))
+        raw_desc = loc.get(key_desc, desc)
+        desc_vi = transform_markup(raw_desc)
         price = calculate_price("sticker", rarity)
         
         cards.append({
@@ -480,7 +548,8 @@ def parse_events(loc):
         desc = clean_str(args[3])
         
         name_vi = loc.get(f"EVENT_{card_id.upper()}_NAME", display_name)
-        desc_vi = clean_desc(loc.get(f"EVENT_{card_id.upper()}_DESC", desc))
+        raw_desc = loc.get(f"EVENT_{card_id.upper()}_DESC", desc)
+        desc_vi = transform_markup(raw_desc)
         
         cards.append({
             "id": card_id,
@@ -525,14 +594,13 @@ def parse_packs(loc):
         frame_index = int(args[6].strip())
         
         # Translate Pack Name
-        # e.g. "PACK_ITEM_I_PACK" -> "Gói Vật Phẩm I"
         lookup_key = f"PACK_{raw_display.replace(' ', '_').upper()}"
         base_name_vi = loc.get(lookup_key, raw_display)
         r_name = rarity_vi.get(rarity, rarity.capitalize())
         name_vi = f"{base_name_vi} ({r_name})"
         
         desc_format = loc.get("DESC_OPEN_PACK", "Mở {0} lá, được chọn {1} lá.")
-        desc_vi = desc_format.format(draw_count, select_count)
+        desc_vi = transform_markup(desc_format.format(draw_count, select_count))
         
         pack_id = f"pack_{pack_type.lower()}_{rarity}"
         cards.append({
@@ -546,6 +614,31 @@ def parse_packs(loc):
             "image": f"assets/cards/pack/{pack_id}.webp"
         })
     return cards
+
+def validate_no_unmapped_tokens(all_cards):
+    """
+    Validation check: ensures no raw unmapped brackets remain in any card description or name.
+    Fails the build if any raw bracket characters are detected.
+    """
+    errors = []
+    for c in all_cards:
+        desc = c.get("descriptionVi", "")
+        name = c.get("nameVi", "")
+        for field_name, val in [("descriptionVi", desc), ("nameVi", name)]:
+            if "[" in val or "]" in val:
+                matches = re.findall(r'\[.*?\]', val)
+                if not matches:
+                    matches = [ch for ch in val if ch in "[]"]
+                errors.append((c["id"], c["type"], field_name, matches, val))
+    
+    if errors:
+        msg_lines = ["FAIL: Found unmapped raw brackets/tokens in card data:"]
+        for cid, ctype, field, tokens, d in errors:
+            msg_lines.append(f"  - Card '{cid}' ({ctype}, field '{field}'): {tokens} in '{d}'")
+        error_msg = "\n".join(msg_lines)
+        print(error_msg, file=sys.stderr)
+        raise ValueError(error_msg)
+    print("✔ Validation passed: 0 unmapped raw bracket tokens found across all cards.")
 
 def main():
     loc = load_localization()
@@ -571,6 +664,9 @@ def main():
         event_cards +
         pack_cards
     )
+    
+    # Requirement 2: Check in build_cards.py that fails if an unmapped token appears
+    validate_no_unmapped_tokens(all_cards)
     
     counts = {
         "value": len(value_cards),

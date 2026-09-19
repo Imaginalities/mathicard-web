@@ -9,6 +9,14 @@
  * =============================================================================
  */
 
+@font-face {
+  font-family: "SVN-Determination-Sans";
+  src: url("../assets/fonts/SVN-Determination-Sans.otf") format("opentype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* 1. RESET & CSS VARIABLES */
 :root {
   --bg-base: #080f1d;
@@ -44,7 +52,8 @@
   --border-cyan: #00b4d8;
   --btn-shadow: #070c14;
 
-  /* Fonts: Pixelify Sans cho tất cả headings, nav, buttons; Be Vietnam Pro cho body */
+  /* Fonts: SVN-Determination-Sans (game font cho card glyphs, wordmark, section titles); Pixelify Sans; Be Vietnam Pro */
+  --font-game: "SVN-Determination-Sans", "Pixelify Sans", monospace, sans-serif;
   --font-pixel: "Pixelify Sans", sans-serif;
   --font-body: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
 
@@ -204,7 +213,7 @@ a.disabled {
 
 /* Styled Pixel Wordmark for Logo Placeholder */
 .brand-wordmark {
-  font-family: var(--font-pixel);
+  font-family: var(--font-game);
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -299,7 +308,7 @@ a.disabled {
 }
 
 .section-title {
-  font-family: var(--font-pixel);
+  font-family: var(--font-game);
   font-size: 2.8rem;
   letter-spacing: 0.05em;
   color: var(--text-main);
@@ -339,7 +348,7 @@ a.disabled {
 }
 
 .hero-wordmark {
-  font-family: var(--font-pixel);
+  font-family: var(--font-game);
   font-weight: 700;
   font-size: 3.8rem;
   letter-spacing: 4px;
@@ -365,7 +374,7 @@ a.disabled {
 }
 
 .hero-slogan {
-  font-family: var(--font-pixel);
+  font-family: var(--font-game);
   font-size: 2.3rem;
   color: var(--color-gold);
   text-shadow: 3px 3px 0 #000;
@@ -1012,6 +1021,15 @@ a.disabled {
   overflow: hidden;
 }
 
+.card-token-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  display: inline-block;
+  object-fit: contain;
+  margin: 0 0.12em;
+}
+
 /* THẺ THUẦN CSS/HTML TEXT RENDERED (GIÁ TRỊ & TOÁN TỬ) */
 .card-rendered {
   container-type: inline-size;
@@ -1041,7 +1059,7 @@ a.disabled {
 
 .card-rendered .card-corner {
   position: absolute;
-  font-family: var(--font-pixel);
+  font-family: var(--font-game);
   font-weight: 700;
   font-size: 1.1rem;
   font-size: 18cqw;
@@ -1067,7 +1085,7 @@ a.disabled {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-pixel);
+  font-family: var(--font-game);
   font-weight: 700;
   font-size: 2.8rem;
   font-size: 46cqw;
@@ -1697,7 +1715,7 @@ a.disabled {
 }
 
 .footer-brand {
-  font-family: var(--font-pixel);
+  font-family: var(--font-game);
   font-size: 2.2rem;
   color: var(--color-gold);
   margin-bottom: 8px;
@@ -1779,7 +1797,7 @@ body.modal-open {
 }
 
 .modal-title {
-  font-family: var(--font-body);
+  font-family: var(--font-game);
   font-weight: 700;
   font-size: 1.35rem;
   color: var(--color-gold);
