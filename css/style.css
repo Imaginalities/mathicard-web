@@ -11,17 +11,17 @@
 
 /* 1. RESET & CSS VARIABLES */
 :root {
-  --bg-base: #0b1320;
-  --bg-panel: rgba(16, 26, 43, 0.92);
-  --bg-panel-solid: #101a2b;
-  --bg-card: rgba(23, 37, 61, 0.94);
-  --bg-card-hover: rgba(30, 48, 78, 0.98);
+  --bg-base: #080f1d;
+  --bg-panel: rgba(13, 22, 38, 0.94);
+  --bg-panel-solid: #0d1626;
+  --bg-card: rgba(20, 33, 56, 0.95);
+  --bg-card-hover: rgba(28, 45, 75, 0.98);
 
-  /* Bảng màu Shader Swirl (Có thể hoán đổi màu tùy ý) */
-  --swirl-col1: #0b1d3a;
-  --swirl-col2: #133854;
-  --swirl-col3: #2a9d8f;
-  --swirl-col4: #e76f51;
+  /* Bảng màu Shader Swirl (Vibrant Balatro-inspired swirl accents) */
+  --swirl-col1: #060b17;
+  --swirl-col2: #0b1a30;
+  --swirl-col3: #00b4d8;
+  --swirl-col4: #ff6b35;
 
   /* Màu nhận diện Thẻ & Game */
   --color-gold: #f4a261;
@@ -32,7 +32,7 @@
   --color-coin: #ffd166;
   --color-bcoin: #e0a96d;
 
-  /* Typography & Contrast */
+  /* Typography & Contrast (Tất cả văn bản đạt > 4.5:1 contrast) */
   --text-main: #f8fafc;
   --text-muted: #cbd5e1;
   --text-dim: #94a3b8;
@@ -41,11 +41,11 @@
   /* Borders & Shadows */
   --border-pixel: #334155;
   --border-gold: #f4a261;
-  --border-cyan: #2a9d8f;
+  --border-cyan: #00b4d8;
   --btn-shadow: #070c14;
 
-  /* Fonts */
-  --font-pixel: "VT323", monospace;
+  /* Fonts: Pixelify Sans cho tất cả headings, nav, buttons; Be Vietnam Pro cho body */
+  --font-pixel: "Pixelify Sans", sans-serif;
   --font-body: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
 
   --max-width: 1240px;
@@ -197,6 +197,30 @@ body.shader-fallback-animated {
   text-decoration: none;
 }
 
+/* Styled Pixel Wordmark for Logo Placeholder */
+.brand-wordmark {
+  font-family: var(--font-pixel);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  display: inline-block;
+  user-select: none;
+}
+
+.nav-wordmark {
+  font-size: 1.6rem;
+  line-height: 1;
+  text-shadow: 2px 2px 0px #000, 0 0 12px rgba(244, 162, 97, 0.4);
+  transition: transform 0.2s, text-shadow 0.2s;
+}
+
+.nav-brand:hover .nav-wordmark {
+  transform: scale(1.05);
+  color: #fff;
+  text-shadow: 2px 2px 0px var(--color-red), 0 0 15px var(--color-gold);
+}
+
 .nav-logo-img {
   height: 42px;
   width: auto;
@@ -212,7 +236,7 @@ body.shader-fallback-animated {
 
 .nav-link {
   font-family: var(--font-pixel);
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   color: var(--text-main);
   text-decoration: none;
   transition: color 0.15s ease;
@@ -303,6 +327,29 @@ body.shader-fallback-animated {
 
 .hero-logo-box {
   margin-bottom: 14px;
+  min-height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-wordmark {
+  font-family: var(--font-pixel);
+  font-weight: 700;
+  font-size: 3.8rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #ffd166;
+  display: inline-block;
+  text-align: center;
+  margin: 0 auto;
+  line-height: 1.1;
+  text-shadow: 
+    3px 3px 0px #000,
+    6px 6px 0px rgba(0, 0, 0, 0.8),
+    0 0 25px rgba(244, 162, 97, 0.5);
+  cursor: default;
+  user-select: none;
 }
 
 .hero-logo-main {
@@ -314,7 +361,7 @@ body.shader-fallback-animated {
 
 .hero-slogan {
   font-family: var(--font-pixel);
-  font-size: 2.9rem;
+  font-size: 2.3rem;
   color: var(--color-gold);
   text-shadow: 3px 3px 0 #000;
   margin-bottom: 8px;
@@ -337,7 +384,7 @@ body.shader-fallback-animated {
   flex-wrap: wrap;
 }
 
-/* FANNED CARD ROW (XÒE BÀI TƯƠNG TÁC) */
+/* FANNED CARD ROW (XÒE BÀI TƯƠNG TÁC BALATRO-STYLE) */
 .hero-fan-container {
   display: flex;
   justify-content: center;
@@ -351,17 +398,22 @@ body.shader-fallback-animated {
 
 .fanned-card {
   position: absolute;
-  width: 155px;
-  height: 230px;
+  width: 140px;
+  height: 210px;
   border-radius: 12px;
   background: var(--bg-card);
   border: 2px solid var(--border-gold);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   cursor: pointer;
-  transform-origin: bottom center;
+  transform-origin: 50% 120%;
   transform: rotate(var(--fan-rot, 0deg)) translateY(var(--fan-y, 0px));
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), z-index 0.1s, box-shadow 0.3s;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), z-index 0.1s, box-shadow 0.3s;
   will-change: transform;
+}
+
+.fanned-card .card-wobble {
+  width: 100%;
+  height: 100%;
 }
 
 .fanned-card .card-inner {
@@ -370,43 +422,31 @@ body.shader-fallback-animated {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 8px;
+  justify-content: center;
+  padding: 6px;
   border-radius: 10px;
   overflow: hidden;
 }
 
 .fanned-card img {
   width: 100%;
-  height: 180px;
-  object-fit: cover;
+  height: 100%;
+  object-fit: contain;
   border-radius: 6px;
 }
 
-.fanned-card .card-badge {
-  font-family: var(--font-pixel);
-  font-size: 0.95rem;
-  color: var(--color-gold);
-  background: rgba(0, 0, 0, 0.7);
-  padding: 2px 6px;
-  border-radius: 4px;
-  width: 100%;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+/* Hover quạt: tản rộng hơn và nhấc nhẹ lên trên thiết bị có chuột/hover */
+@media (hover: hover) {
+  .hero-fan-container:hover .fanned-card {
+    transform: rotate(calc(var(--fan-rot, 0deg) * 1.45)) translateY(calc(var(--fan-y, 0px) - 12px));
+  }
 
-/* Hover quạt: tản rộng và bay lên */
-.hero-fan-container:hover .fanned-card {
-  transform: rotate(calc(var(--fan-rot, 0deg) * 1.35)) translateY(calc(var(--fan-y, 0px) - 15px)) scale(1.03);
-}
-
-.hero-fan-container .fanned-card:hover {
-  transform: rotate(0deg) translateY(-35px) scale(1.18) !important;
-  z-index: 50 !important;
-  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.8), 0 0 20px var(--color-gold);
-  border-color: #fff;
+  .hero-fan-container .fanned-card:hover {
+    transform: rotate(0deg) translateY(-35px) scale(1.15) !important;
+    z-index: 50 !important;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.8), 0 0 25px var(--color-gold);
+    border-color: #fff;
+  }
 }
 
 /* 6. TRAILER SECTION */
@@ -776,14 +816,17 @@ body.shader-fallback-animated {
   display: grid;
   grid-template-columns: 340px 1fr;
   gap: 40px;
-  align-items: center;
+  align-items: start;
 }
 
-/* Thẻ lật đánh giá */
+/* Thẻ lật đánh giá - sticky trên desktop */
 .review-card-perspective {
   perspective: 1000px;
   width: 100%;
   height: 420px;
+  position: sticky;
+  top: calc(var(--nav-height, 70px) + 24px);
+  z-index: 10;
 }
 
 .review-flip-card {
@@ -871,23 +914,58 @@ body.shader-fallback-animated {
 
 .score-number {
   font-family: var(--font-pixel);
-  font-size: 6.5rem;
+  font-size: 5rem;
   color: var(--color-gold);
-  text-shadow: 4px 4px 0 #000;
+  text-shadow: 3px 3px 0 #000;
   line-height: 1;
 }
 
 .score-max {
   font-family: var(--font-pixel);
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   color: var(--text-muted);
 }
 
 .score-stars {
-  font-size: 1.6rem;
-  color: var(--color-coin);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 1.8rem;
+  line-height: 1;
   margin: 10px 0;
-  letter-spacing: 2px;
+}
+
+.score-stars .star {
+  font-family: var(--font-pixel);
+  display: inline-block;
+  user-select: none;
+}
+
+.score-stars .star-full {
+  color: var(--color-gold);
+  text-shadow: 0 0 10px rgba(244, 162, 97, 0.6);
+}
+
+.score-stars .star-empty {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.score-stars .star-half {
+  position: relative;
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.score-stars .star-half::before {
+  content: "★";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: var(--color-gold);
+  text-shadow: 0 0 10px rgba(244, 162, 97, 0.6);
 }
 
 .score-label {
@@ -1392,113 +1470,6 @@ body.shader-fallback-animated {
   margin-top: 10px;
 }
 
-/* ROADMAP / MILESTONES (TIẾN ĐỘ 50 GIỜ) */
-.team-roadmap-wrap {
-  margin-top: 50px;
-  background: var(--bg-card);
-  border: 2px solid var(--border-pixel);
-  border-radius: 12px;
-  padding: 30px 24px;
-}
-
-.roadmap-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.roadmap-title {
-  font-family: var(--font-pixel);
-  font-size: 2.2rem;
-  color: var(--text-main);
-  margin: 6px 0;
-}
-
-.roadmap-subtitle {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-}
-
-.milestones-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-.milestone-card {
-  background: rgba(16, 26, 43, 0.9);
-  border: 1px solid var(--border-pixel);
-  border-radius: 10px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.milestone-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--color-gold);
-}
-
-.milestone-phase {
-  font-family: var(--font-pixel);
-  font-size: 1.15rem;
-  color: var(--color-gold);
-  margin-bottom: 6px;
-}
-
-.milestone-title {
-  font-family: var(--font-pixel);
-  font-size: 1.4rem;
-  color: var(--text-main);
-  margin-bottom: 8px;
-}
-
-.milestone-tasks {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  line-height: 1.45;
-  margin-bottom: 12px;
-}
-
-.milestone-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px dashed rgba(255, 255, 255, 0.1);
-  padding-top: 10px;
-  margin-top: auto;
-}
-
-.milestone-badge {
-  font-family: var(--font-pixel);
-  font-size: 0.95rem;
-  color: var(--color-green);
-  background: rgba(46, 196, 182, 0.15);
-  border: 1px solid var(--color-green);
-  padding: 2px 8px;
-  border-radius: 4px;
-}
-
-.milestone-status {
-  font-size: 0.82rem;
-  color: var(--color-green);
-  font-weight: 500;
-}
-
-@media (max-width: 992px) {
-  .milestones-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 580px) {
-  .milestones-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* 13. CHÂN TRANG (FOOTER) */
 .site-footer {
   background: #070c14;
@@ -1796,11 +1767,20 @@ body.modal-open {
   }
 
   .section-title {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
 
   .hero-slogan {
-    font-size: 2.4rem;
+    font-size: 2rem;
+  }
+
+  .hero-wordmark {
+    font-size: 3rem;
+    letter-spacing: 2px;
+  }
+
+  .nav-wordmark {
+    font-size: 1.4rem;
   }
 
   .mobile-toggle {
@@ -1825,16 +1805,24 @@ body.modal-open {
   }
 
   .hero-fan-container {
-    height: 220px;
+    height: 200px;
   }
 
   .fanned-card {
-    width: 120px;
-    height: 180px;
+    width: 105px;
+    height: 155px;
+    transform-origin: 50% 120%;
+    transform: rotate(calc(var(--fan-rot, 0deg) * 0.75)) translateY(calc(var(--fan-y, 0px) * 0.7));
   }
 
-  .fanned-card img {
-    height: 135px;
+  @media (hover: hover) {
+    .hero-fan-container:hover .fanned-card {
+      transform: rotate(calc(var(--fan-rot, 0deg) * 0.95)) translateY(calc(var(--fan-y, 0px) * 0.7 - 8px));
+    }
+
+    .hero-fan-container .fanned-card:hover {
+      transform: rotate(0deg) translateY(-20px) scale(1.12) !important;
+    }
   }
 
   /* 5 Phases cuộn ngang mượt mà trên mobile (Scroll snap) */
@@ -1870,19 +1858,25 @@ body.modal-open {
 /* Mobile nhỏ (375px) */
 @media (max-width: 480px) {
   .section-title {
-    font-size: 1.85rem;
+    font-size: 1.7rem;
   }
 
   .hero-slogan {
-    font-size: 2rem;
+    font-size: 1.6rem;
+  }
+
+  .hero-wordmark {
+    font-size: 2.3rem;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 0px #000, 4px 4px 0px rgba(0, 0, 0, 0.8);
   }
 
   .hero-desc {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .pixel-btn {
-    font-size: 1.25rem;
+    font-size: 1.05rem;
     padding: 8px 16px;
   }
 
@@ -1891,21 +1885,33 @@ body.modal-open {
     align-items: stretch;
   }
 
+  /* Đảm bảo xòe bài vừa khít bên trong 375px (không tràn ngang) */
   .hero-fan-container {
-    height: 190px;
+    height: 155px;
+    max-width: 100%;
+    overflow: visible;
   }
 
   .fanned-card {
-    width: 95px;
-    height: 150px;
-  }
-
-  .fanned-card img {
+    width: 74px;
     height: 110px;
+    border-width: 1.5px;
+    transform-origin: 50% 120%;
+    transform: rotate(calc(var(--fan-rot, 0deg) * 0.55)) translateY(calc(var(--fan-y, 0px) * 0.5));
   }
 
-  .fanned-card .card-badge {
-    font-size: 0.75rem;
+  .fanned-card .card-inner {
+    padding: 3px;
+  }
+
+  @media (hover: hover) {
+    .hero-fan-container:hover .fanned-card {
+      transform: rotate(calc(var(--fan-rot, 0deg) * 0.7)) translateY(calc(var(--fan-y, 0px) * 0.5 - 4px));
+    }
+
+    .hero-fan-container .fanned-card:hover {
+      transform: rotate(0deg) translateY(-15px) scale(1.1) !important;
+    }
   }
 
   .gallery-grid {

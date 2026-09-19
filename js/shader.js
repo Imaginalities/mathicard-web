@@ -82,19 +82,27 @@ void main() {
     float f = fbm(swirl * 2.2 + 3.6 * r_warp);
 
     // Color blending from CSS palette uniforms
-    vec3 col = mix(u_color1, u_color2, clamp(f * f * 3.2, 0.0, 1.0));
-    col = mix(col, u_color3, clamp(length(q) * 1.1, 0.0, 1.0));
-    col = mix(col, u_color4, clamp(length(r_warp.x) * 0.8, 0.0, 1.0) * 0.7);
+    vec3 col = mix(u_color1, u_color2, clamp(f * 2.5, 0.0, 1.0));
+    // Sapphire accent swirl with boosted vibrancy
+    float swirl3 = smoothstep(0.35, 0.85, length(q));
+    col = mix(col, u_color3, swirl3 * 0.9);
+    // Coral/orange accent swirl with boosted vibrancy
+    float swirl4 = smoothstep(0.3, 0.8, abs(r_warp.x));
+    col = mix(col, u_color4, swirl4 * 0.85);
 
-    // Subtle retro CRT scanlines
-    float scanline = sin(v_uv.y * u_resolution.y * 1.5) * 0.035;
+    // Contrast and saturation enhancement
+    col = pow(col, vec3(0.95));
+    col = clamp((col - 0.02) * 1.05, 0.0, 1.0);
+
+    // Subtle retro CRT scanlines (opacity 0.04 <= 0.08)
+    float scanline = sin(v_uv.y * u_resolution.y * 1.5) * 0.04;
     col -= scanline;
 
     // Soft vignette
     float vig = 1.0 - length(v_uv - 0.5) * 0.85;
     col *= clamp(vig, 0.25, 1.0);
 
-    gl_FragColor = vec4(col, 1.0);
+    gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }
 `;
 
@@ -285,10 +293,10 @@ export class SwirlShader {
 
   updateColors() {
     if (!this.gl || !this.program) return;
-    const c1 = this.parseCssHexColor("--swirl-col1", "#0b1d3a");
-    const c2 = this.parseCssHexColor("--swirl-col2", "#133854");
-    const c3 = this.parseCssHexColor("--swirl-col3", "#2a9d8f");
-    const c4 = this.parseCssHexColor("--swirl-col4", "#e76f51");
+    const c1 = this.parseCssHexColor("--swirl-col1", "#060b17");
+    const c2 = this.parseCssHexColor("--swirl-col2", "#0b1a30");
+    const c3 = this.parseCssHexColor("--swirl-col3", "#00b4d8");
+    const c4 = this.parseCssHexColor("--swirl-col4", "#ff6b35");
 
     this.gl.uniform3fv(this.uniformLocations.color1, c1);
     this.gl.uniform3fv(this.uniformLocations.color2, c2);

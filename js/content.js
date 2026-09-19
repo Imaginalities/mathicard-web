@@ -24,7 +24,7 @@ export const siteContent = {
   hero: {
     logoImg: "assets/logo/Logo_Mathicard_Ngang.png",
     logoAlt: "Logo chính thức của game Mathicard",
-    badgeText: "DỰ ÁN GAME ĐỘC QUYỀN LỚP 68PM1",
+    badgeText: "GAME THẺ BÀI TOÁN HỌC ĐỐI KHÁNG",
     slogan: "Tính nhanh – Thắng lớn!",
     description: "Đấu trường thẻ bài toán học 2–4 người chơi theo lượt. Vận dụng tư duy logic, kết hợp các thẻ số 1–9 cùng toán tử cơ bản để tiệm cận mục tiêu vòng đấu và nâng cấp bộ bài tại Cửa hàng!",
     buttons: {
@@ -39,56 +39,49 @@ export const siteContent = {
         target: "#gioi-thieu"
       }
     },
-    // Dãy thẻ bài xòe quạt tương tác ở Hero (dùng sprite thật đã cắt)
+    // Dãy thẻ bài xòe quạt tương tác ở Hero (5-7 thẻ số + toán tử, không dùng mặt sau)
     fannedCards: [
       {
         id: "hero-1",
-        title: "Bộ bài Cơ bản",
-        subtitle: "Basedeck",
-        image: "assets/cards/deck_base.webp",
-        type: "deck"
+        title: "Thẻ Số 1",
+        image: "assets/cards/val_1.webp",
+        type: "value"
       },
       {
         id: "hero-2",
         title: "Toán tử Cộng (+)",
-        subtitle: "Binary Operator",
         image: "assets/cards/op_plus.webp",
         type: "operator"
       },
       {
         id: "hero-3",
-        title: "Thẻ số 7 Hoàng Kim",
-        subtitle: "Gold Value 7",
-        image: "assets/cards/val_7.webp",
+        title: "Thẻ Số 5",
+        image: "assets/cards/val_5.webp",
         type: "value"
       },
       {
         id: "hero-4",
-        title: "Phép Cầu vồng",
-        subtitle: "Rainbow Spell",
-        image: "assets/cards/item_rainbow.webp",
-        type: "spell"
-      },
-      {
-        id: "hero-5",
-        title: "Phép Jackpot",
-        subtitle: "Triple 7 Combo",
-        image: "assets/cards/item_jackpot.webp",
-        type: "spell"
-      },
-      {
-        id: "hero-6",
         title: "Toán tử Nhân (×)",
-        subtitle: "Multiply Operator",
         image: "assets/cards/op_multiply.webp",
         type: "operator"
       },
       {
+        id: "hero-5",
+        title: "Thẻ Số 7 Hoàng Kim",
+        image: "assets/cards/val_7.webp",
+        type: "value"
+      },
+      {
+        id: "hero-6",
+        title: "Toán tử Trừ (−)",
+        image: "assets/cards/op_minus.webp",
+        type: "operator"
+      },
+      {
         id: "hero-7",
-        title: "Bộ bài Hoàng kim",
-        subtitle: "Golddeck",
-        image: "assets/cards/deck_gold.webp",
-        type: "deck"
+        title: "Thẻ Số 9 Cực Đại",
+        image: "assets/cards/val_9.webp",
+        type: "value"
       }
     ]
   },
@@ -113,14 +106,14 @@ export const siteContent = {
   overview: {
     sectionBadge: "CƠ CHẾ TRÒ CHƠI",
     sectionTitle: "LUẬT CHƠI & 5 LƯỢT ĐẤU",
-    sectionSubtitle: "Chuỗi 5 giai đoạn vòng lặp khép kín trong mỗi round đấu Mathicard",
+    sectionSubtitle: "Chuỗi 5 giai đoạn vòng lặp khép kín trong mỗi vòng đấu Mathicard",
     pitch: "Mỗi ván đấu Mathicard là một cuộc đua điểm số căng thẳng giữa 2–4 người chơi. Mục tiêu là trở thành người đầu tiên tích lũy đủ điểm phòng (20, 30 hoặc 50 điểm) thông qua việc kết hợp thẻ số và thẻ phép tính.",
     phases: [
       {
         id: 1,
         stepNumber: "01",
         name: "Bốc bài",
-        subtitle: "Draw Phase",
+        subtitle: "Giai đoạn Bốc bài",
         iconImg: "assets/images/Luot_01.webp",
         iconAlt: "Giai đoạn 1: Bốc bài",
         brief: "Rút đủ 8 lá bài số lên tay từ cọc bài và nhận 4 lá bài dấu cơ bản (+, −, ×, ÷) vào khung toán tử.",
@@ -130,7 +123,7 @@ export const siteContent = {
         id: 2,
         stepNumber: "02",
         name: "Sinh giá trị",
-        subtitle: "Target Phase",
+        subtitle: "Giai đoạn Sinh giá trị",
         iconImg: "assets/images/Luot_02.webp",
         iconAlt: "Giai đoạn 2: Sinh giá trị",
         brief: "Hệ thống tự động phát sinh một số nguyên ngẫu nhiên làm giá trị mục tiêu cho toàn bộ người chơi.",
@@ -140,7 +133,7 @@ export const siteContent = {
         id: 3,
         stepNumber: "03",
         name: "Đánh bài",
-        subtitle: "Play Phase",
+        subtitle: "Giai đoạn Đánh bài",
         iconImg: "assets/images/Luot_03.webp",
         iconAlt: "Giai đoạn 3: Đánh bài",
         brief: "Đặt thẻ số và toán tử thành một biểu thức toán học hợp lệ sao cho kết quả gần giá trị mục tiêu nhất.",
@@ -150,7 +143,7 @@ export const siteContent = {
         id: 4,
         stepNumber: "04",
         name: "Tính điểm",
-        subtitle: "Scoring Phase",
+        subtitle: "Giai đoạn Tính điểm",
         iconImg: "assets/images/Luot_04.webp",
         iconAlt: "Giai đoạn 4: Tính điểm",
         brief: "So sánh độ lệch của biểu thức so với mục tiêu; trao thưởng điểm phòng, tiền Coin và BCoin danh giá.",
@@ -160,7 +153,7 @@ export const siteContent = {
         id: 5,
         stepNumber: "05",
         name: "Cửa hàng",
-        subtitle: "Shop Phase",
+        subtitle: "Giai đoạn Cửa hàng",
         iconImg: "assets/images/Luot_05.webp",
         iconAlt: "Giai đoạn 5: Cửa hàng",
         brief: "Sử dụng Coin và BCoin mua sắm thẻ phép, thẻ vật phẩm mới, gói thẻ nâng cấp hoặc thay đổi toán tử.",
@@ -171,9 +164,9 @@ export const siteContent = {
 
   // 5. BỘ SƯU TẬP THẺ BÀI (GALLERY)
   cardGallery: {
-    sectionBadge: "CARD COLLECTION",
+    sectionBadge: "BỘ SƯU TẬP THẺ",
     sectionTitle: "BỘ SƯU TẬP THẺ BÀI",
-    sectionSubtitle: "Khám phá hơn 120+ thẻ bài độc đáo: Số học, Toán tử, Thẻ phép & Bộ bài",
+    sectionSubtitle: "Khám phá hệ thống thẻ bài đa dạng: Số học, Toán tử, Thẻ phép & Bộ bài",
     categories: [
       { key: "all", label: "Tất cả thẻ" },
       { key: "value", label: "Thẻ Giá trị" },
@@ -367,29 +360,29 @@ export const siteContent = {
         tag: "Gói mở rộng",
         rarity: "Hiếm",
         image: "assets/cards/pack_2.webp",
-        desc: "Chứa các thẻ phép thuật biến đổi dấu, hỗ trợ lội ngược dòng ngoạn mục ở những round quyết định."
+        desc: "Chứa các thẻ phép thuật biến đổi dấu, hỗ trợ lội ngược dòng ngoạn mục ở những vòng đấu quyết định."
       }
     ]
   },
 
   // 6. ĐÁNH GIÁ & NHẬN XÉT (REVIEW)
   review: {
-    sectionBadge: "CRITIC REVIEW",
+    sectionBadge: "ĐÁNH GIÁ",
     sectionTitle: "ĐÁNH GIÁ CHUYÊN MÔN",
     sectionSubtitle: "Nhận xét và phân tích chất lượng game từ góc nhìn đồ án đa phương tiện",
     cardCoverText: "CHẠM HOẶC CUỘN ĐỂ LẬT THẺ XEM ĐIỂM",
     overallScore: 8.5,
     maxScore: 10,
-    quote: "Mathicard là sự kết hợp táo bạo và sáng tạo giữa tính toán số học phản xạ nhanh với cơ chế Roguelike Deckbuilding gây nghiện. Trò chơi chứng minh rằng toán học có thể trở thành một trải nghiệm giải trí đối kháng cực kỳ gay cấn!",
+    quote: "Mathicard là sự kết hợp táo bạo và sáng tạo giữa tính toán số học phản xạ nhanh với cơ chế xây dựng bộ bài qua cửa hàng giữa các vòng. Trò chơi chứng minh rằng toán học có thể trở thành một trải nghiệm giải trí đối kháng cực kỳ gay cấn!",
     subScores: [
-      { label: "Lối chơi & Tính cân bằng (Gameplay)", score: 9.0, percent: 90 },
+      { label: "Lối chơi & Tính cân bằng", score: 9.0, percent: 90 },
       { label: "Đồ họa Retro Pixel & Hiệu ứng", score: 8.5, percent: 85 },
       { label: "Tính giáo dục & Rèn luyện phản xạ", score: 9.0, percent: 90 },
       { label: "Trải nghiệm đối kháng bạn bè (2–4 người)", score: 8.0, percent: 80 }
     ],
     pros: [
       "Vòng lặp 5 giai đoạn chặt chẽ, dồn dập, không gây nhàm chán.",
-      "Hệ thống hơn 120 thẻ bài phong phú, tạo ra hàng ngàn combo toán học biến ảo.",
+      "Hệ thống thẻ bài phong phú, tạo ra hàng ngàn combo toán học biến ảo.",
       "Đồ họa retro pixel chunky bắt mắt, tương thích mượt mà cả trên Web và Mobile.",
       "Tích hợp cả hai đơn vị tiền tệ Coin và BCoin giúp kinh tế trong game có chiều sâu."
     ],
@@ -401,15 +394,16 @@ export const siteContent = {
 
   // 7. THƯ VIỆN MEDIA & NHẬN DIỆN THƯƠNG HIỆU
   media: {
-    sectionBadge: "MEDIA SHOWCASE",
+    sectionBadge: "THƯ VIỆN MEDIA",
     sectionTitle: "THƯ VIỆN ĐA PHƯƠNG TIỆN",
     sectionSubtitle: "Bộ nhận diện thương hiệu, font chữ tự thiết kế, hình ảnh và hoạt họa",
     fontShowcase: {
       title: "BỘ NHẬN DIỆN & FONT CHỮ TỰ THIẾT KẾ",
       alphabetImg: "assets/logo/BangChu_Mathicard.png",
-      alphabetAlt: "Bảng chữ cái font pixel tự tạo của Mathicard",
+      alphabetPlaceholderImg: "assets/logo/BangChu_Mathicard_placeholder.png",
       logoNgangImg: "assets/logo/Logo_Mathicard_Ngang.png",
       logoIconImg: "assets/logo/Logo_Mathicard_Icon.png",
+      logoIconPlaceholderImg: "assets/logo/Logo_Mathicard_Icon_placeholder.png",
       conceptNote: "Font chữ Pixel 8-bit được nhóm tự xây dựng trên hệ thống lưới (pixel grid) đồng nhất, thiết kế riêng để tối ưu độ tương phản trên màn hình game Godot 4 và giao diện web. Font hỗ trợ trọn vẹn 100% các ký tự tiếng Việt có dấu phức tạp như Đánh giá, Bốc bài, Cửa hàng, Tính điểm.",
       paletteSwatches: [
         { name: "Deep Teal Base", hex: "#0b1320", role: "Nền vũ trụ tối" },
@@ -421,6 +415,12 @@ export const siteContent = {
       ]
     },
     imagesGrid: [
+      {
+        id: "img-promo",
+        src: "assets/images/PromoBanner.png",
+        alt: "Poster quảng bá Mathicard",
+        caption: "Poster quảng bá chính thức của game Mathicard"
+      },
       {
         id: "img-1",
         src: "assets/images/KeyArt.webp",
@@ -456,15 +456,16 @@ export const siteContent = {
       {
         id: "gif-2",
         src: "assets/gif/Anim_Logo.gif",
-        alt: "Animation logo Mathicard phát sáng",
-        caption: "Logo Animation: Hiệu ứng hào quang phát sáng thương hiệu"
+        placeholderSrc: "assets/gif/Anim_Logo_placeholder.gif",
+        alt: "Animation logo Mathicard",
+        caption: "Logo Animation: Hiệu ứng chuyển động logo"
       }
     ]
   },
 
   // 8. TÀI LIỆU HỌC THUẬT BTL CÔNG NGHỆ ĐA PHƯƠNG TIỆN
   academicDocs: {
-    sectionBadge: "ACADEMIC DELIVERABLES",
+    sectionBadge: "TÀI LIỆU HỌC THUẬT",
     sectionTitle: "TÀI LIỆU HỌC THUẬT BTL",
     sectionSubtitle: "Các sản phẩm nghiên cứu, bản dịch giáo trình và mã nguồn của nhóm",
     notice: "Trình duyệt hỗ trợ xem trực tiếp bản PDF trong modal. Bấm 'Xem trực tuyến' để đọc hoặc 'Tải về' để lưu tệp gốc.",
@@ -529,7 +530,7 @@ export const siteContent = {
 
   // 9. THÀNH VIÊN NHÓM & PHÂN CÔNG CÔNG VIỆC
   team: {
-    sectionBadge: "TEAM MEMBERS",
+    sectionBadge: "THÀNH VIÊN NHÓM",
     sectionTitle: "THÀNH VIÊN & PHÂN CÔNG",
     sectionSubtitle: "Thông tin nhóm sinh viên thực hiện bài tập lớn môn Công nghệ đa phương tiện",
     classInfo: "Lớp: 68PM1 · Nhóm: XX",
@@ -562,39 +563,6 @@ export const siteContent = {
         role: "Nghiên cứu & Kỹ thuật",
         tasks: "Báo cáo Nghiên cứu 2.2 (Nén JPEG/MPEG) & 2.3 (Truyền video), Xây dựng mã nguồn Demo nén ảnh Jupyter Notebook",
         status: "Hoàn thành"
-      }
-    ],
-    // Danh mục công việc & Tiến độ 50 giờ (Team Task List & Roadmap)
-    taskRoadmapTitle: "TIẾN ĐỘ THỰC HIỆN DỰ ÁN (50 GIỜ)",
-    taskRoadmapSubtitle: "Lộ trình phân bổ thời gian và các mốc bàn giao sản phẩm của nhóm",
-    milestones: [
-      {
-        phase: "Mốc H0–H8 (Checkpoint 1)",
-        title: "Khởi động & Phác thảo",
-        tasks: "Thiết lập cấu trúc web tĩnh; phác thảo logo và bảng chữ cái font riêng; dịch mục 11.1–11.2; lập dàn ý nghiên cứu 2.2 & 2.3.",
-        status: "Hoàn thành",
-        badge: "CHECKPOINT 1"
-      },
-      {
-        phase: "Mốc H8–H24 (Bản nháp đủ)",
-        title: "Dịch thuật, Nghiên cứu & Media",
-        tasks: "Hoàn thiện bản dịch thô Ch11–12; viết báo cáo nghiên cứu JPEG/MPEG và truyền phát video; lập trình notebook Demo_Nen.ipynb; hoàn thiện bộ hình ảnh KeyArt và cắt thẻ bài.",
-        status: "Hoàn thành",
-        badge: "BẢN NHÁP"
-      },
-      {
-        phase: "Mốc H24–H32 (Review & Sửa)",
-        title: "Kiểm tra chéo & Hoàn thiện",
-        tasks: "Trưởng nhóm review chéo; chuẩn hóa bảng thuật ngữ ThuatNgu.xlsx; xuất bản video trailer lồng tiếng và căn chỉnh phụ đề Video_Mathicard.vtt.",
-        status: "Hoàn thành",
-        badge: "REVIEW"
-      },
-      {
-        phase: "Mốc H32–H50 (Nghiệm thu)",
-        title: "Tích hợp Website & Đóng gói",
-        tasks: "Ghép toàn bộ tài liệu học thuật vào web tĩnh; hoàn thiện slide báo cáo Slide_68PM1_NhomXX; kiểm thử responsive 375px/768px/1440px, shader WebGL và accessibility.",
-        status: "Hoàn thành",
-        badge: "FINAL"
       }
     ]
   },

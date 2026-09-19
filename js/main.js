@@ -23,6 +23,7 @@ const AppState = {
 /** Khởi động ứng dụng khi DOM sẵn sàng */
 document.addEventListener("DOMContentLoaded", () => {
   initShader();
+  initBrandIcons();
   renderNavigation();
   renderHero();
   renderTrailer();
@@ -38,6 +39,29 @@ document.addEventListener("DOMContentLoaded", () => {
   checkInitialHash();
   window.addEventListener("hashchange", checkInitialHash);
 });
+
+/** Kiểm tra sự tồn tại của tệp thông qua HTTP HEAD tại runtime */
+export async function checkFileExists(url) {
+  if (!url) return false;
+  try {
+    const res = await fetch(url, { method: "HEAD" });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/** Tự động cập nhật favicon và logo che mặt sau thẻ bài */
+async function initBrandIcons() {
+  const hasIcon = await checkFileExists("assets/logo/Logo_Mathicard_Icon.png");
+  const iconSrc = hasIcon ? "assets/logo/Logo_Mathicard_Icon.png" : "assets/logo/Logo_Mathicard_Icon_placeholder.png";
+
+  const favicon = document.getElementById("site-favicon");
+  if (favicon) favicon.href = iconSrc;
+
+  const reviewCover = document.getElementById("review-cover-logo");
+  if (reviewCover) reviewCover.src = iconSrc;
+}
 
 function checkInitialHash() {
   const hash = window.location.hash;
@@ -81,11 +105,19 @@ function initShader() {
 /* =============================================================================
    2. THANH ĐIỀU HƯỚNG (NAVBAR)
 ============================================================================= */
-function renderNavigation() {
+async function renderNavigation() {
+  const brandWordmark = document.getElementById("nav-logo-wordmark");
   const brandLogo = document.getElementById("nav-logo");
-  if (brandLogo) {
+
+  const hasLogoNgang = await checkFileExists(siteContent.hero.logoImg);
+  if (hasLogoNgang && brandLogo) {
     brandLogo.src = siteContent.hero.logoImg;
     brandLogo.alt = siteContent.hero.logoAlt;
+    brandLogo.style.display = "block";
+    if (brandWordmark) brandWordmark.style.display = "none";
+  } else {
+    if (brandWordmark) brandWordmark.style.display = "inline-block";
+    if (brandLogo) brandLogo.style.display = "none";
   }
 
   const navLinksContainer = document.getElementById("nav-menu-links");
@@ -136,14 +168,22 @@ function setupMobileMenu() {
 /* =============================================================================
    3. HERO SECTION (BANNER & XÒE BÀI TƯƠNG TÁC)
 ============================================================================= */
-function renderHero() {
+async function renderHero() {
   const heroBadge = document.getElementById("hero-badge");
   if (heroBadge) heroBadge.textContent = siteContent.hero.badgeText;
 
+  const heroWordmark = document.getElementById("hero-logo-wordmark");
   const heroLogo = document.getElementById("hero-logo-img");
-  if (heroLogo) {
+
+  const hasLogoNgang = await checkFileExists(siteContent.hero.logoImg);
+  if (hasLogoNgang && heroLogo) {
     heroLogo.src = siteContent.hero.logoImg;
     heroLogo.alt = siteContent.hero.logoAlt;
+    heroLogo.style.display = "block";
+    if (heroWordmark) heroWordmark.style.display = "none";
+  } else {
+    if (heroWordmark) heroWordmark.style.display = "block";
+    if (heroLogo) heroLogo.style.display = "none";
   }
 
   const heroSlogan = document.getElementById("hero-slogan");
@@ -166,18 +206,20 @@ function renderHeroCardFan() {
   fanContainer.innerHTML = cards
     .map((card, idx) => {
       const offset = idx - middle;
-      const rot = offset * 6; // Góc xoay quạt
-      const translateY = Math.abs(offset) * 12;
+      const rot = offset * 7; // Góc xoay quạt
+      const translateY = Math.abs(offset) * 6;
       const delay = (idx * 0.15).toFixed(2);
 
       return `
-        <div class="fanned-card card-wobble" 
-             style="--fan-rot: ${rot}deg; --fan-y: ${translateY}px; --wobble-delay: ${delay}s; z-index: ${10 + idx};"
+        <div class="fanned-card" 
+             style="--fan-rot: ${rot}deg; --fan-y: ${translateY}px; z-index: ${10 + idx};"
              data-title="${card.title}"
-             data-type="${card.type}">
-          <div class="card-inner">
-            <img src="${card.image}" alt="${card.title}" width="160" height="235" />
-            <div class="card-badge">${card.subtitle}</div>
+             data-type="${card.type}"
+             title="${card.title}">
+          <div class="card-wobble" style="--wobble-delay: ${delay}s;">
+            <div class="card-inner">
+              <img src="${card.image}" alt="${card.title}" width="140" height="210" loading="eager" />
+            </div>
           </div>
         </div>
       `;
@@ -497,6 +539,26 @@ function openCardInspectorModal(card) {
 /* =============================================================================
    7. ĐÁNH GIÁ (REVIEW CARD FLIP, SCORE TALLY & SCREEN SHAKE)
 ============================================================================= */
+function computeStarsHtml(score, maxScore = 10) {
+  const ratingOutOf5 = (score / maxScore) * 5;
+  const rounded = Math.round(ratingOutOf5 * 2) / 2; // Làm tròn về bội số 0.5 (ví dụ 8.5/10 -> 4.5 sao)
+  const full = Math.floor(rounded);
+  const half = (rounded % 1 !== 0);
+  const empty = 5 - full - (half ? 1 : 0);
+
+  let html = "";
+  for (let i = 0; i < full; i++) {
+    html += '<span class="star star-full" aria-hidden="true">★</span>';
+  }
+  if (half) {
+    html += '<span class="star star-half" aria-hidden="true">★</span>';
+  }
+  for (let i = 0; i < empty; i++) {
+    html += '<span class="star star-empty" aria-hidden="true">☆</span>';
+  }
+  return { html, rounded };
+}
+
 function renderReviewSection() {
   const badge = document.getElementById("review-badge");
   if (badge && siteContent.review.sectionBadge) badge.textContent = siteContent.review.sectionBadge;
@@ -512,6 +574,14 @@ function renderReviewSection() {
 
   const quote = document.getElementById("review-quote");
   if (quote) quote.textContent = `"${siteContent.review.quote}"`;
+
+  // Render số sao tính toán động từ điểm overallScore (8.5/10 -> 4.5 sao)
+  const starsContainer = document.getElementById("review-score-stars");
+  if (starsContainer) {
+    const { html, rounded } = computeStarsHtml(siteContent.review.overallScore, siteContent.review.maxScore);
+    starsContainer.innerHTML = html;
+    starsContainer.setAttribute("aria-label", `${rounded} trên 5 sao`);
+  }
 
   renderReviewCriteria();
   renderReviewProsCons();
@@ -667,13 +737,14 @@ function renderMediaLibrary() {
   renderAnimatedGrid();
 }
 
-function renderFontShowcase() {
+async function renderFontShowcase() {
   const fontData = siteContent.media.fontShowcase;
 
   const alphabetImg = document.getElementById("font-alphabet-img");
   if (alphabetImg) {
-    alphabetImg.src = fontData.alphabetImg;
-    alphabetImg.alt = fontData.alphabetAlt;
+    const hasAlphabet = await checkFileExists(fontData.alphabetImg);
+    alphabetImg.src = hasAlphabet ? fontData.alphabetImg : (fontData.alphabetPlaceholderImg || "assets/logo/BangChu_Mathicard_placeholder.png");
+    alphabetImg.alt = fontData.alphabetAlt || "Bảng font chữ pixel tự tạo";
   }
 
   const conceptNote = document.getElementById("font-concept-note");
@@ -746,17 +817,25 @@ function renderMediaImageGrid() {
   });
 }
 
-function renderAnimatedGrid() {
+async function renderAnimatedGrid() {
   const grid = document.getElementById("media-animated-grid");
   if (!grid) return;
 
-  grid.innerHTML = siteContent.media.animatedGrid
+  const resolvedGifs = await Promise.all(
+    siteContent.media.animatedGrid.map(async (gif) => {
+      const exists = await checkFileExists(gif.src);
+      const activeSrc = exists ? gif.src : (gif.placeholderSrc || gif.src);
+      return { ...gif, activeSrc };
+    })
+  );
+
+  grid.innerHTML = resolvedGifs
     .map(
       (gif) => `
-      <div class="media-thumb-card gif-card" tabindex="0" role="button" data-src="${gif.src}" data-caption="${gif.caption}">
+      <div class="media-thumb-card gif-card" tabindex="0" role="button" data-src="${gif.activeSrc}" data-caption="${gif.caption}">
         <div class="thumb-img-wrap">
-          <img src="${gif.src}" alt="${gif.alt}" loading="lazy" />
-          <span class="gif-badge">GIF ANIMATION</span>
+          <img src="${gif.activeSrc}" alt="${gif.alt}" loading="lazy" />
+          <span class="gif-badge">ẢNH ĐỘNG GIF</span>
         </div>
         <div class="thumb-caption">${gif.caption}</div>
       </div>
@@ -790,7 +869,7 @@ function openLightbox(src, caption) {
 /* =============================================================================
    9. TÀI LIỆU HỌC THUẬT BTL (DOCUMENTS & MODAL PDF VIEWER)
 ============================================================================= */
-function renderAcademicDocs() {
+async function renderAcademicDocs() {
   setTextContent("academic-badge", siteContent.academicDocs.sectionBadge);
   setTextContent("academic-title", siteContent.academicDocs.sectionTitle);
   setTextContent("academic-sub", siteContent.academicDocs.sectionSubtitle);
@@ -798,7 +877,16 @@ function renderAcademicDocs() {
   const container = document.getElementById("academic-docs-grid");
   if (!container) return;
 
-  container.innerHTML = siteContent.academicDocs.deliverables.map(renderDocCard).join("");
+  // Kiểm tra trạng thái tồn tại của tệp qua HTTP HEAD tại runtime
+  const docStatuses = await Promise.all(
+    siteContent.academicDocs.deliverables.map(async (doc) => {
+      const hasPdf = doc.pdfFile ? await checkFileExists(doc.pdfFile) : false;
+      const hasDownload = doc.downloadFile ? await checkFileExists(doc.downloadFile) : false;
+      return { ...doc, hasPdf, hasDownload, isReady: hasPdf || hasDownload };
+    })
+  );
+
+  container.innerHTML = docStatuses.map(renderDocCard).join("");
   setupDocPreviewActions(container);
 }
 
@@ -808,11 +896,15 @@ function renderDocCard(doc) {
     ? `<span class="doc-badge ready">SẴN SÀNG</span>`
     : `<span class="doc-badge pending">ĐANG CẬP NHẬT</span>`;
 
-  const previewBtn = isReady && doc.pdfFile
-    ? `<button class="pixel-btn btn-secondary btn-view-pdf" data-pdf="${doc.pdfFile}" data-title="${doc.title}">Xem</button>`
-    : `<button class="pixel-btn btn-secondary disabled" disabled title="Tài liệu đang được nhóm cập nhật">Xem</button>`;
+  const previewTooltip = doc.pdfFile
+    ? "Tài liệu đang được nhóm cập nhật"
+    : "Mã nguồn - chỉ hỗ trợ tải về trực tiếp, không có bản xem trước PDF";
 
-  const downloadBtn = isReady && doc.downloadFile
+  const previewBtn = doc.hasPdf
+    ? `<button class="pixel-btn btn-secondary btn-view-pdf" data-pdf="${doc.pdfFile}" data-title="${doc.title}">Xem</button>`
+    : `<button class="pixel-btn btn-secondary disabled" disabled title="${previewTooltip}">Xem</button>`;
+
+  const downloadBtn = doc.hasDownload
     ? `<a href="${doc.downloadFile}" download class="pixel-btn btn-primary">Tải về</a>`
     : `<button class="pixel-btn btn-primary disabled" disabled title="Tài liệu đang được nhóm cập nhật">Tải về</button>`;
 
@@ -887,35 +979,6 @@ function renderTeamSection() {
       )
       .join("");
   }
-
-  renderTeamRoadmap();
-}
-
-function renderTeamRoadmap() {
-  const roadmapTitle = document.getElementById("team-roadmap-title");
-  if (roadmapTitle && siteContent.team.taskRoadmapTitle) roadmapTitle.textContent = siteContent.team.taskRoadmapTitle;
-
-  const roadmapSub = document.getElementById("team-roadmap-sub");
-  if (roadmapSub && siteContent.team.taskRoadmapSubtitle) roadmapSub.textContent = siteContent.team.taskRoadmapSubtitle;
-
-  const grid = document.getElementById("team-milestones-grid");
-  if (!grid || !siteContent.team.milestones) return;
-
-  grid.innerHTML = siteContent.team.milestones
-    .map(
-      (m) => `
-      <div class="milestone-card">
-        <div class="milestone-phase">${m.phase}</div>
-        <h4 class="milestone-title">${m.title}</h4>
-        <p class="milestone-tasks">${m.tasks}</p>
-        <div class="milestone-footer">
-          <span class="milestone-badge">${m.badge}</span>
-          <span class="milestone-status">✔ ${m.status}</span>
-        </div>
-      </div>
-    `
-    )
-    .join("");
 }
 
 /* =============================================================================

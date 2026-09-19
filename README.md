@@ -42,28 +42,28 @@ Toàn bộ nội dung chữ, đường dẫn ảnh, video và tài liệu học 
 2. (Tùy chọn) Mở `web/js/content.js` để chỉnh sửa lại mô tả, điểm số hoặc tên thành viên.
 3. **Tuyệt đối không cần chỉnh sửa các tệp HTML, CSS hay mã nguồn JavaScript khác!**
 
-### Danh Sách Tệp Cần Thay Thế:
+### Danh Sách Tệp Cần Thay Thế & Trạng Thái Hiện Tại:
 
-| Hạng mục | Đường dẫn tệp | Mô tả & Lưu ý | Người phụ trách |
+| Hạng mục | Đường dẫn tệp | Trạng thái & Cơ chế fallback tự động | Người phụ trách |
 |---|---|---|---|
-| **Logo ngang** | `web/assets/logo/Logo_Mathicard_Ngang.png` | Logo chính thức có font thiết kế riêng (nền trong suốt PNG) | Trần Minh Bảo |
-| **Logo icon** | `web/assets/logo/Logo_Mathicard_Icon.png` | Icon ứng dụng vuông 1:1 (khuyên dùng 192x192 hoặc 512x512) | Trần Minh Bảo |
-| **Bảng chữ cái** | `web/assets/logo/BangChu_Mathicard.png` | Bản vẽ mẫu các ký tự của font tự thiết kế (A–Z, 0–9, tiếng Việt) | Trần Minh Bảo |
-| **Key Art 16:9** | `web/assets/images/KeyArt.webp` | Hình ảnh minh họa chính của game (banner 1200x675 px) | Trần Minh Bảo |
-| **Ảnh Showcase** | `web/assets/images/CardShowcase.webp` | Hình chụp hoặc banner các bộ bài & gói mở rộng | Trần Minh Bảo |
-| **Ảnh Đánh giá** | `web/assets/images/DanhGia.webp` | Infographic bảng điểm đánh giá | Trần Minh Bảo |
-| **Ảnh 5 Lượt** | `web/assets/images/Luot_01.webp` .. `Luot_05.webp` | Minh họa 5 phase: Bốc bài, Sinh số, Đánh bài, Tính điểm, Cửa hàng | Trần Minh Bảo |
-| **GIF Logo** | `web/assets/gif/Anim_Logo.gif` | Ảnh động logo phát sáng/chuyển động | Trần Minh Bảo |
-| **GIF Lật bài** | `web/assets/gif/Anim_LatBai.gif` | Ảnh động hiệu ứng lật bài 2 mặt trong game | Trần Minh Bảo |
-| **Video Trailer** | `web/assets/video/Video_Mathicard_NoSub.mp4` | Video dưới 30 giây, có lồng tiếng, KHÔNG dán cứng phụ đề | Trần Minh Bảo |
-| **Phụ đề VTT** | `web/assets/video/Video_Mathicard.vtt` | Tệp phụ đề WebVTT đồng bộ khớp giọng đọc tiếng Việt | Trần Minh Bảo |
-| **Bản dịch C11-12** | `web/docs/Dich_Ch11_12.pdf` & `.docx` | Bản dịch sách *Fundamentals of Multimedia* (Chương 11 & 12) | Lê Hoàng Cường |
-| **Nghiên cứu 2.2** | `web/docs/NC_2.2_JPEG_MPEG.pdf` & `.docx` | Báo cáo các bước nén mất dữ liệu trong JPEG & MPEG | Phạm Quốc Dũng |
-| **Nghiên cứu 2.3** | `web/docs/NC_2.3_Video.pdf` & `.docx` | Báo cáo công nghệ lưu trữ, phát lại & truyền luồng video | Phạm Quốc Dũng |
-| **Demo Nén** | `web/docs/Demo_Nen.ipynb` | Jupyter Notebook chạy demo thuật toán DCT & lượng tử hóa | Phạm Quốc Dũng |
-| **Slide Thuyết trình**| `web/docs/Slide_68PM1_NhomXX.pdf` & `.pptx` | Bản trình chiếu báo cáo bài tập lớn của nhóm | Nguyễn Văn An |
+| **Logo ngang** | `web/assets/logo/Logo_Mathicard_Ngang.png` | **Chờ thay thế**: Web tự động kiểm tra runtime HEAD; khi chưa có, tự động hiển thị wordmark pixel "MATHICARD" được tạo kiểu chuẩn CSS. Banner promo cũ đã chuyển vào `web/assets/images/PromoBanner.png`. | Trần Minh Bảo |
+| **Logo icon** | `web/assets/logo/Logo_Mathicard_Icon.png` | **Đang dùng placeholder**: `Logo_Mathicard_Icon_placeholder.png`. Thay bằng icon PNG nền trong suốt 192x192 hoặc 512x512. | Trần Minh Bảo |
+| **Bảng chữ cái** | `web/assets/logo/BangChu_Mathicard.png` | **Đang dùng placeholder**: `BangChu_Mathicard_placeholder.png`. Bản vẽ mẫu các ký tự của font tự thiết kế (A–Z, 0–9, tiếng Việt). | Trần Minh Bảo |
+| **GIF Logo** | `web/assets/gif/Anim_Logo.gif` | **Đang dùng placeholder**: `Anim_Logo_placeholder.gif`. Thay bằng GIF động nền trong suốt. | Trần Minh Bảo |
+| **GIF Lật bài** | `web/assets/gif/Anim_LatBai.gif` | Đã có: Ảnh động hiệu ứng lật bài 2 mặt trong game. | Trần Minh Bảo |
+| **Key Art 16:9** | `web/assets/images/KeyArt.webp` | Đã có: Banner minh họa chính 1200x675 px. | Trần Minh Bảo |
+| **Ảnh Showcase** | `web/assets/images/CardShowcase.webp` | Đã có: Banner các bộ bài & gói mở rộng. | Trần Minh Bảo |
+| **Ảnh Đánh giá** | `web/assets/images/DanhGia.webp` | Đã có: Bảng điểm đánh giá đồ án. | Trần Minh Bảo |
+| **Ảnh 5 Lượt** | `web/assets/images/Luot_01.webp` .. `Luot_05.webp` | Đã có: Minh họa 5 phase của vòng đấu. | Trần Minh Bảo |
+| **Video Trailer** | `web/assets/video/Video_Mathicard_NoSub.mp4` | Đã có: Video gameplay/trailer kèm phụ đề VTT rời. | Trần Minh Bảo |
+| **Phụ đề VTT** | `web/assets/video/Video_Mathicard.vtt` | Đã có: Tệp phụ đề WebVTT chuẩn hóa. | Trần Minh Bảo |
+| **Bản dịch C11-12** | `web/docs/Dich_Ch11_12.pdf` & `.docx` | **Đang cập nhật**: Đã gỡ tài liệu giả. Web tự động kiểm tra HEAD; nút bấm tự vô hiệu hóa và hiện nhãn "ĐANG CẬP NHẬT". Khi đặt file thật vào, nút tự kích hoạt ngay. | Lê Hoàng Cường |
+| **Nghiên cứu 2.2** | `web/docs/NC_2.2_JPEG_MPEG.pdf` & `.docx` | **Đang cập nhật**: Đã gỡ file giả; tự động kiểm tra HEAD runtime. | Phạm Quốc Dũng |
+| **Nghiên cứu 2.3** | `web/docs/NC_2.3_Video.pdf` & `.docx` | **Đang cập nhật**: Đã gỡ file giả; tự động kiểm tra HEAD runtime. | Phạm Quốc Dũng |
+| **Demo Nén** | `web/docs/Demo_Nen.ipynb` | **Đang cập nhật**: Đã gỡ file giả; tự động kiểm tra HEAD runtime. | Phạm Quốc Dũng |
+| **Slide Thuyết trình**| `web/docs/Slide_68PM1_NhomXX.pdf` & `.pptx` | **Đang cập nhật**: Đã gỡ file giả; tự động kiểm tra HEAD runtime. | Nguyễn Văn An |
 
-> 💡 **Xử lý tài liệu chưa có:** Trong `web/js/content.js`, đặt `isReady: false` cho tài liệu đó. Thẻ bài trên web sẽ tự động hiện nhãn *"ĐANG CẬP NHẬT"* và vô hiệu hóa nút bấm, tránh phát sinh lỗi 404 cho giảng viên khi chấm bài!
+> 💡 **Cơ chế Runtime HEAD-check thông minh:** Website tự động thực hiện truy vấn HTTP HEAD đối với từng tệp trong `web/docs/` và `web/assets/logo/Logo_Mathicard_Ngang.png`. Nếu tệp chưa tồn tại trên máy chủ, giao diện tự động vô hiệu hóa nút bấm và hiển thị trạng thái *"ĐANG CẬP NHẬT"*, ngăn hoàn toàn lỗi HTTP 404. Khi thành viên nhóm hoàn thành và đặt tệp thật vào thư mục `docs/`, hệ thống lập tức mở khóa nút xem/tải mà không cần chỉnh sửa bất kỳ dòng mã nào.
 
 ---
 
@@ -127,4 +127,5 @@ Trang web đã được cấu hình **100% đường dẫn tương đối** (`cs
 - **WebGL Custom Shader**: Viết bằng GLSL thuần, tạo chuyển động cuộn xoáy psychedelic phong cách Balatro nguyên bản với domain warping. Render ở độ phân giải 0.5x kết hợp CSS pixelated scaling giúp tiết kiệm GPU và chạy mượt 60 FPS trên mọi thiết bị.
 - **Tự động ngắt Shader (Smart Lifecycle)**: Sử dụng `IntersectionObserver` và `visibilitychange` để tự động tạm dừng render loop khi người dùng cuộn khỏi Hero section hoặc chuyển tab.
 - **Accessibility**: Tương thích tiêu chuẩn `prefers-reduced-motion` (tắt hiệu ứng lắc/rung, chuyển nền gradient tĩnh), hỗ trợ điều hướng toàn bộ phím Tab/Enter/Escape, độ tương phản văn bản đạt chuẩn WCAG AA >= 4.5:1.
-- **Dung lượng trang siêu nhẹ**: Toàn bộ trang web (bao gồm đầy đủ hình ảnh, sprite cards, GIF và tài liệu PDF) chỉ nặng **~1.7 MB** (thấp hơn nhiều so với hạn mức tối đa 3 MB của đề bài).
+- **Deploy Hygiene & Tinh gọn**: Thư mục `web/` đã có `.nojekyll` để đảm bảo GitHub Pages không bỏ qua các tài nguyên tĩnh. Toàn bộ kế hoạch (`PLAN.md`), công cụ kiểm thử CDP tự động (`verify_all.js`), và ảnh chụp màn hình kiểm định (`_screens/`) được chuyển sang thư mục phát triển riêng `web_dev/`, giúp thư mục phát hành `web/` luôn gọn gàng và tinh sạch.
+- **Dung lượng trang siêu nhẹ**: Toàn bộ trang web (bao gồm đầy đủ hình ảnh, sprite cards, GIF và tài liệu) chỉ nặng **~1.7 MB** (thấp hơn nhiều so với hạn mức tối đa 3 MB của đề bài).

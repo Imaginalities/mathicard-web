@@ -6,14 +6,14 @@
   <title>Mathicard – Game Thẻ Bài Toán Học Đối Kháng | 68PM1</title>
   <meta name="description" content="Trang web quảng bá tựa game thẻ bài toán học chiến thuật Mathicard - Bài tập lớn môn Công nghệ đa phương tiện, Lớp 68PM1." />
   
-  <!-- Google Fonts: VT323 (Retro-Pixel chuẩn tiếng Việt) & Be Vietnam Pro (Body) -->
+  <!-- Google Fonts: Pixelify Sans (Retro Pixel) & Be Vietnam Pro (Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=VT323&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   
   <!-- CSS Stylesheet chính (Đường dẫn tương đối) -->
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="icon" type="image/png" href="assets/logo/Logo_Mathicard_Icon.png" />
+  <link id="site-favicon" rel="icon" type="image/png" href="assets/logo/Logo_Mathicard_Icon_placeholder.png" />
 </head>
 <body>
 
@@ -23,8 +23,9 @@
   <!-- 2. STICKY PIXEL NAVIGATION -->
   <header class="sticky-nav">
     <div class="nav-container">
-      <a href="#hero" class="nav-brand" aria-label="Mathicard Home">
-        <img id="nav-logo" src="assets/logo/Logo_Mathicard_Ngang.png" alt="Mathicard Logo" class="nav-logo-img" />
+      <a href="#hero" class="nav-brand" id="nav-brand" aria-label="Mathicard Home">
+        <span id="nav-logo-wordmark" class="brand-wordmark nav-wordmark card-wobble">MATHICARD</span>
+        <img id="nav-logo" src="" alt="Mathicard Logo" class="nav-logo-img" style="display: none;" />
       </a>
 
       <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Mở menu" aria-expanded="false">☰</button>
@@ -34,7 +35,7 @@
       </ul>
 
       <div class="nav-actions">
-        <a href="#trailer" class="pixel-btn btn-primary" style="font-size: 1.15rem; padding: 6px 14px;">Trailer</a>
+        <a href="#trailer" class="pixel-btn btn-primary" style="font-size: 1.05rem; padding: 6px 14px;">Trailer</a>
       </div>
     </div>
   </header>
@@ -47,8 +48,9 @@
           <span id="hero-badge" class="section-badge"></span>
         </div>
 
-        <div class="hero-logo-box">
-          <img id="hero-logo-img" src="assets/logo/Logo_Mathicard_Ngang.png" alt="Logo Mathicard" class="hero-logo-main" />
+        <div class="hero-logo-box" id="hero-logo-box">
+          <div id="hero-logo-wordmark" class="hero-wordmark card-wobble" aria-label="MATHICARD">MATHICARD</div>
+          <img id="hero-logo-img" src="" alt="Logo Mathicard" class="hero-logo-main" style="display: none;" />
         </div>
 
         <h1 id="hero-slogan" class="hero-slogan">Tính nhanh – Thắng lớn!</h1>
@@ -74,7 +76,7 @@
     <section id="trailer" class="trailer-section section-padding">
       <div class="container">
         <div class="section-header">
-          <span class="section-badge">VIDEO PROMOTION</span>
+          <span class="section-badge">VIDEO GIỚI THIỆU</span>
           <h2 id="trailer-title" class="section-title">TRAILER GAME & GAMEPLAY</h2>
           <p id="trailer-sub" class="section-subtitle">Video giới thiệu nhịp đấu kịch tính và luật chơi cơ bản dưới 30 giây</p>
         </div>
@@ -113,7 +115,7 @@
     <section id="cac-loai-the" class="gallery-section section-padding">
       <div class="container">
         <div class="section-header">
-          <span id="gallery-badge" class="section-badge">CARD COLLECTION</span>
+          <span id="gallery-badge" class="section-badge">BỘ SƯU TẬP THẺ</span>
           <h2 id="gallery-title" class="section-title">CÁC LOẠI THẺ BÀI</h2>
           <p id="gallery-sub" class="section-subtitle">Hệ thống thẻ bài phong phú tạo nên chiều sâu chiến thuật và hàng vạn nước đi bất ngờ</p>
         </div>
@@ -134,7 +136,7 @@
     <section id="danh-gia" class="review-section section-padding">
       <div class="container">
         <div class="section-header">
-          <span id="review-badge" class="section-badge">CRITIC REVIEW</span>
+          <span id="review-badge" class="section-badge">ĐÁNH GIÁ</span>
           <h2 id="review-title" class="section-title">ĐÁNH GIÁ CHUYÊN MÔN</h2>
           <p id="review-sub" class="section-subtitle">Phân tích toàn diện chất lượng đồ họa, cơ chế đối kháng và giá trị giáo dục</p>
         </div>
@@ -146,7 +148,7 @@
               <!-- MẶT ÚP (FACE DOWN) -->
               <div class="review-face review-cover">
                 <div class="card-back-pattern">
-                  <img src="assets/logo/Logo_Mathicard_Icon.png" alt="Mathicard Icon" class="cover-logo" />
+                  <img id="review-cover-logo" src="assets/logo/Logo_Mathicard_Icon_placeholder.png" alt="Mathicard Icon" class="cover-logo" />
                   <span id="review-cover-text" class="cover-text">CHẠM HOẶC CUỘN ĐỂ LẬT THẺ XEM ĐIỂM</span>
                 </div>
               </div>
@@ -157,7 +159,7 @@
                   <span id="tally-score-number" class="score-number">0.0</span>
                   <span class="score-max">/ 10</span>
                 </div>
-                <div class="score-stars">★★★★★</div>
+                <div id="review-score-stars" class="score-stars" aria-label="4.5 trên 5 sao"></div>
                 <span class="score-label">XUẤT SẮC</span>
               </div>
             </div>
@@ -192,7 +194,7 @@
     <section id="media" class="media-section section-padding">
       <div class="container">
         <div class="section-header">
-          <span id="media-badge" class="section-badge">MEDIA SHOWCASE</span>
+          <span id="media-badge" class="section-badge">THƯ VIỆN MEDIA</span>
           <h2 id="media-title" class="section-title">THƯ VIỆN ĐA PHƯƠNG TIỆN</h2>
           <p id="media-sub" class="section-subtitle">Trưng bày font chữ tùy tạo của nhóm, logo thương hiệu, hình ảnh nghệ thuật và hoạt họa</p>
         </div>
@@ -205,7 +207,7 @@
           </div>
 
           <div class="alphabet-preview-wrap">
-            <img id="font-alphabet-img" src="assets/logo/BangChu_Mathicard.png" alt="Bảng font chữ pixel tự tạo" loading="lazy" />
+            <img id="font-alphabet-img" src="assets/logo/BangChu_Mathicard_placeholder.png" alt="Bảng font chữ pixel tự tạo" loading="lazy" />
           </div>
 
           <div class="palette-swatches-wrap">
@@ -232,7 +234,7 @@
     <section id="tai-lieu" class="academic-section section-padding">
       <div class="container">
         <div class="section-header">
-          <span id="academic-badge" class="section-badge">ACADEMIC DELIVERABLES</span>
+          <span id="academic-badge" class="section-badge">TÀI LIỆU HỌC THUẬT</span>
           <h2 id="academic-title" class="section-title">TÀI LIỆU HỌC THUẬT BTL</h2>
           <p id="academic-sub" class="section-subtitle">Sản phẩm nghiên cứu khoa học, dịch thuật chuyên sâu và mã nguồn môn Công nghệ đa phương tiện</p>
         </div>
@@ -247,7 +249,7 @@
     <section id="nhom" class="team-section section-padding">
       <div class="container">
         <div class="section-header">
-          <span id="team-badge" class="section-badge">TEAM MEMBERS</span>
+          <span id="team-badge" class="section-badge">THÀNH VIÊN NHÓM</span>
           <h2 id="team-title" class="section-title">THÀNH VIÊN & PHÂN CÔNG</h2>
           <p id="team-sub" class="section-subtitle">Thông tin nhóm sinh viên thực hiện bài tập lớn môn Công nghệ đa phương tiện</p>
           <div class="team-class-wrap">
@@ -270,18 +272,6 @@
               <!-- Render từ main.js -->
             </tbody>
           </table>
-        </div>
-
-        <!-- TIẾN ĐỘ THỰC HIỆN DỰ ÁN (TEAM TASK LIST & ROADMAP) -->
-        <div class="team-roadmap-wrap">
-          <div class="roadmap-header">
-            <span class="section-badge">PROJECT ROADMAP</span>
-            <h3 id="team-roadmap-title" class="roadmap-title">TIẾN ĐỘ THỰC HIỆN DỰ ÁN (50 GIỜ)</h3>
-            <p id="team-roadmap-sub" class="roadmap-subtitle">Lộ trình phân bổ thời gian và các mốc bàn giao sản phẩm của nhóm</p>
-          </div>
-          <div id="team-milestones-grid" class="milestones-grid">
-            <!-- Render từ main.js -->
-          </div>
         </div>
       </div>
     </section>
