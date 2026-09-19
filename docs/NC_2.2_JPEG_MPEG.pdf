@@ -1,0 +1,99 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1574 >>
+stream
+0.96 0.97 0.98 rg
+0 0 612 792 re f
+0.08 0.15 0.25 rg
+36 680 540 80 re f
+0.96 0.64 0.38 RG 2 w
+36 680 540 80 re s
+BT
+/F1 18 Tf
+1 1 1 rg
+54 730 Td (NGHIEN CUU 2.2: CAC BUOC NEN MAT DU LIEU TRONG JPEG VA MPEG) Tj
+/F2 10 Tf
+0.9 0.9 0.9 rg
+0 -22 Td (Chuyen de nghien cuu toi uu hoa nen da phuong tien | Tac gia: Pham Quoc Dung \(Nhom XX - 68PM1\)) Tj
+ET
+BT
+/F1 13 Tf
+0.1 0.2 0.35 rg
+54 640 Td (1. Qua trinh nen mat du lieu \(Lossy Compression\) trong JPEG) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 620 Td (Buoc 1: Chuyen he mau tu RGB sang YCbCr va lay mau giam sac do \(Chroma Subsampling 4:2:0\).) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 604 Td (Buoc 2: Bien doi Cosine roi rac \(DCT 8x8\) tach thanh phan tan so cao va thap.) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 588 Td (Buoc 3: Luong tu hoa \(Quantization\) - day la buoc DUY NHAT gay mat mat du lieu chinh.) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 572 Td (Buoc 4: Ma hoa do dai chay \(RLE\) va ma hoa Huffman \(Khong mat du lieu\).) Tj
+ET
+BT
+/F1 13 Tf
+0.1 0.2 0.35 rg
+54 542 Td (2. Cac buoc mat du lieu trong chuan MPEG) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 522 Td (Su mat mat trong bu chuyen dong do sai so vector chuyen dong va luong tu hoa du sai.) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 506 Td (Kiem soat toc do bit \(Rate Control\) va danh doi giua do net va kich thuoc tep.) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 490 Td (Ket luan thuc nghiem: Anh huong cua he so luong tu hoa Q len chat luong hinh anh.) Tj
+ET
+BT
+/F2 9 Tf
+0.5 0.5 0.6 rg
+54 36 Td (Bai tap lon Cong nghe da phuong tien - Lop 68PM1 - Nhom XX | Trang 1/1) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000242 00000 n 
+0000000320 00000 n 
+0000000395 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2022
+%%EOF

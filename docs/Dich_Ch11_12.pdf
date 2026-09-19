@@ -1,0 +1,104 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1699 >>
+stream
+0.96 0.97 0.98 rg
+0 0 612 792 re f
+0.08 0.15 0.25 rg
+36 680 540 80 re f
+0.96 0.64 0.38 RG 2 w
+36 680 540 80 re s
+BT
+/F1 18 Tf
+1 1 1 rg
+54 730 Td (BAN DICH CHUONG 11 & 12 - FUNDAMENTALS OF MULTIMEDIA) Tj
+/F2 10 Tf
+0.9 0.9 0.9 rg
+0 -22 Td (Mon hoc: Cong nghe da phuong tien \(CNDPT\) | Tac gia: Le Hoang Cuong \(Nhom XX - 68PM1\)) Tj
+ET
+BT
+/F1 13 Tf
+0.1 0.2 0.35 rg
+54 640 Td (1. Chuong 11: Chuan nen video MPEG-1, MPEG-2, MPEG-4 va MPEG-7) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 620 Td (Tong quan ve kien truc ma hoa video lien khung \(Inter-frame compression\).) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 604 Td (Phan loai khung hinh I-frame, P-frame va B-frame trong chuoi GOP \(Group of Pictures\).) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 588 Td (Ky thuat uoc luong chuyen dong \(Motion Estimation\) va bu chuyen dong \(Motion Compensation\).) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 572 Td (Ung dung MPEG-2 trong truyen hinh ky thuat so DVD va chuan MPEG-4 doi tuong.) Tj
+ET
+BT
+/F1 13 Tf
+0.1 0.2 0.35 rg
+54 542 Td (2. Chuong 12: Chuan nen H.264 \(AVC\) va H.265 \(HEVC\)) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 522 Td (Cau truc khoi bien doi linh hoat tu Macroblock 16x16 sang Coding Tree Unit \(CTU 64x64\).) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 506 Td (Bien doi DCT so nguyen \(Integer DCT\) va bo loc giam khoi \(Deblocking Filter\).) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 490 Td (Ma hoa entropy CABAC va CAVLC giup tiet kiem 50% bang thong so voi chuan cu.) Tj
+ET
+BT
+/F2 10 Tf
+0.2 0.25 0.3 rg
+54 474 Td (Ung dung thuc tien trong streaming 4K/8K va nen video game thoi gian thuc.) Tj
+ET
+BT
+/F2 9 Tf
+0.5 0.5 0.6 rg
+54 36 Td (Bai tap lon Cong nghe da phuong tien - Lop 68PM1 - Nhom XX | Trang 1/1) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000242 00000 n 
+0000000320 00000 n 
+0000000395 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2147
+%%EOF

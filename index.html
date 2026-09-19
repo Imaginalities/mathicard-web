@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mathicard – Game Thẻ Bài Toán Học Đối Kháng | 68PM1</title>
+  <meta name="description" content="Trang web quảng bá tựa game thẻ bài toán học chiến thuật Mathicard - Bài tập lớn môn Công nghệ đa phương tiện, Lớp 68PM1." />
+  
+  <!-- Google Fonts: VT323 (Retro-Pixel chuẩn tiếng Việt) & Be Vietnam Pro (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=VT323&display=swap" rel="stylesheet" />
+  
+  <!-- CSS Stylesheet chính (Đường dẫn tương đối) -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="assets/logo/Logo_Mathicard_Icon.png" />
+</head>
+<body>
+
+  <!-- 1. FULLSCREEN WEBGL SHADER BACKGROUND CANVAS -->
+  <canvas id="bg-shader-canvas" aria-hidden="true"></canvas>
+
+  <!-- 2. STICKY PIXEL NAVIGATION -->
+  <header class="sticky-nav">
+    <div class="nav-container">
+      <a href="#hero" class="nav-brand" aria-label="Mathicard Home">
+        <img id="nav-logo" src="assets/logo/Logo_Mathicard_Ngang.png" alt="Mathicard Logo" class="nav-logo-img" />
+      </a>
+
+      <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+
+      <ul id="nav-menu-links" class="nav-menu">
+        <!-- Được tạo tự động từ main.js -->
+      </ul>
+
+      <div class="nav-actions">
+        <a href="#trailer" class="pixel-btn btn-primary" style="font-size: 1.15rem; padding: 6px 14px;">Trailer</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 3. HERO SECTION -->
+    <section id="hero" class="hero-section">
+      <div class="container hero-content">
+        <div class="hero-badge-wrap">
+          <span id="hero-badge" class="section-badge"></span>
+        </div>
+
+        <div class="hero-logo-box">
+          <img id="hero-logo-img" src="assets/logo/Logo_Mathicard_Ngang.png" alt="Logo Mathicard" class="hero-logo-main" />
+        </div>
+
+        <h1 id="hero-slogan" class="hero-slogan">Tính nhanh – Thắng lớn!</h1>
+        <p id="hero-desc" class="hero-desc"></p>
+
+        <div class="hero-cta-group">
+          <button id="hero-btn-trailer" class="pixel-btn btn-primary">
+            <span>▶</span> Xem trailer
+          </button>
+          <a href="#gioi-thieu" class="pixel-btn btn-secondary">
+            <span>↓</span> Khám phá game
+          </a>
+        </div>
+
+        <!-- Dòng thẻ bài xòe quạt tương tác (Interactive Card Fan) -->
+        <div id="hero-card-fan" class="hero-fan-container" aria-label="Bộ thẻ bài Mathicard tiêu biểu">
+          <!-- Được render từ main.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TRAILER SECTION -->
+    <section id="trailer" class="trailer-section section-padding">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">VIDEO PROMOTION</span>
+          <h2 id="trailer-title" class="section-title">TRAILER GAME & GAMEPLAY</h2>
+          <p id="trailer-sub" class="section-subtitle">Video giới thiệu nhịp đấu kịch tính và luật chơi cơ bản dưới 30 giây</p>
+        </div>
+
+        <div class="trailer-wrapper">
+          <video id="main-trailer-video" controls preload="metadata" playsinline>
+            <track id="trailer-subtitles-track" kind="subtitles" srclang="vi" label="Tiếng Việt" default />
+            Trình duyệt của bạn không hỗ trợ thẻ video HTML5.
+          </video>
+          <!-- Fallback hiển thị poster sang trọng khi chưa có video mp4 -->
+          <div id="trailer-fallback" class="trailer-fallback-box"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. GIỚI THIỆU GAME & 5 GIAI ĐOẠN (3D FLIP CARDS) -->
+    <section id="gioi-thieu" class="overview-section section-padding">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">CƠ CHẾ TRÒ CHƠI</span>
+          <h2 class="section-title">LUẬT CHƠI & 5 LƯỢT ĐẤU</h2>
+          <p class="section-subtitle">Mỗi ván đấu là một vòng lặp chiến thuật gồm 5 giai đoạn liên tục và kịch tính</p>
+        </div>
+
+        <div class="overview-pitch-box">
+          <p id="overview-pitch"></p>
+        </div>
+
+        <div id="phases-grid" class="phases-grid-wrap">
+          <!-- Render 5 thẻ bài lật 3D từ main.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. BỘ SƯU TẬP THẺ BÀI (GALLERY) -->
+    <section id="cac-loai-the" class="gallery-section section-padding">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">CARD COLLECTION</span>
+          <h2 class="section-title">CÁC LOẠI THẺ BÀI</h2>
+          <p class="section-subtitle">Hệ thống thẻ bài phong phú tạo nên chiều sâu chiến thuật và hàng vạn nước đi bất ngờ</p>
+        </div>
+
+        <!-- Filter tabs -->
+        <div id="gallery-filter-tabs" class="gallery-filters" role="tablist">
+          <!-- Render từ main.js -->
+        </div>
+
+        <!-- Lưới thẻ bài -->
+        <div id="gallery-cards-grid" class="gallery-grid">
+          <!-- Render từ main.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. ĐÁNH GIÁ (REVIEW SCORE FLIP & TALLY) -->
+    <section id="danh-gia" class="review-section section-padding">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">CRITIC REVIEW</span>
+          <h2 id="review-title" class="section-title">ĐÁNH GIÁ CHUYÊN MÔN</h2>
+          <p class="section-subtitle">Phân tích toàn diện chất lượng đồ họa, cơ chế đối kháng và giá trị giáo dục</p>
+        </div>
+
+        <div class="review-container">
+          <!-- Thẻ bài úp bí ẩn (Card Flip on scroll) -->
+          <div class="review-card-perspective">
+            <div id="review-flip-card" class="review-flip-card" role="button" tabindex="0" aria-label="Thẻ điểm đánh giá Mathicard">
+              <!-- MẶT ÚP (FACE DOWN) -->
+              <div class="review-face review-cover">
+                <div class="card-back-pattern">
+                  <img src="assets/logo/Logo_Mathicard_Icon.png" alt="Mathicard Icon" class="cover-logo" />
+                  <span class="cover-text">CHẠM HOẶC CUỘN ĐỂ LẬT THẺ XEM ĐIỂM</span>
+                </div>
+              </div>
+              <!-- MẶT NGỬA (FACE UP) -->
+              <div class="review-face review-front">
+                <span class="score-badge">ĐIỂM TỔNG HỢP</span>
+                <div class="score-display">
+                  <span id="tally-score-number" class="score-number">0.0</span>
+                  <span class="score-max">/ 10</span>
+                </div>
+                <div class="score-stars">★★★★★</div>
+                <span class="score-label">XUẤT SẮC</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chi tiết đánh giá bên phải -->
+          <div class="review-details">
+            <div class="review-quote-box">
+              <p id="review-quote"></p>
+            </div>
+
+            <!-- Animated criteria bars -->
+            <div id="review-criteria-bars" class="criteria-bars"></div>
+
+            <!-- Ưu điểm / Nhược điểm -->
+            <div class="pros-cons-grid">
+              <div class="pros-box">
+                <h4>✔ ƯU ĐIỂM NỔI BẬT</h4>
+                <ul id="review-pros"></ul>
+              </div>
+              <div class="cons-box">
+                <h4>✖ ĐIỂM CẦN NÂNG CẤP</h4>
+                <ul id="review-cons"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. THƯ VIỆN MEDIA & FONT CHỮ THIẾT KẾ -->
+    <section id="media" class="media-section section-padding">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">MEDIA SHOWCASE</span>
+          <h2 class="section-title">THƯ VIỆN ĐA PHƯƠNG TIỆN</h2>
+          <p class="section-subtitle">Trưng bày font chữ tùy tạo của nhóm, logo thương hiệu, hình ảnh nghệ thuật và hoạt họa</p>
+        </div>
+
+        <!-- Trưng bày font chữ riêng & bảng màu -->
+        <div class="font-showcase-box">
+          <div class="font-showcase-header">
+            <h3>BỘ NHẬN DIỆN & FONT CHỮ TỰ THIẾT KẾ</h3>
+            <p id="font-concept-note"></p>
+          </div>
+
+          <div class="alphabet-preview-wrap">
+            <img id="font-alphabet-img" src="assets/logo/BangChu_Mathicard.png" alt="Bảng font chữ pixel tự tạo" loading="lazy" />
+          </div>
+
+          <div class="palette-swatches-wrap">
+            <h4>BẢNG MÃ MÀU CHỦ ĐẠO (BẤM ĐỂ SAO CHÉP MÃ HEX)</h4>
+            <div id="media-palette-grid" class="palette-grid"></div>
+          </div>
+        </div>
+
+        <!-- Lưới hình ảnh độ nét cao -->
+        <div class="media-grid-section">
+          <h3 class="media-sub-heading">HÌNH ẢNH GAME & SHOWCASE (BẤM XEM PHÓNG TO)</h3>
+          <div id="media-images-grid" class="media-cards-grid"></div>
+        </div>
+
+        <!-- Lưới ảnh động GIF / WebP -->
+        <div class="media-grid-section">
+          <h3 class="media-sub-heading">ẢNH ĐỘNG GAMEPLAY & HIỆU ỨNG (GIF)</h3>
+          <div id="media-animated-grid" class="media-cards-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. TÀI LIỆU HỌC THUẬT (ACADEMIC DELIVERABLES) -->
+    <section id="tai-lieu" class="academic-section section-padding">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">ACADEMIC DELIVERABLES</span>
+          <h2 class="section-title">TÀI LIỆU HỌC THUẬT BTL</h2>
+          <p class="section-subtitle">Sản phẩm nghiên cứu khoa học, dịch thuật chuyên sâu và mã nguồn môn Công nghệ đa phương tiện</p>
+        </div>
+
+        <div id="academic-docs-grid" class="academic-docs-grid">
+          <!-- Render từ main.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. THÔNG TIN NHÓM -->
+    <section id="nhom" class="team-section section-padding">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">TEAM MEMBERS</span>
+          <h2 class="section-title">THÀNH VIÊN & PHÂN CÔNG</h2>
+          <p id="team-class-info" class="section-subtitle">Lớp 68PM1 · Nhóm XX</p>
+        </div>
+
+        <div class="team-table-wrap">
+          <table class="team-table">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Thành viên</th>
+                <th>Vai trò</th>
+                <th>Nội dung công việc phụ trách</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody id="team-table-body">
+              <!-- Render từ main.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 11. FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <h3 class="footer-brand">MATHICARD</h3>
+      <p id="footer-credit" class="footer-credit"></p>
+
+      <ul class="footer-links">
+        <li><a href="#hero">Trang chủ</a></li>
+        <li><a href="#trailer">Trailer</a></li>
+        <li><a href="#gioi-thieu">Luật chơi</a></li>
+        <li><a href="#cac-loai-the">Bộ thẻ bài</a></li>
+        <li><a href="#danh-gia">Đánh giá</a></li>
+        <li><a href="#media">Media</a></li>
+        <li><a href="#tai-lieu">Tài liệu</a></li>
+        <li><a href="#nhom">Nhóm</a></li>
+      </ul>
+
+      <p id="footer-copyright" class="footer-copyright"></p>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       MODAL DIALOGS
+  ========================================================================= -->
+
+  <!-- Modal Video Trailer -->
+  <div id="video-modal" class="modal-backdrop" aria-hidden="true" role="dialog">
+    <div class="modal-box" style="max-width: 860px;">
+      <div class="modal-header">
+        <h3 class="modal-title">MATHICARD TRAILER</h3>
+        <button class="modal-close-btn" aria-label="Đóng modal">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 0; background: #000;">
+        <video id="modal-video-elem" controls style="width: 100%; aspect-ratio: 16/9; display: block;">
+          <track kind="subtitles" srclang="vi" label="Tiếng Việt" default />
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Card Inspector (Xem thẻ bài chi tiết) -->
+  <div id="card-modal" class="modal-backdrop" aria-hidden="true" role="dialog">
+    <div class="modal-box" style="max-width: 720px;">
+      <div class="modal-header">
+        <h3 class="modal-title">CHI TIẾT THẺ BÀI</h3>
+        <button class="modal-close-btn" aria-label="Đóng modal">✕</button>
+      </div>
+      <div id="card-modal-content" class="modal-body card-inspector-layout">
+        <!-- Render khi bấm thẻ -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Đọc PDF Tài Liệu In-Page -->
+  <div id="pdf-modal" class="modal-backdrop" aria-hidden="true" role="dialog">
+    <div class="modal-box pdf-modal-box">
+      <div class="modal-header">
+        <h3 id="pdf-modal-title" class="modal-title">XEM TÀI LIỆU PDF</h3>
+        <button class="modal-close-btn" aria-label="Đóng modal">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 0;">
+        <div class="pdf-iframe-container">
+          <iframe id="pdf-modal-iframe" src="about:blank" title="Trình xem PDF"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Lightbox (Phóng to ảnh & GIF) -->
+  <div id="lightbox-modal" class="modal-backdrop" aria-hidden="true" role="dialog">
+    <div class="lightbox-box">
+      <button class="modal-close-btn" style="align-self: flex-end; margin-bottom: 8px;" aria-label="Đóng">✕</button>
+      <div class="lightbox-img-wrap">
+        <img id="lightbox-img" src="" alt="Phóng to ảnh" />
+      </div>
+      <div id="lightbox-caption" class="lightbox-caption"></div>
+    </div>
+  </div>
+
+  <!-- Script ES Module chính -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
