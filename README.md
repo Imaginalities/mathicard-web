@@ -6,9 +6,13 @@ Trang web quảng bá chính thức cho tựa game **Mathicard** – Đồ án b
 
 ## 1. CÁCH CHẠY THỬ TRANG WEB Ở LOCAL
 
-Website được xây dựng hoàn toàn bằng **Static Web chuẩn hiện đại** (HTML5 + CSS3 + Vanilla JavaScript ES Modules, không sử dụng npm/build tool phức tạp). 
+Website được xây dựng hoàn toàn bằng **Static Web chuẩn hiện đại** (HTML5 + CSS3 + Vanilla JavaScript thuần, không cần web server, không phụ thuộc npm hay build tool). 
 
-### Cách 1: Chạy bằng Python (Khuyên dùng)
+### Cách 1: Mở index.html bằng trình duyệt (không cần cài đặt gì)
+- Nhấp đúp chuột trực tiếp vào tệp `web/index.html` (giao thức `file://` trên Google Chrome, Mozilla Firefox, Microsoft Edge,...).
+- Toàn bộ tính năng (shader WebGL nền, bộ sưu tập 275 thẻ bài, video trailer, font chữ pixel, cơ chế tự động nhận diện ảnh/video) đều hoạt động trơn tru ngay lập tức mà **không cần bất kỳ máy chủ nào**.
+
+### Cách 2: Chạy bằng Python (Tùy chọn)
 Mở terminal tại thư mục gốc của đồ án hoặc thư mục `web/`:
 
 ```bash
@@ -27,7 +31,7 @@ python3 -m http.server 8000
 # Mở: http://localhost:8000/
 ```
 
-### Cách 2: Sử dụng VS Code Live Server
+### Cách 3: Sử dụng VS Code Live Server
 Cài đặt extension **Live Server** trong VS Code, mở tệp `web/index.html` và nhấn nút **Go Live** ở thanh trạng thái dưới cùng.
 
 ---
@@ -46,7 +50,7 @@ Khi cập nhật tài nguyên:
 
 | Hạng mục | Đường dẫn tệp | Trạng thái & Cơ chế fallback tự động |
 |---|---|---|
-| **Logo ngang** | `web/assets/logo/Logo_Mathicard_Ngang.png` | **Chờ thay thế**: Web tự động kiểm tra runtime HEAD; khi chưa có, tự động hiển thị wordmark pixel "MATHICARD" được tạo kiểu chuẩn CSS. Banner promo có trong `web/assets/images/PromoBanner.png`. |
+| **Logo ngang** | `web/assets/logo/Logo_Mathicard_Ngang.png` | **Chờ thay thế**: Web tự động kiểm tra qua Image element event (onload/onerror); khi chưa có, tự động hiển thị wordmark pixel "MATHICARD" được tạo kiểu chuẩn CSS. Banner promo có trong `web/assets/images/PromoBanner.png`. |
 | **Logo icon** | `web/assets/logo/Logo_Mathicard_Icon.png` | **Đang dùng placeholder**: `Logo_Mathicard_Icon_placeholder.png`. Thay bằng icon PNG nền trong suốt 192x192 hoặc 512x512. |
 | **Bảng chữ cái** | `web/assets/logo/BangChu_Mathicard.png` | **Đang dùng placeholder**: `BangChu_Mathicard_placeholder.png`. Bản vẽ mẫu các ký tự của font pixel (A–Z, 0–9, tiếng Việt). |
 | **GIF Logo** | `web/assets/gif/Anim_Logo.gif` | **Đang dùng placeholder**: `Anim_Logo_placeholder.gif`. Thay bằng GIF động nền trong suốt. |

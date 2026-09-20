@@ -7,7 +7,6 @@
   <meta name="description" content="Trang web quảng bá tựa game thẻ bài toán học chiến thuật Mathicard - Bài tập lớn môn Công nghệ đa phương tiện." />
   
   <!-- Fonts: Mathicard Display (In-Game Pixel Font) & Be Vietnam Pro (Body) -->
-  <link rel="preload" href="assets/fonts/MathicardDisplay.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -281,7 +280,10 @@
     </div>
   </div>
 
-  <!-- Script ES Module chính -->
-  <script type="module" src="js/main.js"></script>
+  <!-- Classic Scripts nạp theo đúng thứ tự phụ thuộc (gắn vào window.MATHICARD) -->
+  <script defer src="js/content.js"></script>
+  <script defer src="js/cards-data.js"></script>
+  <script defer src="js/shader.js"></script>
+  <script defer src="js/main.js"></script>
 </body>
 </html>

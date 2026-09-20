@@ -680,9 +680,15 @@ def main():
         "pack": len(pack_cards)
     }
     
-    # Generate ES Module
-    header = "// AUTO-GENERATED – do not edit, run tools/build_cards.py\n\n"
-    js_content = f"{header}export const cardsData = {json.dumps(all_cards, ensure_ascii=False, indent=2)};\n"
+    # Generate Classic Script for window.MATHICARD
+    header = (
+        "// AUTO-GENERATED – do not edit, run tools/build_cards.py\n\n"
+        "window.MATHICARD = window.MATHICARD || {};\n\n"
+    )
+    js_content = (
+        f"{header}window.MATHICARD.cards = {json.dumps(all_cards, ensure_ascii=False, indent=2)};\n"
+        "window.MATHICARD.cardsData = window.MATHICARD.cards;\n"
+    )
     
     os.makedirs(os.path.dirname(OUTPUT_JS), exist_ok=True)
     with open(OUTPUT_JS, "w", encoding="utf-8") as f:

@@ -7,8 +7,10 @@
  * KHÔNG CẦN CHỈNH SỬA MÃ NGUỒN HTML/CSS/JS KHÁC!
  * =============================================================================
  */
+(function () {
+  window.MATHICARD = window.MATHICARD || {};
 
-export const siteContent = {
+  const siteContent = {
   // 1. THÔNG TIN CHUNG VỀ DỰ ÁN & WEBSITE
   meta: {
     siteTitle: "Mathicard – Game Thẻ Bài Toán Học Đối Kháng",
@@ -365,6 +367,11 @@ export const siteContent = {
   footerText: undefined
 };
 
-export const footerText = "Bài tập lớn môn Công nghệ Đa phương tiện · 68PM1 · Nhóm 6";
+const footerText = "Bài tập lớn môn Công nghệ Đa phương tiện · 68PM1 · Nhóm 6";
 siteContent.footerText = footerText;
 siteContent.footer.footerText = footerText;
+
+  window.MATHICARD.content = siteContent;
+  window.MATHICARD.siteContent = siteContent;
+  window.MATHICARD.footerText = footerText;
+})();

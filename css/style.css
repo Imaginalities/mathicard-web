@@ -11,9 +11,9 @@
 
 @font-face {
   font-family: "Mathicard Display";
-  src: url("../assets/fonts/MathicardDisplay.woff2") format("woff2"),
-       url("../assets/fonts/MathicardDisplay.otf") format("opentype"),
-       url("../assets/fonts/SVN-Determination-Sans.otf") format("opentype");
+  src: url("fonts/MathicardDisplay.woff2") format("woff2"),
+       url("fonts/MathicardDisplay.otf") format("opentype"),
+       url("fonts/SVN-Determination-Sans.otf") format("opentype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -21,8 +21,8 @@
 
 @font-face {
   font-family: "SVN-Determination-Sans";
-  src: url("../assets/fonts/MathicardDisplay.woff2") format("woff2"),
-       url("../assets/fonts/SVN-Determination-Sans.otf") format("opentype");
+  src: url("fonts/MathicardDisplay.woff2") format("woff2"),
+       url("fonts/SVN-Determination-Sans.otf") format("opentype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;

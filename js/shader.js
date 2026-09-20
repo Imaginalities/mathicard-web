@@ -11,7 +11,10 @@
  * =============================================================================
  */
 
-const VERTEX_SHADER_SRC = `
+(function () {
+  window.MATHICARD = window.MATHICARD || {};
+
+  const VERTEX_SHADER_SRC = `
 attribute vec2 a_position;
 varying vec2 v_uv;
 void main() {
@@ -106,7 +109,7 @@ void main() {
 }
 `;
 
-export class SwirlShader {
+class SwirlShader {
   constructor(canvasId = "bg-shader-canvas") {
     this.canvas = document.getElementById(canvasId);
     this.gl = null;
@@ -333,3 +336,7 @@ export class SwirlShader {
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
   }
 }
+
+  window.MATHICARD.SwirlShader = SwirlShader;
+  window.MATHICARD.shader = SwirlShader;
+})();

@@ -10,9 +10,13 @@
  * =============================================================================
  */
 
-import { siteContent, footerText } from "./content.js";
-import { cardsData } from "./cards-data.js";
-import { SwirlShader } from "./shader.js";
+(function () {
+  window.MATHICARD = window.MATHICARD || {};
+
+  const siteContent = window.MATHICARD.content || window.MATHICARD.siteContent;
+  const footerText = window.MATHICARD.footerText;
+  const cardsData = window.MATHICARD.cards || window.MATHICARD.cardsData;
+  const SwirlShader = window.MATHICARD.SwirlShader || window.MATHICARD.shader;
 
 // Trạng thái ứng dụng
 const AppState = {
@@ -24,33 +28,64 @@ const AppState = {
   activeModal: null
 };
 
-/** Khởi động ứng dụng khi DOM sẵn sàng */
-document.addEventListener("DOMContentLoaded", () => {
-  initShader();
-  initBrandIcons();
-  renderNavigation();
-  renderHero();
-  renderTrailer();
-  renderOverviewPhases();
-  renderCardGallery();
-  renderDevEvaluation();
-  renderMediaLibrary();
-  renderFooter();
-  setupGlobalInteractions();
-  setupModals();
-  checkInitialHash();
-  window.addEventListener("hashchange", checkInitialHash);
-});
 
-/** Kiểm tra sự tồn tại của tệp thông qua HTTP HEAD tại runtime */
-export async function checkFileExists(url) {
-  if (!url) return false;
-  try {
-    const res = await fetch(url, { method: "HEAD" });
-    return res.ok;
-  } catch {
-    return false;
+const imageExistsCache = new Map();
+
+/** Kiểm tra sự tồn tại của hình ảnh thông qua Image element events (onload/onerror) - hỗ trợ hoàn hảo file:// */
+function checkImageExists(url) {
+  if (!url) return Promise.resolve(false);
+  if (imageExistsCache.has(url)) {
+    return Promise.resolve(imageExistsCache.get(url));
   }
+  return new Promise((resolve) => {
+    const img = new Image();
+    let settled = false;
+    const done = (result) => {
+      if (!settled) {
+        settled = true;
+        img.onload = null;
+        img.onerror = null;
+        imageExistsCache.set(url, result);
+        resolve(result);
+      }
+    };
+    img.onload = () => done(true);
+    img.onerror = () => done(false);
+    setTimeout(() => done(false), 4000);
+    img.src = url;
+    if (img.complete && img.naturalWidth > 0) {
+      done(true);
+    }
+  });
+}
+
+/** Tương thích ngược: kiểm tra tệp hình ảnh không dùng fetch/HEAD */
+const checkFileExists = checkImageExists;
+
+/** Kiểm tra sự tồn tại của video thông qua Video element events (loadedmetadata/error) */
+function checkVideoExists(url) {
+  if (!url) return Promise.resolve(false);
+  return new Promise((resolve) => {
+    const vid = document.createElement("video");
+    let settled = false;
+    const done = (result) => {
+      if (!settled) {
+        settled = true;
+        vid.onloadedmetadata = null;
+        vid.onerror = null;
+        vid.src = "";
+        resolve(result);
+      }
+    };
+    vid.onloadedmetadata = () => done(true);
+    vid.onerror = () => done(false);
+    setTimeout(() => done(false), 4000);
+    vid.preload = "metadata";
+    vid.src = url;
+    if (vid.readyState >= 1) {
+      done(true);
+    }
+  });
 }
 
 /** Tự động cập nhật favicon */
@@ -85,7 +120,7 @@ function checkInitialHash() {
 /* =============================================================================
    HẰNG SỐ & HÀM TIỆN ÍCH THẺ BÀI
 ============================================================================= */
-export const RARITY_LABELS = {
+const RARITY_LABELS = {
   all: "Tất cả độ hiếm",
   common: "Phổ biến",
   rare: "Hiếm",
@@ -94,7 +129,7 @@ export const RARITY_LABELS = {
   special: "Đặc biệt"
 };
 
-export const TYPE_LABELS = {
+const TYPE_LABELS = {
   all: "Tất cả",
   value: "Giá trị",
   operator: "Toán tử",
@@ -108,7 +143,7 @@ export const TYPE_LABELS = {
 };
 
 /** Chuyển tiếng Việt có dấu sang không dấu để tìm kiếm không phân biệt dấu */
-export function removeVietnameseTones(str) {
+function removeVietnameseTones(str) {
   if (!str) return "";
   return String(str)
     .normalize("NFD")
@@ -118,7 +153,7 @@ export function removeVietnameseTones(str) {
     .trim();
 }
 
-export function getSymbolLengthClass(symbol) {
+function getSymbolLengthClass(symbol) {
   const len = String(symbol || "").length;
   if (len >= 4) return "len-long";
   if (len === 3) return "len-3";
@@ -126,7 +161,7 @@ export function getSymbolLengthClass(symbol) {
   return "";
 }
 
-export function getCornerLengthClass(symbol) {
+function getCornerLengthClass(symbol) {
   return String(symbol || "").length >= 4 ? "len-long" : "";
 }
 
@@ -137,7 +172,7 @@ function resolveCardColor(card, symbol) {
 }
 
 /** Render thẻ bài thuần CSS/HTML text card cho thẻ giá trị & toán tử */
-export function renderCardFaceHtml(card) {
+function renderCardFaceHtml(card) {
   if (!card) return "";
   const isValue = card.type === "value";
   const symbol = isValue ? (card.value || "?") : (card.symbol || card.value || "?");
@@ -159,7 +194,8 @@ export function renderCardFaceHtml(card) {
 ============================================================================= */
 function initShader() {
   try {
-    new SwirlShader("bg-shader-canvas");
+    const shader = new SwirlShader("bg-shader-canvas");
+    window.MATHICARD.shaderInstance = shader;
   } catch (err) {
     console.warn("Không thể khởi động WebGL Shader, chuyển sang CSS gradient fallback:", err);
     document.body.classList.add("shader-fallback");
@@ -309,10 +345,21 @@ async function renderTrailer() {
     videoElem.poster = siteContent.trailer.posterImg;
     videoElem.src = siteContent.trailer.videoSrc;
 
+    // Lắng nghe sự kiện loadedmetadata khi tệp video sẵn sàng
+    videoElem.addEventListener("loadedmetadata", () => {
+      videoElem.style.display = "block";
+      if (fallbackElem) fallbackElem.style.display = "none";
+    });
+
     // Bắt sự kiện lỗi khi file video MP4 chưa được đặt vào thư mục
     videoElem.addEventListener("error", () => {
       handleVideoMissing(videoElem, fallbackElem);
     });
+
+    if (videoElem.readyState >= 1) {
+      videoElem.style.display = "block";
+      if (fallbackElem) fallbackElem.style.display = "none";
+    }
 
     // Mở video modal khi bấm nút xem
     const watchBtn = document.getElementById("hero-btn-trailer");
@@ -358,9 +405,19 @@ async function openVideoModal() {
     modalVideo.src = siteContent.trailer.videoSrc;
     modalVideo.poster = siteContent.trailer.posterImg;
 
+    modalVideo.addEventListener("loadedmetadata", () => {
+      modalVideo.style.display = "block";
+      if (modalFallback) modalFallback.style.display = "none";
+    }, { once: true });
+
     modalVideo.addEventListener("error", () => {
       showModalVideoFallback(modalVideo, modalFallback);
     }, { once: true });
+
+    if (modalVideo.readyState >= 1) {
+      modalVideo.style.display = "block";
+      if (modalFallback) modalFallback.style.display = "none";
+    }
 
     modalVideo.play().catch(() => {});
   }
@@ -1096,4 +1153,42 @@ function fallbackCopyText(text) {
   document.body.removeChild(textArea);
   return success;
 }
+
+  /** Khởi động ứng dụng khi DOM sẵn sàng */
+  function initApp() {
+    initShader();
+    initBrandIcons();
+    renderNavigation();
+    renderHero();
+    renderTrailer();
+    renderOverviewPhases();
+    renderCardGallery();
+    renderDevEvaluation();
+    renderMediaLibrary();
+    renderFooter();
+    setupGlobalInteractions();
+    setupModals();
+    checkInitialHash();
+    window.addEventListener("hashchange", checkInitialHash);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initApp);
+  } else {
+    initApp();
+  }
+
+  // Gắn các trạng thái và hàm tiện ích vào namespace toàn cục window.MATHICARD
+  window.MATHICARD.AppState = AppState;
+  window.MATHICARD.initApp = initApp;
+  window.MATHICARD.checkImageExists = checkImageExists;
+  window.MATHICARD.checkFileExists = checkFileExists;
+  window.MATHICARD.checkVideoExists = checkVideoExists;
+  window.MATHICARD.RARITY_LABELS = RARITY_LABELS;
+  window.MATHICARD.TYPE_LABELS = TYPE_LABELS;
+  window.MATHICARD.removeVietnameseTones = removeVietnameseTones;
+  window.MATHICARD.getSymbolLengthClass = getSymbolLengthClass;
+  window.MATHICARD.getCornerLengthClass = getCornerLengthClass;
+  window.MATHICARD.renderCardFaceHtml = renderCardFaceHtml;
+})();
 

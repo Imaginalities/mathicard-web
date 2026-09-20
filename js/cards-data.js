@@ -1,6 +1,8 @@
 // AUTO-GENERATED – do not edit, run tools/build_cards.py
 
-export const cardsData = [
+window.MATHICARD = window.MATHICARD || {};
+
+window.MATHICARD.cards = [
   {
     "id": "Val_Red_1",
     "type": "value",
@@ -2881,3 +2883,4 @@ export const cardsData = [
     "image": "assets/cards/pack/pack_operatorlevel1_rare.webp"
   }
 ];
+window.MATHICARD.cardsData = window.MATHICARD.cards;
