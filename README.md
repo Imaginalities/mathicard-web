@@ -53,13 +53,15 @@ Khi cập nhật tài nguyên:
 | **Logo ngang** | `web/assets/logo/Logo_Mathicard_Ngang.png` | **Chờ thay thế**: Web tự động kiểm tra qua Image element event (onload/onerror); khi chưa có, tự động hiển thị wordmark pixel "MATHICARD" được tạo kiểu chuẩn CSS. Banner promo có trong `web/assets/images/PromoBanner.png`. |
 | **Logo icon** | `web/assets/logo/Logo_Mathicard_Icon.png` | **Đang dùng placeholder**: `Logo_Mathicard_Icon_placeholder.png`. Thay bằng icon PNG nền trong suốt 192x192 hoặc 512x512. |
 | **Bảng chữ cái** | `web/assets/logo/BangChu_Mathicard.png` | **Đang dùng placeholder**: `BangChu_Mathicard_placeholder.png`. Bản vẽ mẫu các ký tự của font pixel (A–Z, 0–9, tiếng Việt). |
-| **GIF Logo** | `web/assets/gif/Anim_Logo.gif` | **Đang dùng placeholder**: `Anim_Logo_placeholder.gif`. Thay bằng GIF động nền trong suốt. |
-| **GIF Lật bài** | `web/assets/gif/Anim_LatBai.gif` | Đã có: Ảnh động hiệu ứng lật bài 2 mặt trong game. |
+| **GIF / WebP Logo** | `web/assets/gif/Anim_Logo.webp`, `web/assets/gif/Anim_Logo.gif` | Đã có: Ảnh động biểu trưng logo Mathicard trích từ đoạn mở đầu của game (WebP có fallback GIF). |
+| **GIF Ghép phép tính** | `web/assets/gif/Anim_GhepPhepTinh.gif` | Chờ cập nhật: Ô dự phòng hiển thị "Ảnh động sắp cập nhật". |
 | **Key Art 16:9** | `web/assets/images/KeyArt.webp` | Đã có: Banner minh họa chính 1200x675 px. |
 | **Ảnh Showcase** | `web/assets/images/CardShowcase.webp` | Đã có: Banner các bộ bài & gói mở rộng. |
 | **Ảnh Đánh giá** | `web/assets/images/DanhGia.webp` | Đã có: Bảng điểm đánh giá đồ án. |
 | **Ảnh 5 Lượt** | `web/assets/images/Luot_01.webp` .. `Luot_05.webp` | Đã có: Minh họa 5 phase của vòng đấu. |
 | **Video Trailer** | `web/assets/video/Video_Mathicard_Sub.mp4` | Đã có: Video giới thiệu trò chơi với phụ đề tiếng Việt được gắn cứng (burned-in). Trình duyệt không tải hay hiển thị phụ đề trùng lặp. |
+| **Poster Trailer** | `web/assets/video/poster.webp` | Đã có: Poster tĩnh 1280x720 chất lượng cao trích từ khung hình logo Mathicard phát sáng. |
+| **Trailer Loop Overlay** | `web/assets/video/logo_loop.mp4` | Đã có: Video vòng lặp không tiếng (H.264, 1280x720, +faststart) làm thumbnail động phủ lên trailer. |
 
 > 💡 **Phông chữ hiển thị (Display Font):** Phông chữ hiển thị pixel `Mathicard Display` (`web/assets/fonts/MathicardDisplay.woff2`) được kế thừa và mở rộng trực tiếp từ phông chữ của trò chơi (`SVN-Determination-Sans`) cho đồ án môn học này (*the extended font is derived from the game's font for this course project*). Phông chữ đạt độ phủ 100% tiếng Việt có dấu và toàn bộ các ký hiệu toán học đặc thù (`+`, `−`, `×`, `/`, `√`, `Σ`, `π`, `φ`, `⌈⌉`, `⌊⌋`, v.v.), không còn bất kỳ ký tự nào bị lỗi hiển thị hay rơi vào font chữ dự phòng (fallback). Phông chữ nội dung (body text) sử dụng Be Vietnam Pro.
 

@@ -4,7 +4,7 @@
  * =============================================================================
  * - Kết nối dữ liệu từ content.js vào giao diện người dùng (DOM).
  * - Khởi tạo WebGL Shader nền và hiệu ứng thẻ bài Balatro-inspired.
- * - Quản lý tương tác: Lật bài, Tally điểm số, Lightbox, Video phụ đề.
+ * - Quản lý tương tác: Xem 5 giai đoạn, Tally điểm số, Lightbox, Video phụ đề.
  * - Tuân thủ tiêu chuẩn kỹ thuật: Cyclomatic Complexity <= 8 cho mỗi hàm,
  *   tối ưu hiệu năng, responsive và accessibility.
  * =============================================================================
@@ -329,8 +329,133 @@ function renderHeroCardFan() {
 }
 
 /* =============================================================================
-   4. TRAILER SECTION (VIDEO, FALLBACK & PHỤ ĐỀ WEBVTT)
+   4. TRAILER SECTION (VIDEO, FALLBACK & ANIMATED OVERLAY)
 ============================================================================= */
+function isTrailerPlayedSession() {
+  try {
+    return sessionStorage.getItem("mathicard_trailer_played") === "true";
+  } catch (e) {
+    return window.MATHICARD._trailerPlayed === true;
+  }
+}
+
+function markTrailerPlayedSession() {
+  window.MATHICARD._trailerPlayed = true;
+  try {
+    sessionStorage.setItem("mathicard_trailer_played", "true");
+  } catch (e) {}
+}
+
+function dismissTrailerOverlay(overlay, overlayVideo) {
+  if (overlayVideo) {
+    overlayVideo.pause();
+    overlayVideo.removeAttribute("src");
+    overlayVideo.load();
+  }
+  if (overlay) {
+    overlay.style.display = "none";
+  }
+}
+
+function loadAndPlayOverlayVideo(overlay, overlayVideo, mainVideo) {
+  if (isTrailerPlayedSession()) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (mainVideo.paused === false || mainVideo.style.display === "none") return;
+
+  overlayVideo.addEventListener(
+    "error",
+    () => {
+      dismissTrailerOverlay(overlay, overlayVideo);
+    },
+    { once: true }
+  );
+
+  const loopSrc = siteContent.trailer.loopSrc || "assets/video/logo_loop.mp4";
+  overlayVideo.src = loopSrc;
+
+  const playPromise = overlayVideo.play();
+  if (playPromise !== undefined) {
+    playPromise
+      .then(() => {
+        if (!isTrailerPlayedSession() && mainVideo.paused) {
+          overlay.style.display = "flex";
+        } else {
+          dismissTrailerOverlay(overlay, overlayVideo);
+        }
+      })
+      .catch(() => {
+        dismissTrailerOverlay(overlay, overlayVideo);
+      });
+  } else {
+    overlay.style.display = "flex";
+  }
+}
+
+function setupTrailerOverlay(mainVideo) {
+  const overlay = document.getElementById("trailer-overlay");
+  const overlayVideo = document.getElementById("trailer-overlay-video");
+  const trailerSection = document.getElementById("trailer");
+  if (!overlay || !overlayVideo || !mainVideo || !trailerSection) return;
+
+  if (isTrailerPlayedSession()) {
+    dismissTrailerOverlay(overlay, overlayVideo);
+    return;
+  }
+
+  if (siteContent.trailer && siteContent.trailer.playLabel) {
+    overlay.setAttribute("aria-label", siteContent.trailer.playLabel);
+    const labelElem = overlay.querySelector(".trailer-play-label");
+    if (labelElem) labelElem.textContent = siteContent.trailer.playLabel;
+  }
+
+  mainVideo.addEventListener("play", () => {
+    markTrailerPlayedSession();
+    dismissTrailerOverlay(overlay, overlayVideo);
+  });
+
+  const onActivate = () => {
+    markTrailerPlayedSession();
+    dismissTrailerOverlay(overlay, overlayVideo);
+    mainVideo.play().catch(() => {});
+  };
+
+  overlay.addEventListener("click", onActivate);
+  overlay.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onActivate();
+    }
+  });
+
+  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (motionQuery.matches) {
+    dismissTrailerOverlay(overlay, overlayVideo);
+    return;
+  }
+  motionQuery.addEventListener("change", (e) => {
+    if (e.matches) {
+      dismissTrailerOverlay(overlay, overlayVideo);
+    }
+  });
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            obs.disconnect();
+            loadAndPlayOverlayVideo(overlay, overlayVideo, mainVideo);
+          }
+        });
+      },
+      { rootMargin: "250px 0px" }
+    );
+    observer.observe(trailerSection);
+  } else {
+    loadAndPlayOverlayVideo(overlay, overlayVideo, mainVideo);
+  }
+}
+
 async function renderTrailer() {
   const title = document.getElementById("trailer-title");
   if (title) title.textContent = siteContent.trailer.sectionTitle;
@@ -361,6 +486,8 @@ async function renderTrailer() {
       if (fallbackElem) fallbackElem.style.display = "none";
     }
 
+    setupTrailerOverlay(videoElem);
+
     // Mở video modal khi bấm nút xem
     const watchBtn = document.getElementById("hero-btn-trailer");
     if (watchBtn) {
@@ -373,6 +500,9 @@ async function renderTrailer() {
 
 function handleVideoMissing(videoElem, fallbackElem) {
   if (!videoElem || !fallbackElem) return;
+  const overlay = document.getElementById("trailer-overlay");
+  const overlayVideo = document.getElementById("trailer-overlay-video");
+  dismissTrailerOverlay(overlay, overlayVideo);
   videoElem.style.display = "none";
   fallbackElem.style.display = "flex";
   fallbackElem.innerHTML = `
@@ -418,6 +548,10 @@ async function openVideoModal() {
       modalVideo.style.display = "block";
       if (modalFallback) modalFallback.style.display = "none";
     }
+
+    modalVideo.addEventListener("play", () => {
+      markTrailerPlayedSession();
+    }, { once: true });
 
     modalVideo.play().catch(() => {});
   }
@@ -966,27 +1100,54 @@ async function renderAnimatedGrid() {
 
   const resolvedGifs = await Promise.all(
     siteContent.media.animatedGrid.map(async (gif) => {
-      const exists = await checkFileExists(gif.src);
-      const activeSrc = exists ? gif.src : (gif.placeholderSrc || gif.src);
-      return { ...gif, activeSrc };
+      const hasWebp = gif.webpSrc ? await checkFileExists(gif.webpSrc) : false;
+      const hasGif = await checkFileExists(gif.src);
+      const isAvailable = hasWebp || hasGif;
+      return { ...gif, hasWebp, hasGif, isAvailable };
     })
   );
 
   grid.innerHTML = resolvedGifs
-    .map(
-      (gif) => `
-      <div class="media-thumb-card gif-card" tabindex="0" role="button" data-src="${gif.activeSrc}" data-caption="${gif.caption}">
-        <div class="thumb-img-wrap">
-          <img src="${gif.activeSrc}" alt="${gif.alt}" loading="lazy" />
-          <span class="gif-badge">ẢNH ĐỘNG</span>
+    .map((gif) => {
+      if (!gif.isAvailable) {
+        return `
+          <div class="media-thumb-card gif-card placeholder-tile" tabindex="-1" aria-label="Ảnh động sắp cập nhật">
+            <div class="thumb-img-wrap">
+              <div class="screen-fallback-tile" style="min-height: 180px;">
+                <span class="screen-fallback-icon">🎬</span>
+                <span class="screen-fallback-text">Ảnh động sắp cập nhật</span>
+                <span class="screen-fallback-sub">${gif.src}</span>
+              </div>
+            </div>
+            <div class="thumb-caption">${gif.placeholderTitle || "Ảnh động sắp cập nhật"}</div>
+          </div>
+        `;
+      }
+
+      const pictureMarkup = gif.hasWebp
+        ? `
+          <picture>
+            <source srcset="${gif.webpSrc}" type="image/webp" />
+            <img src="${gif.src}" alt="${gif.alt}" loading="lazy" />
+          </picture>
+        `
+        : `<img src="${gif.src}" alt="${gif.alt}" loading="lazy" />`;
+
+      const primarySrc = gif.hasWebp ? gif.webpSrc : gif.src;
+
+      return `
+        <div class="media-thumb-card gif-card" tabindex="0" role="button" data-src="${primarySrc}" data-caption="${gif.caption}">
+          <div class="thumb-img-wrap">
+            ${pictureMarkup}
+            <span class="gif-badge">ẢNH ĐỘNG</span>
+          </div>
+          <div class="thumb-caption">${gif.caption}</div>
         </div>
-        <div class="thumb-caption">${gif.caption}</div>
-      </div>
-    `
-    )
+      `;
+    })
     .join("");
 
-  grid.querySelectorAll(".media-thumb-card").forEach((card) => {
+  grid.querySelectorAll(".media-thumb-card[data-src]").forEach((card) => {
     const onSelect = () => openLightbox(card.dataset.src, card.dataset.caption);
     card.addEventListener("click", onSelect);
     card.addEventListener("keydown", (e) => {

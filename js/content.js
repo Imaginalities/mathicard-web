@@ -98,6 +98,8 @@
     videoSrc: "assets/video/Video_Mathicard_Sub.mp4",
     posterImg: "assets/video/poster.webp",
     posterAlt: "Poster video Mathicard",
+    loopSrc: "assets/video/logo_loop.mp4",
+    playLabel: "Xem trailer",
     durationText: "Thời lượng: < 30 giây · Lồng tiếng & Phụ đề tiếng Việt",
     // Trạng thái dự phòng khi đồng đội chưa kịp nộp file MP4
     placeholderTitle: "Video sắp ra mắt!",
@@ -336,17 +338,19 @@
     ],
     animatedGrid: [
       {
-        id: "gif-1",
-        src: "assets/gif/Anim_LatBai.gif",
-        alt: "Hiệu ứng lật thẻ bài 2 mặt",
-        caption: "Ảnh động lật thẻ: Hiệu ứng lật thẻ bài hai mặt (9 khung hình)"
+        id: "anim-logo",
+        webpSrc: "assets/gif/Anim_Logo.webp",
+        src: "assets/gif/Anim_Logo.gif",
+        alt: "Ảnh động logo Mathicard",
+        caption: "Ảnh động logo Mathicard (trích từ đoạn mở đầu của game)"
       },
       {
-        id: "gif-2",
-        src: "assets/gif/Anim_Logo.gif",
-        placeholderSrc: "assets/gif/Anim_Logo_placeholder.gif",
-        alt: "Animation logo Mathicard",
-        caption: "Ảnh động biểu trưng: Hiệu ứng chuyển động logo"
+        id: "anim-ghep-phep-tinh",
+        src: "assets/gif/Anim_GhepPhepTinh.gif",
+        alt: "Ảnh động ghép phép tính",
+        caption: "Ảnh động sắp cập nhật",
+        isPlaceholder: true,
+        placeholderTitle: "Ảnh động sắp cập nhật"
       }
     ]
   },

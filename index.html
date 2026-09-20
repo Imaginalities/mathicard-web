@@ -87,10 +87,20 @@
           <p id="trailer-sub" class="section-subtitle">Video giới thiệu nhịp đấu kịch tính và luật chơi cơ bản dưới 30 giây</p>
         </div>
 
-        <div class="trailer-wrapper">
-          <video id="main-trailer-video" controls preload="metadata" playsinline>
+        <div class="trailer-wrapper" id="trailer-wrapper">
+          <video id="main-trailer-video" controls preload="metadata" playsinline poster="assets/video/poster.webp">
             Trình duyệt của bạn không hỗ trợ thẻ video HTML5.
           </video>
+          <!-- Animated overlay thumbnail che phủ trailer video -->
+          <div id="trailer-overlay" class="trailer-overlay" role="button" tabindex="0" aria-label="Xem trailer" style="display: none;">
+            <video id="trailer-overlay-video" class="trailer-overlay-video" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>
+            <div class="trailer-overlay-action">
+              <div class="trailer-play-btn" aria-hidden="true">
+                <span class="trailer-play-icon">▶</span>
+              </div>
+              <span class="trailer-play-label">Xem trailer</span>
+            </div>
+          </div>
           <!-- Fallback hiển thị poster sang trọng khi chưa có video mp4 -->
           <div id="trailer-fallback" class="trailer-fallback-box"></div>
         </div>
@@ -111,7 +121,7 @@
         </div>
 
         <div id="phases-grid" class="phases-grid-wrap">
-          <!-- Render 5 thẻ bài lật 3D từ main.js -->
+          <!-- Render 5 giai đoạn ván đấu từ main.js -->
         </div>
       </div>
     </section>
