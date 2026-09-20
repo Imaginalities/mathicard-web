@@ -10,19 +10,26 @@
  */
 
 @font-face {
-  font-family: "Mathicard Display";
-  src: url("fonts/MathicardDisplay.woff2") format("woff2"),
-       url("fonts/MathicardDisplay.otf") format("opentype"),
-       url("fonts/SVN-Determination-Sans.otf") format("opentype");
+  font-family: "Mathicard";
+  src: url("fonts/Mathicard-Regular.woff2") format("woff2"),
+       url("fonts/Mathicard-Regular.ttf") format("truetype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "SVN-Determination-Sans";
-  src: url("fonts/MathicardDisplay.woff2") format("woff2"),
-       url("fonts/SVN-Determination-Sans.otf") format("opentype");
+  font-family: "Mathicard 3D";
+  src: url("fonts/Mathicard-3D.woff2") format("woff2"),
+       url("fonts/Mathicard-3D.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Mathicard Display";
+  src: url("fonts/MathicardDisplay.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -63,8 +70,9 @@
   --border-cyan: #00b4d8;
   --btn-shadow: #070c14;
 
-  /* Single Display Font: Mathicard Display (extended game pixel font with 100% Vietnamese & math coverage) */
-  --font-display: "Mathicard Display", "SVN-Determination-Sans", monospace, sans-serif;
+  /* Team Pixel Fonts: Mathicard 3D (wordmarks + biggest titles), Mathicard (display text), Mathicard Display (20-symbol fallback) */
+  --font-display-3d: "Mathicard 3D", "Mathicard Display", sans-serif;
+  --font-display: "Mathicard", "Mathicard Display", sans-serif;
   --font-game: var(--font-display);
   --font-pixel: var(--font-display);
   --font-body: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
@@ -225,7 +233,7 @@ a.disabled {
 
 /* Styled Pixel Wordmark for Logo Placeholder */
 .brand-wordmark {
-  font-family: var(--font-game);
+  font-family: var(--font-display-3d);
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -267,6 +275,7 @@ a.disabled {
   text-decoration: none;
   transition: color 0.15s ease;
   letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .nav-link:hover {
@@ -284,10 +293,12 @@ a.disabled {
   background: transparent;
   border: 2px solid var(--border-pixel);
   color: var(--text-main);
+  font-family: var(--font-pixel);
   font-size: 1.5rem;
   padding: 4px 10px;
   border-radius: 6px;
   cursor: pointer;
+  text-transform: uppercase;
 }
 
 /* 4. LAYOUT & CONTAINERS */
@@ -320,9 +331,10 @@ a.disabled {
 }
 
 .section-title {
-  font-family: var(--font-pixel);
+  font-family: var(--font-display-3d);
   font-size: 2.8rem;
   letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: var(--text-main);
   text-shadow: 2px 2px 0 #000;
   margin-bottom: 8px;
@@ -357,9 +369,10 @@ a.disabled {
 }
 
 .hero-wordmark {
-  font-family: var(--font-game);
+  font-family: var(--font-display-3d);
   font-size: 4rem;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--color-gold);
   text-shadow: 4px 4px 0 #000, -2px -2px 0 #070c14;
   display: inline-block;
@@ -379,6 +392,7 @@ a.disabled {
   text-shadow: 3px 3px 0 #000;
   margin-bottom: 8px;
   letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .hero-desc {
@@ -613,6 +627,7 @@ a.disabled {
   padding: 6px 18px;
   border-radius: 20px;
   border: 1px solid rgba(244, 162, 97, 0.5);
+  text-transform: uppercase;
 }
 
 @media (max-width: 600px) {
@@ -670,6 +685,7 @@ a.disabled {
   font-size: 2.2rem;
   color: var(--color-gold);
   margin: 12px 0 8px;
+  text-transform: uppercase;
 }
 
 .poster-overlay p {
@@ -683,6 +699,7 @@ a.disabled {
   font-family: var(--font-pixel);
   font-size: 1.15rem;
   color: var(--color-green);
+  text-transform: uppercase;
 }
 
 /* 7. GIỚI THIỆU 5 GIAI ĐOẠN (3D FLIP CARDS) */
@@ -765,6 +782,7 @@ a.disabled {
   border: 1px solid var(--color-gold);
   flex-shrink: 0;
   margin-bottom: 6px;
+  text-transform: uppercase;
 }
 
 .phase-icon-box {
@@ -795,6 +813,7 @@ a.disabled {
   align-items: center;
   gap: 2px;
   flex-shrink: 0;
+  text-transform: uppercase;
 }
 
 .phase-name .phase-round {
@@ -860,6 +879,7 @@ a.disabled {
   flex-direction: column;
   gap: 2px;
   flex-shrink: 0;
+  text-transform: uppercase;
 }
 
 .back-title .phase-round {
@@ -936,9 +956,11 @@ a.disabled {
   background: transparent;
   border: none;
   color: var(--text-dim);
+  font-family: var(--font-pixel);
   font-size: 1.1rem;
   cursor: pointer;
   padding: 4px 8px;
+  text-transform: uppercase;
 }
 
 .search-clear-btn:hover {
@@ -1146,6 +1168,7 @@ a.disabled {
   font-weight: 700;
   font-size: 1.15rem;
   color: var(--text-main);
+  text-transform: uppercase;
 }
 
 .card-tag {
@@ -1218,6 +1241,7 @@ a.disabled {
   line-height: 1;
   z-index: 2;
   text-align: center;
+  text-transform: uppercase;
 }
 
 .card-rendered .card-corner.top-left {
@@ -1244,6 +1268,7 @@ a.disabled {
   line-height: 1;
   text-align: center;
   z-index: 1;
+  text-transform: uppercase;
 }
 
 /* Font size thích ứng cho ký hiệu dài */
@@ -1504,6 +1529,7 @@ a.disabled {
   font-size: 2.2rem;
   color: var(--color-gold);
   margin-bottom: 8px;
+  text-transform: uppercase;
 }
 
 .font-showcase-header p {
@@ -1515,17 +1541,36 @@ a.disabled {
 
 .alphabet-preview-wrap {
   width: 100%;
+  max-width: 900px;
+  margin: 0 auto 12px;
   border-radius: 8px;
   overflow: hidden;
   border: 2px solid var(--border-pixel);
-  margin-bottom: 24px;
   background: #000;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.alphabet-preview-wrap:hover,
+.alphabet-preview-wrap:focus-visible {
+  border-color: var(--border-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(244, 162, 97, 0.25);
 }
 
 .alphabet-preview-wrap img {
   width: 100%;
   height: auto;
   display: block;
+}
+
+.alphabet-caption {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0 auto 24px;
+  max-width: 760px;
+  line-height: 1.5;
 }
 
 /* Palette Swatches */
@@ -1539,6 +1584,7 @@ a.disabled {
   font-family: var(--font-pixel);
   font-size: 1.4rem;
   color: var(--text-main);
+  text-transform: uppercase;
 }
 
 .palette-grid {
@@ -1590,6 +1636,7 @@ a.disabled {
   font-family: var(--font-pixel);
   font-size: 1.15rem;
   color: var(--color-gold);
+  text-transform: uppercase;
 }
 
 .swatch-role {
@@ -1606,6 +1653,7 @@ a.disabled {
   font-size: 0.9rem;
   padding: 2px 6px;
   border-radius: 4px;
+  text-transform: uppercase;
 }
 
 /* Lưới hình ảnh & GIF */
@@ -1614,6 +1662,7 @@ a.disabled {
   font-size: 1.8rem;
   color: var(--text-main);
   margin-bottom: 20px;
+  text-transform: uppercase;
 }
 
 .media-grid-section {
@@ -1686,6 +1735,7 @@ a.disabled {
   font-size: 0.95rem;
   padding: 2px 8px;
   border-radius: 4px;
+  text-transform: uppercase;
 }
 
 .thumb-caption {
@@ -1708,6 +1758,7 @@ a.disabled {
   font-size: 2.2rem;
   color: var(--color-gold);
   margin-bottom: 8px;
+  text-transform: uppercase;
 }
 
 .footer-links {
@@ -1724,6 +1775,7 @@ a.disabled {
   font-size: 1.25rem;
   color: var(--text-dim);
   text-decoration: none;
+  text-transform: uppercase;
 }
 
 .footer-links a:hover {
@@ -1784,6 +1836,7 @@ body.modal-open {
   font-weight: 700;
   font-size: 1.35rem;
   color: var(--color-gold);
+  text-transform: uppercase;
 }
 
 .modal-close-btn {
@@ -1795,6 +1848,7 @@ body.modal-open {
   padding: 2px 10px;
   border-radius: 6px;
   cursor: pointer;
+  text-transform: uppercase;
 }
 
 .modal-close-btn:hover {
@@ -1837,7 +1891,7 @@ body.modal-open {
 }
 
 .modal-rarity-tag {
-  font-family: var(--font-body);
+  font-family: var(--font-pixel);
   font-weight: 700;
   font-size: 0.95rem;
   color: var(--color-green);
@@ -1852,6 +1906,7 @@ body.modal-open {
   font-size: 1.65rem;
   color: var(--text-main);
   margin-bottom: 12px;
+  text-transform: uppercase;
 }
 
 .modal-card-meta {
@@ -1928,6 +1983,7 @@ body.modal-open {
   background: rgba(0, 0, 0, 0.7);
   padding: 4px 16px;
   border-radius: 6px;
+  text-transform: uppercase;
 }
 
 /* 15. HIỆU ỨNG POP & WOBBLE */

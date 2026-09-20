@@ -248,11 +248,10 @@
     fontShowcase: {
       title: "BỘ NHẬN DIỆN & KIỂU CHỮ TỰ THIẾT KẾ",
       alphabetImg: "assets/logo/BangChu_Mathicard.png",
-      alphabetPlaceholderImg: "assets/logo/BangChu_Mathicard_placeholder.png",
+      alphabetCaption: "Bảng chữ cái bộ font Mathicard do nhóm tự thiết kế (228 ký tự, đầy đủ dấu tiếng Việt)",
       logoNgangImg: "assets/logo/Logo_Mathicard_Ngang.png",
       logoIconImg: "assets/logo/Logo_Mathicard_Icon.png",
-      logoIconPlaceholderImg: "assets/logo/Logo_Mathicard_Icon_placeholder.png",
-      conceptNote: "Kiểu chữ Pixel 8-bit được thiết kế và tự xây dựng trên hệ thống lưới đồng nhất, thiết kế riêng để tối ưu độ tương phản trên màn hình game Godot 4 và giao diện web. Phông chữ hỗ trợ trọn vẹn 100% các ký tự tiếng Việt có dấu phức tạp như Đánh giá, Bốc bài, Cửa hàng, Tính điểm.",
+      conceptNote: "Bộ chữ pixel do nhóm tự dựng trên lưới 10 đơn vị, gồm 228 ký tự và 2 kiểu chữ (Regular và 3D), dùng cho logo cùng toàn bộ giao diện trang web. Phông chữ hỗ trợ trọn vẹn tiếng Việt, kể cả các ký tự nhiều dấu như Đánh giá, Bốc bài, Cửa hàng, Tính điểm.",
       paletteSwatches: [
         { name: "Deep Teal Base", hex: "#0b1320", role: "Nền vũ trụ tối" },
         { name: "Card Panel Navy", hex: "#162a45", role: "Nền khung thẻ bài" },

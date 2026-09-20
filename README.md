@@ -50,9 +50,9 @@ Khi cập nhật tài nguyên:
 
 | Hạng mục | Đường dẫn tệp | Trạng thái & Cơ chế fallback tự động |
 |---|---|---|
-| **Logo ngang** | `web/assets/logo/Logo_Mathicard_Ngang.png` | **Chờ thay thế**: Web tự động kiểm tra qua Image element event (onload/onerror); khi chưa có, tự động hiển thị wordmark pixel "MATHICARD" được tạo kiểu chuẩn CSS. Banner promo có trong `web/assets/images/PromoBanner.png`. |
-| **Logo icon** | `web/assets/logo/Logo_Mathicard_Icon.png` | **Đang dùng placeholder**: `Logo_Mathicard_Icon_placeholder.png`. Thay bằng icon PNG nền trong suốt 192x192 hoặc 512x512. |
-| **Bảng chữ cái** | `web/assets/logo/BangChu_Mathicard.png` | **Đang dùng placeholder**: `BangChu_Mathicard_placeholder.png`. Bản vẽ mẫu các ký tự của font pixel (A–Z, 0–9, tiếng Việt). |
+| **Logo ngang** | `web/assets/logo/Logo_Mathicard_Ngang.png` | **Chờ thay thế**: Web tự động kiểm tra qua Image element event (onload/onerror); khi chưa có, tự động hiển thị wordmark pixel "MATHICARD" được tạo kiểu chuẩn CSS bằng font `Mathicard 3D`. Banner promo có trong `web/assets/images/PromoBanner.png`. |
+| **Logo icon** | `web/assets/logo/Logo_Mathicard_Icon.png` | **Chờ thay thế**: Web tự động kiểm tra qua Image element event (onload/onerror); khi chưa có, favicon giữ sạch không phát sinh lỗi 404. Thay bằng icon PNG nền trong suốt 192x192 hoặc 512x512. |
+| **Bảng chữ cái** | `web/assets/logo/BangChu_Mathicard.png` | **Đã cài đặt chính thức**: Bản vẽ mẫu kích thước 2000×2344 của bộ font Mathicard do nhóm tự thiết kế (228 ký tự, đầy đủ dấu tiếng Việt). Bấm vào để mở xem chi tiết trong lightbox. |
 | **GIF / WebP Logo** | `web/assets/gif/Anim_Logo.webp`, `web/assets/gif/Anim_Logo.gif` | Đã có: Ảnh động biểu trưng logo Mathicard trích từ đoạn mở đầu của game (WebP có fallback GIF). |
 | **GIF Ghép phép tính** | `web/assets/gif/Anim_GhepPhepTinh.gif` | Chờ cập nhật: Ô dự phòng hiển thị "Ảnh động sắp cập nhật". |
 | **Key Art 16:9** | `web/assets/images/KeyArt.webp` | Đã có: Banner minh họa chính 1200x675 px. |
@@ -63,7 +63,7 @@ Khi cập nhật tài nguyên:
 | **Poster Trailer** | `web/assets/video/poster.webp` | Đã có: Poster tĩnh 1280x720 chất lượng cao trích từ khung hình logo Mathicard phát sáng. |
 | **Trailer Loop Overlay** | `web/assets/video/logo_loop.mp4` | Đã có: Video vòng lặp không tiếng (H.264, 1280x720, +faststart) làm thumbnail động phủ lên trailer. |
 
-> 💡 **Phông chữ hiển thị (Display Font):** Phông chữ hiển thị pixel `Mathicard Display` (`web/assets/fonts/MathicardDisplay.woff2`) được kế thừa và mở rộng trực tiếp từ phông chữ của trò chơi (`SVN-Determination-Sans`) cho đồ án môn học này (*the extended font is derived from the game's font for this course project*). Phông chữ đạt độ phủ 100% tiếng Việt có dấu và toàn bộ các ký hiệu toán học đặc thù (`+`, `−`, `×`, `/`, `√`, `Σ`, `π`, `φ`, `⌈⌉`, `⌊⌋`, v.v.), không còn bất kỳ ký tự nào bị lỗi hiển thị hay rơi vào font chữ dự phòng (fallback). Phông chữ nội dung (body text) sử dụng Be Vietnam Pro.
+> 💡 **Phông chữ hiển thị (Display Font):** Trang web sử dụng bộ phông chữ pixel do nhóm tự thiết kế: `Mathicard` (dành cho toàn bộ văn bản hiển thị như nút bấm, nhãn phân loại, tiêu đề giai đoạn, thẻ bài, modal) và `Mathicard 3D` (dành riêng cho logo wordmark và các tiêu đề mục lớn nhất) tại `web/assets/fonts/` và `web/css/fonts/`. Phông chữ gồm 228 ký tự, hỗ trợ đầy đủ 100% tiếng Việt có dấu theo chuẩn thiết kế UNICASE (`text-transform: uppercase`). Đối với 20 ký hiệu toán học và điều hướng đặc thù mà phông chữ mới chưa có (` ``, `·`, `×`, `÷`, `–`, `↓`, `−`, `√`, `≤`, `≥`, `⌈`, `⌉`, `⌊`, `⌋`, `▶`, `☰`, `✕`, `Σ`, `π`, `φ`), hệ thống tự động kế thừa cơ chế dự phòng (symbol fallback) chuẩn xác từ phông chữ `Mathicard Display` (`MathicardDisplay.woff2`) thông qua chuỗi fallback CSS: `font-family: "Mathicard", "Mathicard Display", sans-serif;` (và `"Mathicard 3D", "Mathicard Display", sans-serif;`), đảm bảo tuyệt đối không có bất kỳ ký tự nào bị lỗi hiển thị (tofu box). Phông chữ nội dung (body text) sử dụng Be Vietnam Pro.
 
 ---
 

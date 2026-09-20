@@ -91,10 +91,14 @@ function checkVideoExists(url) {
 /** Tự động cập nhật favicon */
 async function initBrandIcons() {
   const hasIcon = await checkFileExists("assets/logo/Logo_Mathicard_Icon.png");
-  const iconSrc = hasIcon ? "assets/logo/Logo_Mathicard_Icon.png" : "assets/logo/Logo_Mathicard_Icon_placeholder.png";
-
   const favicon = document.getElementById("site-favicon");
-  if (favicon) favicon.href = iconSrc;
+  if (favicon) {
+    if (hasIcon) {
+      favicon.href = "assets/logo/Logo_Mathicard_Icon.png";
+    } else {
+      favicon.removeAttribute("href");
+    }
+  }
 }
 
 function checkInitialHash() {
@@ -1003,12 +1007,35 @@ function renderMediaLibrary() {
 
 async function renderFontShowcase() {
   const fontData = siteContent.media.fontShowcase;
+  const alphabetSrc = fontData.alphabetImg || "assets/logo/BangChu_Mathicard.png";
+  const alphabetCaption = fontData.alphabetCaption || "Bảng chữ cái bộ font Mathicard do nhóm tự thiết kế (228 ký tự, đầy đủ dấu tiếng Việt)";
 
   const alphabetImg = document.getElementById("font-alphabet-img");
+  const alphabetWrap = document.getElementById("font-alphabet-wrap");
+
   if (alphabetImg) {
-    const hasAlphabet = await checkFileExists(fontData.alphabetImg);
-    alphabetImg.src = hasAlphabet ? fontData.alphabetImg : (fontData.alphabetPlaceholderImg || "assets/logo/BangChu_Mathicard_placeholder.png");
-    alphabetImg.alt = fontData.alphabetAlt || "Bảng font chữ pixel tự tạo";
+    alphabetImg.src = alphabetSrc;
+    alphabetImg.alt = alphabetCaption;
+  }
+
+  const captionElem = document.getElementById("font-alphabet-caption");
+  if (captionElem) {
+    captionElem.textContent = alphabetCaption;
+  }
+
+  const onOpenAlphabet = () => {
+    openLightbox(alphabetSrc, alphabetCaption);
+  };
+
+  const triggerTarget = alphabetWrap || alphabetImg;
+  if (triggerTarget) {
+    triggerTarget.addEventListener("click", onOpenAlphabet);
+    triggerTarget.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onOpenAlphabet();
+      }
+    });
   }
 
   const conceptNote = document.getElementById("font-concept-note");

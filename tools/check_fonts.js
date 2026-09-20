@@ -55,8 +55,9 @@ function checkFonts(root = document) {
     }
 
     // Check 2: Elements using the display font
-    const isDisplayFont = rawFamily.includes("mathicard display") ||
-                          rawFamily.includes("svn-determination-sans");
+    const isDisplayFont = rawFamily.includes("mathicard") ||
+                          rawFamily.includes("mathicard 3d") ||
+                          rawFamily.includes("mathicard display");
 
     if (isDisplayFont) {
       // Get visible textContent of direct or text nodes
