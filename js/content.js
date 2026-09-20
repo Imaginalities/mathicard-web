@@ -344,12 +344,11 @@
         caption: "Ảnh động logo Mathicard (trích từ đoạn mở đầu của game)"
       },
       {
-        id: "anim-ghep-phep-tinh",
-        src: "assets/gif/Anim_GhepPhepTinh.gif",
-        alt: "Ảnh động ghép phép tính",
-        caption: "Ảnh động sắp cập nhật",
-        isPlaceholder: true,
-        placeholderTitle: "Ảnh động sắp cập nhật"
+        id: "anim-lac-the",
+        webpSrc: "assets/gif/Anim_LacThe.webp",
+        src: "assets/gif/Anim_LacThe.gif",
+        alt: "Ảnh động hiệu ứng rung thẻ khi người chơi bấm Chốt",
+        caption: "Ảnh động: hiệu ứng rung thẻ khi người chơi bấm Chốt phép tính"
       }
     ]
   },
