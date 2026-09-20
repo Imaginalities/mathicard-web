@@ -213,7 +213,9 @@ async function renderNavigation() {
   const brandWordmark = document.getElementById("nav-logo-wordmark");
   const brandLogo = document.getElementById("nav-logo");
 
-  const hasLogoNgang = await checkFileExists(siteContent.hero.logoImg);
+  // Logo luôn hiển thị bằng chữ (font Mathicard 3D do nhóm tự thiết kế) để giữ màu, vị trí và hiệu ứng động.
+  // File PNG chỉ dùng làm tài nguyên tải về trong thư viện media.
+  const hasLogoNgang = false;
   if (hasLogoNgang && brandLogo) {
     brandLogo.src = siteContent.hero.logoImg;
     brandLogo.alt = siteContent.hero.logoAlt;
@@ -277,7 +279,9 @@ async function renderHero() {
   const heroWordmark = document.getElementById("hero-logo-wordmark");
   const heroLogo = document.getElementById("hero-logo-img");
 
-  const hasLogoNgang = await checkFileExists(siteContent.hero.logoImg);
+  // Logo luôn hiển thị bằng chữ (font Mathicard 3D do nhóm tự thiết kế) để giữ màu, vị trí và hiệu ứng động.
+  // File PNG chỉ dùng làm tài nguyên tải về trong thư viện media.
+  const hasLogoNgang = false;
   if (hasLogoNgang && heroLogo) {
     heroLogo.src = siteContent.hero.logoImg;
     heroLogo.alt = siteContent.hero.logoAlt;
